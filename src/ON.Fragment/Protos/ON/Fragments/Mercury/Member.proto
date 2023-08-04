@@ -1,0 +1,32 @@
+﻿syntax = "proto3";
+
+package ON.Fragments.Mercury;
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "Protos/ON/Fragments/Mercury/Role.proto";
+
+service MemberInterface {
+  rpc CreateMember (CreateMemberRequest) returns (CreateMemberResponse) {};
+  rpc GetMember (GetMemberRequest) returns (GetMemberResponse) {};
+  rpc UpdateMember (UpdateMemberRequest) returns (UpdateMemberResponse) {};
+}
+
+message Member {
+  string Id = 1;
+  string Username = 2;
+  optional Roles Roles = 3;
+  google.protobuf.Timestamp CreatedOn = 5;
+  google.protobuf.Timestamp ModifiedOn = 6;
+}
+
+message CreateMemberRequest {}
+
+message CreateMemberResponse {}
+
+message GetMemberRequest {}
+
+message GetMemberResponse {}
+
+message UpdateMemberRequest {}
+
+message UpdateMemberResponse {}

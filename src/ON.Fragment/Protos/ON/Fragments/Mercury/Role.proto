@@ -1,0 +1,67 @@
+﻿syntax = "proto3";
+package ON.Fragments.Mercury;
+import "google/protobuf/timestamp.proto";
+
+service RoleInterface {
+  rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse);
+  rpc GetRoles(GetRolesRequest) returns (GetRolesResponse);
+  rpc DeleteRole(DeleteRoleRequest) returns (DeleteRoleResponse);
+  rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse);
+}
+
+message PermissionSet {
+  string Key = 1;
+  string Value = 2;
+}
+
+message Roles {
+  repeated Role Roles = 1;
+}
+
+message Role {
+  string Id = 1;
+  string Name = 2;
+  repeated PermissionSet Permissions = 4;
+  int32 Hierarchy = 6;
+  google.protobuf.Timestamp CreatedOn = 7;
+  optional google.protobuf.Timestamp ModifiedOn = 8;
+}
+
+message CreateRoleRequest {
+  string Name = 1;
+  repeated PermissionSet Permissions = 2;
+  int32 Hierarchy = 3;
+}
+
+message CreateRoleResponse {
+  bool IsSuccess = 1;
+  string Error = 2;
+  Role Role = 3;
+}
+
+message GetRolesRequest {}
+
+message GetRolesResponse {
+  bool IsSuccess = 1;
+  string Error = 2;
+  repeated Role Roles = 3;
+}
+
+message DeleteRoleRequest {
+  string Id = 1;
+}
+
+message DeleteRoleResponse {
+  bool IsSuccess = 1;
+  string Error = 2;
+}
+
+message UpdateRoleRequest {
+  Role RoleUpdate = 1;
+}
+
+message UpdateRoleResponse {
+  bool IsSuccess = 1;
+  string Error = 2;
+  Role UpdatedRole = 3;
+}

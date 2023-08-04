@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ON.Fragment", "..\ON.Fragment\ON.Fragment.csproj", "{0EFCFC95-FB4F-4689-968A-9CB743132D20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ON.Mercury.Service", "Service\ON.Mercury.Service.csproj", "{FE1CE174-11C8-4782-920E-255F31E3990B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0EFCFC95-FB4F-4689-968A-9CB743132D20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EFCFC95-FB4F-4689-968A-9CB743132D20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EFCFC95-FB4F-4689-968A-9CB743132D20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EFCFC95-FB4F-4689-968A-9CB743132D20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF885DB1-FE38-4AF2-AF69-5CD1EB30582F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF885DB1-FE38-4AF2-AF69-5CD1EB30582F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF885DB1-FE38-4AF2-AF69-5CD1EB30582F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF885DB1-FE38-4AF2-AF69-5CD1EB30582F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE1CE174-11C8-4782-920E-255F31E3990B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE1CE174-11C8-4782-920E-255F31E3990B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE1CE174-11C8-4782-920E-255F31E3990B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE1CE174-11C8-4782-920E-255F31E3990B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

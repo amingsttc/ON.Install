@@ -1,0 +1,40 @@
+﻿syntax = "proto3";
+
+package ON.Fragments.Mercury;
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "Protos/ON/Fragments/Mercury/Message.proto";
+import "Protos/ON/Fragments/Mercury/Role.proto";
+
+service ChannelInterface {
+  rpc CreateChannel(CreateChannelRequest) returns (CreateChannelResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/channels",
+      body: "*"
+    };
+  };
+}
+
+message Channel {
+  string Id = 1;
+  string Name = 2;
+  optional string Category = 3;
+  optional string Description = 4;
+  repeated Message Messages = 5;
+  repeated Role Roles = 6;
+  google.protobuf.Timestamp CreatedOn = 7;
+  optional google.protobuf.Timestamp ModifiedOn = 8;
+}
+
+message CreateChannelRequest {
+  string Name = 1;
+  optional string Category = 2;
+  optional string Description = 3;
+  optional Roles Roles = 4;
+}
+
+message CreateChannelResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  optional Channel Channel = 3;
+}
