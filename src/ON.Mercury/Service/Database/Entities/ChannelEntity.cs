@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.EntityFrameworkCore;
 using ON.Fragments.Mercury;
 using ON.Mercury.Service.Database;
@@ -43,7 +44,14 @@ public class ChannelEntity : IPostgresEntity<Channel, ChannelEntity>
 
     public Channel ToPb()
     {
-        throw new System.NotImplementedException();
+        return new Channel()
+        {
+            Id = Id,
+            Name = Name,
+            Category = Category,
+            Description = Description,
+            CreatedOn = Timestamp.FromDateTime(CreatedOn)
+        };
     }
 
     public static void SetColumnMetadata(ModelBuilder modelBuilder)

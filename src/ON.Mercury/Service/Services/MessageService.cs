@@ -2,16 +2,19 @@
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using ON.Fragments.Mercury;
+using ON.Mercury.Service.Database;
 
 namespace ON.Mercury.Service.Services;
 
 public class MessageService : MessageInterface.MessageInterfaceBase
 {
     private readonly ILogger<MessageService> _logger;
+    private readonly PostgresContext _postgres;
 
-    public MessageService(ILogger<MessageService> logger)
+    public MessageService(ILogger<MessageService> logger, PostgresContext postgres)
     {
         _logger = logger;
+        _postgres = postgres;
     }
 
     public override Task<SendMessageResponse> SendMessage(SendMessageRequest request, ServerCallContext context)

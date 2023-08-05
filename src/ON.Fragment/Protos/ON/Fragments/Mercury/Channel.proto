@@ -13,6 +13,22 @@ service ChannelInterface {
       body: "*"
     };
   };
+  rpc GetChannels(GetChannelsRequest) returns (GetChannelsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/channels"
+    };
+  };
+  rpc UpdateChannel(UpdateChannelRequest) returns (UpdateChannelResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/channels/{Id}",
+      body: "*"
+    };
+  };
+  rpc DeleteChannel(DeleteChannelRequest) returns (DeleteChannelResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/channels/{Id}",
+    };
+  };
 }
 
 message Channel {
@@ -37,4 +53,33 @@ message CreateChannelResponse {
   bool IsSuccess = 1;
   optional string Error = 2;
   optional Channel Channel = 3;
+}
+
+message GetChannelsRequest {}
+
+message GetChannelsResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  repeated Channel Channels = 3;
+}
+
+message UpdateChannelRequest {
+  string Name = 1;
+  optional string Category = 2;
+  optional string Description = 3;
+  repeated Roles Roles = 4;
+}
+
+message UpdateChannelResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  optional Channel Channel = 3;
+}
+
+message DeleteChannelRequest {}
+
+message DeleteChannelResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  optional string ChannelId = 3;
 }

@@ -2,16 +2,19 @@
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using ON.Fragments.Mercury;
+using ON.Mercury.Service.Database;
 
 namespace ON.Mercury.Service.Services;
 
 public class RoleService : RoleInterface.RoleInterfaceBase
 {
     private readonly ILogger<RoleService> _logger;
+    private readonly PostgresContext _postgres;
 
-    public RoleService(ILogger<RoleService> logger)
+    public RoleService(ILogger<RoleService> logger, PostgresContext postgres)
     {
         _logger = logger;
+        _postgres = postgres;
     }
 
     public override Task<CreateRoleResponse> CreateRole(CreateRoleRequest request, ServerCallContext context)
