@@ -110,6 +110,23 @@ services:
             target: /var/lib/eventstore
           - source: tmpdata/eventdb/logs
             target: /var/log/eventstore
+    - name: pg
+      image: postgres
+      env:
+          - name: POSTGRES_USER
+            value: root
+          - name: POSTGRES_PASSWORD
+            value: root
+          - name: POSTGRES_DB
+            value: test_db
+      volumes:
+          - source: tmpdata/mercury/pg
+            target: /var/lib/postgresql/data
+          - source: tmpdata/mercury/init-scripts
+            target: /docker-entrypoint-initdb.d
+      bindings:
+          - port: 5432
+            connectionString: Host=localhost;Port=5432;Database=test_db;User Id=root;Password=root;
 # - name: grpc-lb
 # dockerFile: grpc-lb/Dockerfile
 # dockerFileContext: grpc-lb

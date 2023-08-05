@@ -9,6 +9,8 @@
         <PackageReference Include="Grpc.AspNetCore" Version="2.34.0" />
         <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Core" Version="2.2.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.9" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
     </ItemGroup>
 
     <ItemGroup>
@@ -18,5 +20,9 @@
     <ItemGroup>
       <ProjectReference Include="..\..\ON.Fragment\ON.Fragment.csproj" />
     </ItemGroup>
+
+
+
+
 
 </Project>

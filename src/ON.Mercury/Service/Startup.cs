@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ON.Mercury.Service.Database;
 using ON.Mercury.Service.Services;
 
 namespace ON.Mercury.Service;
@@ -20,6 +23,12 @@ public class Startup
     {
         services.AddGrpcHttpApi();
         services.AddLogging();
+        services.AddDbContext<PostgresContext>(opts =>
+        {
+            opts.UseNpgsql(Configuration.GetConnectionString("Postgres"));
+        });
+        
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
