@@ -1,12 +1,31 @@
 ﻿syntax = "proto3";
 package ON.Fragments.Mercury;
 import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
 
 service RoleInterface {
-  rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse);
-  rpc GetRoles(GetRolesRequest) returns (GetRolesResponse);
-  rpc DeleteRole(DeleteRoleRequest) returns (DeleteRoleResponse);
-  rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse);
+  rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/roles",
+      body: "*"
+    };
+  };
+  rpc GetRoles(GetRolesRequest) returns (GetRolesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/roles"
+    };
+  };
+  rpc DeleteRole(DeleteRoleRequest) returns (DeleteRoleResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/roles/{RoleId}"
+    };
+  };
+  rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse){
+    option (google.api.http) = {
+      put: "/api/v1/roles/{RoleId}",
+      body: "*"
+    };
+  };
 }
 
 message PermissionSet {

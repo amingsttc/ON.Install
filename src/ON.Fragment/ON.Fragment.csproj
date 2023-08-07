@@ -142,7 +142,6 @@
     <Protobuf Include="Protos\ON\Fragments\Authorization\Payment\Paypal\PaypalInterface.proto" GrpcServices="Both" />
     <Protobuf Include="Protos\ON\Fragments\Mercury\Member.proto" />
     <Protobuf Include="Protos\ON\Fragments\Mercury\Channel.proto" />
-    <Protobuf Include="Protos\ON\Fragments\Mercury\Message.proto" />
     <Protobuf Include="Protos\ON\Fragments\Mercury\Role.proto" />
   </ItemGroup>
 

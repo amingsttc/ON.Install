@@ -6,9 +6,23 @@ import "google/api/annotations.proto";
 import "Protos/ON/Fragments/Mercury/Role.proto";
 
 service MemberInterface {
-  rpc CreateMember (CreateMemberRequest) returns (CreateMemberResponse) {};
-  rpc GetMember (GetMemberRequest) returns (GetMemberResponse) {};
-  rpc UpdateMember (UpdateMemberRequest) returns (UpdateMemberResponse) {};
+  rpc CreateMember (CreateMemberRequest) returns (CreateMemberResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/members",
+      body: "*"
+    };
+  };
+  rpc GetMember (GetMemberRequest) returns (GetMemberResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/members/{MemberId}"
+    };
+  };
+  rpc UpdateMember (UpdateMemberRequest) returns (UpdateMemberResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/members/{MemberId}",
+      body: "*"
+    };
+  };
 }
 
 message Member {
@@ -19,14 +33,33 @@ message Member {
   google.protobuf.Timestamp ModifiedOn = 6;
 }
 
-message CreateMemberRequest {}
+message CreateMemberRequest {
+  string UserId = 1;
+  string Username = 2;
+  optional Roles Roles = 3;
+}
 
-message CreateMemberResponse {}
+message CreateMemberResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  optional Member Member = 3;
+}
 
 message GetMemberRequest {}
 
-message GetMemberResponse {}
+message GetMemberResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  optional Member Member = 3;
+}
 
-message UpdateMemberRequest {}
+message UpdateMemberRequest {
+  optional string Username = 1;
+  optional Roles Roles = 2;
+}
 
-message UpdateMemberResponse {}
+message UpdateMemberResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  optional Member Member = 3;
+}

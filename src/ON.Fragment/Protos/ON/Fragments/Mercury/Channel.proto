@@ -3,7 +3,6 @@
 package ON.Fragments.Mercury;
 import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
-import "Protos/ON/Fragments/Mercury/Message.proto";
 import "Protos/ON/Fragments/Mercury/Role.proto";
 
 service ChannelInterface {
@@ -20,15 +19,48 @@ service ChannelInterface {
   };
   rpc UpdateChannel(UpdateChannelRequest) returns (UpdateChannelResponse) {
     option (google.api.http) = {
-      put: "/api/v1/channels/{Id}",
+      put: "/api/v1/channels/{ChannelId}",
       body: "*"
     };
   };
   rpc DeleteChannel(DeleteChannelRequest) returns (DeleteChannelResponse) {
     option (google.api.http) = {
-      delete: "/api/v1/channels/{Id}",
+      delete: "/api/v1/channels/{ChannelId}",
     };
   };
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/channels/{ChannelId}/messages",
+      body: "*"
+    };
+  };
+  rpc GetMessages(GetMessagesRequest) returns (GetMessagesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/channels/{ChannelId}/messages"
+    }; 
+  };
+  rpc UpdateMessage(UpdateMessageRequest) returns (UpdateMessageResponse) {
+    option (google.api.http) = {
+      put: "api/v1/channels/{ChannelId}/messages/{MessageId}",
+      body: "*"
+    };
+  };
+  rpc DeleteMessage(DeleteMessageRequest) returns (DeleteMessageResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/channels/{ChannelId}/messages/{MessageId}",
+      body: "*"
+    };
+  };
+};
+
+message Message {
+  string Id = 1;
+  string ChannelId = 2;
+  string SenderId = 3;
+  string Body = 4;
+  google.protobuf.Timestamp SentOn = 5;
+  google.protobuf.Timestamp ModifiedOn = 6;
+  google.protobuf.Timestamp DeletedOn = 7;
 }
 
 message Channel {
@@ -82,4 +114,44 @@ message DeleteChannelResponse {
   bool IsSuccess = 1;
   optional string Error = 2;
   optional string ChannelId = 3;
+}
+
+message SendMessageRequest {
+  string ChannelId = 1;
+  string SenderId = 2;
+  string Body = 3;
+}
+
+message SendMessageResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  optional Message Message = 3;
+}
+
+message GetMessagesRequest {}
+
+message GetMessagesResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  repeated Message Messages = 3;
+}
+
+message UpdateMessageRequest {
+  string MessageId = 1;
+  string Body = 2;
+}
+
+message UpdateMessageResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  optional Message Updated = 3;
+}
+
+message DeleteMessageRequest {
+  string MessageId = 1;
+}
+
+message DeleteMessageResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
 }
