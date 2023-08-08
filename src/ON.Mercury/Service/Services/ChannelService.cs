@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Microsoft.EntityFrameworkCore;
@@ -53,22 +54,106 @@ public class ChannelService : ChannelInterface.ChannelInterfaceBase
 
         if (channels.Count == 0) return response;
 
-        foreach (var channel in channels)
+        foreach (var proto in channels.Select(channel => channel.ToPb()))
         {
-            var proto = channel.ToPb();
             response.Channels.Add(proto);
         }
 
         return response;
     }
 
-    public override Task<UpdateChannelResponse> UpdateChannel(UpdateChannelRequest request, ServerCallContext context)
+    public override async Task<UpdateChannelResponse> UpdateChannel(UpdateChannelRequest request, ServerCallContext context)
     {
-        return base.UpdateChannel(request, context);
+        var foundChannel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == request.Id);
+        if (foundChannel is null)
+        {
+            return new UpdateChannelResponse()
+            {
+                    IsSuccess = false,
+                    Error = "Channel Not Found"
+            };
+        }
+
+        foundChannel.Name = request.Name;
+        foundChannel.Description = request.Description;
+        foundChannel.Category = request.Category;
+        // foundChannel.Roles.Clear();
+        // foundChannel.Roles = request.Roles;
+
+        try
+        {
+            _postgres.Channels.Update(foundChannel);
+            await _postgres.SaveChangesAsync();
+
+            return new UpdateChannelResponse()
+            {
+                IsSuccess = true,
+                Error = "",
+                Channel = foundChannel.ToPb()
+            };
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return new UpdateChannelResponse()
+            {
+                IsSuccess = false,
+                Error = "Error Updating Channel"
+            };
+        }
     }
 
-    public override Task<DeleteChannelResponse> DeleteChannel(DeleteChannelRequest request, ServerCallContext context)
+    public override async Task<DeleteChannelResponse> DeleteChannel(DeleteChannelRequest request, ServerCallContext context)
     {
-        return base.DeleteChannel(request, context);
+        try
+        {
+            var foundChannel = await _postgres.Channels.Where(c => c.Id == request.Id).FirstOrDefaultAsync();
+            if (foundChannel is null)
+            {
+                return new DeleteChannelResponse()
+                {
+                    IsSuccess = false,
+                    Error = "Channel Not Found"
+                };
+            }
+
+            _postgres.Channels.Remove(foundChannel);
+            await _postgres.SaveChangesAsync();
+            return new DeleteChannelResponse()
+            {
+                IsSuccess = true,
+                Error = "",
+                ChannelId = foundChannel.Id
+            };
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return new DeleteChannelResponse()
+            {
+                IsSuccess = false,
+                Error = "Server error"
+            };
+        }
+    }
+
+    public override Task<SendMessageResponse> SendMessage(SendMessageRequest request, ServerCallContext context)
+    {
+        return base.SendMessage(request, context);
+    }
+
+    public override Task<GetMessagesResponse> GetMessages(GetMessagesRequest request, ServerCallContext context)
+    {
+        return base.GetMessages(request, context);
+    }
+
+    public override Task<UpdateMessageResponse> UpdateMessage(UpdateMessageRequest request, ServerCallContext context)
+    {
+        return base.UpdateMessage(request, context);
+    }
+
+    public override Task<DeleteMessageResponse> DeleteMessage(DeleteMessageRequest request, ServerCallContext context)
+    {
+        return base.DeleteMessage(request, context);
     }
 }

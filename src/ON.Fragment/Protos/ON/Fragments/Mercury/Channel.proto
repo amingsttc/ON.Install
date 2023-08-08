@@ -96,10 +96,11 @@ message GetChannelsResponse {
 }
 
 message UpdateChannelRequest {
-  string Name = 1;
-  optional string Category = 2;
-  optional string Description = 3;
-  repeated Roles Roles = 4;
+  string Id = 1;
+  string Name = 2;
+  optional string Category = 3;
+  optional string Description = 4;
+  repeated Roles Roles = 5;
 }
 
 message UpdateChannelResponse {
@@ -108,7 +109,9 @@ message UpdateChannelResponse {
   optional Channel Channel = 3;
 }
 
-message DeleteChannelRequest {}
+message DeleteChannelRequest {
+  string Id = 1;
+}
 
 message DeleteChannelResponse {
   bool IsSuccess = 1;
