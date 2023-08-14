@@ -45,26 +45,38 @@ public class ChannelService : ChannelInterface.ChannelInterfaceBase
 
     public override async Task<GetChannelsResponse> GetChannels(GetChannelsRequest request, ServerCallContext context)
     {
-        var channels = await _postgres.Channels.ToListAsync();
-        var response = new GetChannelsResponse()
+        try
         {
-            IsSuccess = true,
-            Error = ""
-        };
+            var channels = await _postgres.Channels.ToListAsync();
+            var response = new GetChannelsResponse()
+            {
+                IsSuccess = true,
+                Error = ""
+            };
 
-        if (channels.Count == 0) return response;
+            if (channels.Count > 0)
+            {
+                foreach (var channel in channels)
+                {
+                    response.Channels.Add(channel.ToPb());
+                }
+            }
 
-        foreach (var proto in channels.Select(channel => channel.ToPb()))
-        {
-            response.Channels.Add(proto);
+            return response;
         }
-
-        return response;
+        catch (Exception e)
+        {
+            _logger.LogInformation(e.Message);
+            return new GetChannelsResponse()
+            {
+                IsSuccess = false,
+            };
+        }
     }
 
     public override async Task<UpdateChannelResponse> UpdateChannel(UpdateChannelRequest request, ServerCallContext context)
     {
-        var foundChannel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == request.Id);
+        var foundChannel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == request.ChannelId);
         if (foundChannel is null)
         {
             return new UpdateChannelResponse()
@@ -73,18 +85,16 @@ public class ChannelService : ChannelInterface.ChannelInterfaceBase
                     Error = "Channel Not Found"
             };
         }
-
+        
         foundChannel.Name = request.Name;
         foundChannel.Description = request.Description;
         foundChannel.Category = request.Category;
-        // foundChannel.Roles.Clear();
-        // foundChannel.Roles = request.Roles;
-
+        
         try
         {
             _postgres.Channels.Update(foundChannel);
             await _postgres.SaveChangesAsync();
-
+            
             return new UpdateChannelResponse()
             {
                 IsSuccess = true,
@@ -107,7 +117,7 @@ public class ChannelService : ChannelInterface.ChannelInterfaceBase
     {
         try
         {
-            var foundChannel = await _postgres.Channels.Where(c => c.Id == request.Id).FirstOrDefaultAsync();
+            var foundChannel = await _postgres.Channels.Where(c => c.Id == request.ChannelId).FirstOrDefaultAsync();
             if (foundChannel is null)
             {
                 return new DeleteChannelResponse()

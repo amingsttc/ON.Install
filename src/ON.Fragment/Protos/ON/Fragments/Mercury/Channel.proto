@@ -8,53 +8,53 @@ import "Protos/ON/Fragments/Mercury/Role.proto";
 service ChannelInterface {
   rpc CreateChannel(CreateChannelRequest) returns (CreateChannelResponse) {
     option (google.api.http) = {
-      post: "/api/v1/channels",
+      post: "/api/v1/mercury/channels",
       body: "*"
     };
   };
   rpc GetChannels(GetChannelsRequest) returns (GetChannelsResponse) {
     option (google.api.http) = {
-      get: "/api/v1/channels"
+      get: "/api/v1/mercury/channels"
     };
   };
   rpc UpdateChannel(UpdateChannelRequest) returns (UpdateChannelResponse) {
     option (google.api.http) = {
-      put: "/api/v1/channels/{ChannelId}",
+      put: "/api/v1/mercury/channels/{ChannelId}/update",
       body: "*"
     };
-  };
+  }
   rpc DeleteChannel(DeleteChannelRequest) returns (DeleteChannelResponse) {
     option (google.api.http) = {
-      delete: "/api/v1/channels/{ChannelId}",
+      delete: "/api/v1/mercury/channels/{ChannelId}/delete",
     };
   };
   rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {
     option (google.api.http) = {
-      post: "/api/v1/channels/{ChannelId}/messages",
+      post: "/api/v1/mercury/channels/{ChannelId}/messages",
       body: "*"
     };
   };
   rpc GetMessages(GetMessagesRequest) returns (GetMessagesResponse) {
     option (google.api.http) = {
-      get: "/api/v1/channels/{ChannelId}/messages"
+      get: "/api/v1/mercury/channels/{ChannelId}/messages"
     }; 
   };
   rpc UpdateMessage(UpdateMessageRequest) returns (UpdateMessageResponse) {
     option (google.api.http) = {
-      put: "api/v1/channels/{ChannelId}/messages/{MessageId}",
+      put: "/api/v1/mercury/channels/{ChannelId}/messages/{MessageId}/update",
       body: "*"
     };
   };
   rpc DeleteMessage(DeleteMessageRequest) returns (DeleteMessageResponse) {
     option (google.api.http) = {
-      put: "/api/v1/channels/{ChannelId}/messages/{MessageId}",
+      put: "/api/v1/mercury/channels/{ChannelId}/messages/{MessageId}/delete",
       body: "*"
     };
   };
 };
 
 message Message {
-  string Id = 1;
+  string MessageId = 1;
   string ChannelId = 2;
   string SenderId = 3;
   string Body = 4;
@@ -96,7 +96,7 @@ message GetChannelsResponse {
 }
 
 message UpdateChannelRequest {
-  string Id = 1;
+  string ChannelId = 1;
   string Name = 2;
   optional string Category = 3;
   optional string Description = 4;
@@ -110,7 +110,7 @@ message UpdateChannelResponse {
 }
 
 message DeleteChannelRequest {
-  string Id = 1;
+  string ChannelId = 1;
 }
 
 message DeleteChannelResponse {
@@ -131,7 +131,9 @@ message SendMessageResponse {
   optional Message Message = 3;
 }
 
-message GetMessagesRequest {}
+message GetMessagesRequest {
+  string ChannelId = 1;
+}
 
 message GetMessagesResponse {
   bool IsSuccess = 1;
@@ -140,8 +142,9 @@ message GetMessagesResponse {
 }
 
 message UpdateMessageRequest {
-  string MessageId = 1;
-  string Body = 2;
+  string ChannelId = 1;
+  string MessageId = 2;
+  string Body = 3;
 }
 
 message UpdateMessageResponse {
@@ -151,7 +154,8 @@ message UpdateMessageResponse {
 }
 
 message DeleteMessageRequest {
-  string MessageId = 1;
+  string ChannelId = 1;
+  string MessageId = 2;
 }
 
 message DeleteMessageResponse {

@@ -4,9 +4,11 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
-      "applicationUrl": "http://localhost:5296",
+      "applicationUrl": "http://localhost:8011/api/v1/mercury",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "SERVICE__MERCURYSERVICE__API__PORT": "8011",
+        "SERVICE__MERCURYSERVICE__GRPC__PORT": "7011"
       }
     },
     "https": {

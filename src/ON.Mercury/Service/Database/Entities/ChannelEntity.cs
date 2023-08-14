@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using ON.Fragments.Mercury;
 using ON.Mercury.Service.Database;
 using ON.Mercury.Service.Database.UnionTables;
@@ -44,14 +45,8 @@ public class ChannelEntity : IPostgresEntity<Channel, ChannelEntity>
 
     public Channel ToPb()
     {
-        return new Channel()
-        {
-            Id = Id,
-            Name = Name,
-            Category = Category,
-            Description = Description,
-            CreatedOn = Timestamp.FromDateTime(CreatedOn)
-        };
+        var json = JsonConvert.SerializeObject(this);
+        return Google.Protobuf.JsonParser.Default.Parse<Channel>(json);
     }
 
     public static void SetColumnMetadata(ModelBuilder modelBuilder)
@@ -81,8 +76,7 @@ public class ChannelEntity : IPostgresEntity<Channel, ChannelEntity>
 
         modelBuilder.Entity<ChannelEntity>()
             .Property(x => x.ModifiedOn)
-            .HasColumnName("modified_on")
-            .IsRequired();
+            .HasColumnName("modified_on");
 
         modelBuilder.Entity<ChannelEntity>()
             .HasMany(x => x.Messages)
