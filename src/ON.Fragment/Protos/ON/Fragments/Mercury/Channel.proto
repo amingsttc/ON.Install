@@ -41,20 +41,20 @@ service ChannelInterface {
   };
   rpc UpdateMessage(UpdateMessageRequest) returns (UpdateMessageResponse) {
     option (google.api.http) = {
-      put: "/api/v1/mercury/channels/{ChannelId}/messages/{MessageId}/update",
+      put: "/api/v1/mercury/messages/{MessageId}/update",
       body: "*"
     };
   };
   rpc DeleteMessage(DeleteMessageRequest) returns (DeleteMessageResponse) {
     option (google.api.http) = {
-      put: "/api/v1/mercury/channels/{ChannelId}/messages/{MessageId}/delete",
+      put: "/api/v1/mercury/messages/{MessageId}/delete",
       body: "*"
     };
   };
 };
 
 message Message {
-  string MessageId = 1;
+  string Id = 1;
   string ChannelId = 2;
   string SenderId = 3;
   string Body = 4;
@@ -142,9 +142,8 @@ message GetMessagesResponse {
 }
 
 message UpdateMessageRequest {
-  string ChannelId = 1;
-  string MessageId = 2;
-  string Body = 3;
+  string MessageId = 1;
+  string Body = 2;
 }
 
 message UpdateMessageResponse {
@@ -154,11 +153,11 @@ message UpdateMessageResponse {
 }
 
 message DeleteMessageRequest {
-  string ChannelId = 1;
-  string MessageId = 2;
+  string MessageId = 1;
 }
 
 message DeleteMessageResponse {
   bool IsSuccess = 1;
   optional string Error = 2;
+  optional Message Deleted = 3;
 }
