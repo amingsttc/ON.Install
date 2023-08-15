@@ -25,6 +25,7 @@ public class Startup
     {
         services.AddGrpcHttpApi();
         services.AddLogging();
+        services.AddSingleton<MemberStateProvider>();
         services.AddSignalR().AddNewtonsoftJsonProtocol(opts =>
         {
             opts.PayloadSerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;

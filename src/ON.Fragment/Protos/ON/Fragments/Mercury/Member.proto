@@ -28,6 +28,7 @@ service MemberInterface {
       delete: "/api/v1/mercury/members/{MemberId}"
     };
   }
+  rpc GetMembers (GetMembersRequest) returns (GetMemberResponse);
 }
 
 message Member {
@@ -58,6 +59,14 @@ message GetMemberResponse {
   bool IsSuccess = 1;
   optional string Error = 2;
   optional Member Member = 3;
+}
+
+message GetMembersRequest {}
+
+message GetMembersResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  repeated Member Members = 3;
 }
 
 message UpdateMemberRequest {
