@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using ON.Mercury.Service.Database;
+using ON.Mercury.Service.Hubs;
 using ON.Mercury.Service.Services;
 
 namespace ON.Mercury.Service;
@@ -23,6 +25,10 @@ public class Startup
     {
         services.AddGrpcHttpApi();
         services.AddLogging();
+        services.AddSignalR().AddNewtonsoftJsonProtocol(opts =>
+        {
+            opts.PayloadSerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+        });
         services.AddDbContext<PostgresContext>(opts =>
         {
             opts.UseNpgsql(Configuration.GetConnectionString("Postgres"));
@@ -41,6 +47,7 @@ public class Startup
             endpoints.MapGrpcService<ChannelService>();
             endpoints.MapGrpcService<RoleService>();
             endpoints.MapGrpcService<MemberService>();
+            endpoints.MapHub<EventHub>("/api/v1/hub");
         });
     }
 }

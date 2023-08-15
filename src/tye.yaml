@@ -83,6 +83,7 @@ services:
       project: ON.Mercury/Service/ON.Mercury.Service.csproj
       bindings:
           - name: api
+            port: 8011
           - name: grpc
             port: 7011
       env:
