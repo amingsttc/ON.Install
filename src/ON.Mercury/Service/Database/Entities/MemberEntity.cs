@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using ON.Fragments.Mercury;
 using ON.Mercury.Service.Database.UnionTables;
 using Service.Database.Entities;
@@ -35,11 +36,8 @@ public class MemberEntity : IPostgresEntity<Member, MemberEntity>
 
     public Member ToPb()
     {
-        return new Member()
-        {
-            Id = Id,
-            Username = Username
-        };
+        var json = JsonConvert.SerializeObject(this);
+        return Google.Protobuf.JsonParser.Default.Parse<Member>(json);
     }
     
     public static void SetColumnMetadata(ModelBuilder modelBuilder)

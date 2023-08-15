@@ -8,27 +8,32 @@ import "Protos/ON/Fragments/Mercury/Role.proto";
 service MemberInterface {
   rpc CreateMember (CreateMemberRequest) returns (CreateMemberResponse) {
     option (google.api.http) = {
-      post: "/api/v1/members",
+      post: "/api/v1/mercury/members",
       body: "*"
     };
   };
   rpc GetMember (GetMemberRequest) returns (GetMemberResponse) {
     option (google.api.http) = {
-      get: "/api/v1/members/{MemberId}"
+      get: "/api/v1/mercury/members/{MemberId}"
     };
   };
   rpc UpdateMember (UpdateMemberRequest) returns (UpdateMemberResponse) {
     option (google.api.http) = {
-      put: "/api/v1/members/{MemberId}",
+      put: "/api/v1/mercury/members/{MemberId}",
       body: "*"
     };
   };
+  rpc DeleteMember (DeleteMemberRequest) returns (DeleteMemberResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/mercury/members/{MemberId}"
+    };
+  }
 }
 
 message Member {
   string Id = 1;
   string Username = 2;
-  optional Roles Roles = 3;
+  repeated Role Roles = 3;
   google.protobuf.Timestamp CreatedOn = 5;
   google.protobuf.Timestamp ModifiedOn = 6;
 }
@@ -36,7 +41,7 @@ message Member {
 message CreateMemberRequest {
   string UserId = 1;
   string Username = 2;
-  optional Roles Roles = 3;
+  repeated Role Roles = 3;
 }
 
 message CreateMemberResponse {
@@ -45,7 +50,9 @@ message CreateMemberResponse {
   optional Member Member = 3;
 }
 
-message GetMemberRequest {}
+message GetMemberRequest {
+  string MemberId = 1;
+}
 
 message GetMemberResponse {
   bool IsSuccess = 1;
@@ -54,12 +61,23 @@ message GetMemberResponse {
 }
 
 message UpdateMemberRequest {
-  optional string Username = 1;
-  optional Roles Roles = 2;
+  string MemberId = 1;
+  optional string Username = 2;
+  repeated Role Roles = 3;
 }
 
 message UpdateMemberResponse {
   bool IsSuccess = 1;
   optional string Error = 2;
   optional Member Member = 3;
+}
+
+message DeleteMemberRequest {
+  string MemberId = 1;
+}
+
+message DeleteMemberResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  string DeletedMember = 3;
 }
