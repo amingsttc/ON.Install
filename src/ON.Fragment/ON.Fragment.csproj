@@ -72,6 +72,7 @@
     <None Remove="Protos\ON\Fragments\Mercury\Member.proto" />
     <None Remove="Protos\ON\Fragments\Mercury\Message.proto" />
     <None Remove="Protos\ON\Fragments\Mercury\Role.proto" />
+    <None Remove="Protos\ON\Fragments\Mercury\Event.proto" />
   </ItemGroup>
 
   <ItemGroup>
@@ -143,6 +144,7 @@
     <Protobuf Include="Protos\ON\Fragments\Mercury\Member.proto" />
     <Protobuf Include="Protos\ON\Fragments\Mercury\Channel.proto" />
     <Protobuf Include="Protos\ON\Fragments\Mercury\Role.proto" />
+    <Protobuf Include="Protos\ON\Fragments\Mercury\Event.proto" />
   </ItemGroup>
 
   <ItemGroup>

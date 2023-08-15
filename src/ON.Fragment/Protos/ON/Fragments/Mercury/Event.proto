@@ -1,0 +1,60 @@
+﻿syntax = "proto3";
+
+package ON.Fragments.Mercury;
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "Protos/ON/Fragments/Mercury/Role.proto";
+import "Protos/ON/Fragments/Mercury/Channel.proto";
+import "Protos/ON/Fragments/Mercury/Member.proto";
+
+service EventInterface {
+  rpc Subscribe (SubscribeRequest) returns (stream MercuryEvent);
+  rpc Unsubscribe (UnsubscribeRequest) returns (UnsubscribeResponse);
+  rpc QueueEvent (QueueEventRequest) returns (QueueEventResponse);
+  rpc Reconnect (ReconnectRequest) returns (stream MercuryEvent);
+}
+
+enum EVENT_TYPES {
+  MESSAGE_SENT = 0;
+  MESSAGE_UPDATED = 1;
+  MESSAGE_DELETED = 2;
+  CHANNEL_CREATED = 3;
+  CHANNEL_UPDATED = 4;
+  CHANNEL_DELETED = 6;
+}
+
+message MercuryEvent {
+  string Id = 1;
+  EVENT_TYPES Type = 2;
+  google.protobuf.Timestamp DateFired = 3;
+  oneof EventData {
+    Message Message = 4;
+    Channel Channel = 5;
+  };
+}
+
+message SubscribeRequest {
+  string MemberId = 1;
+}
+
+message UnsubscribeRequest {
+  string SubscriptionId = 1;
+}
+
+message UnsubscribeResponse {}
+
+message QueueEventRequest {
+  EVENT_TYPES Type = 1;
+  google.protobuf.Timestamp DateFired = 2;
+  oneof EventData {
+    Message Message = 3;
+    Channel Channel = 4;
+  };
+}
+
+message QueueEventResponse {}
+
+message ReconnectRequest {
+  string SubscriptionId = 1;
+  string LastEventId = 2;
+}
