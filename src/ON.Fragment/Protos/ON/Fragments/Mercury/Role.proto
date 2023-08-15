@@ -2,27 +2,28 @@
 package ON.Fragments.Mercury;
 import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
 
 service RoleInterface {
   rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse) {
     option (google.api.http) = {
-      post: "/api/v1/roles",
+      post: "/api/v1/mercury/roles",
       body: "*"
     };
   };
   rpc GetRoles(GetRolesRequest) returns (GetRolesResponse) {
     option (google.api.http) = {
-      get: "/api/v1/roles"
+      get: "/api/v1/mercury/roles"
     };
   };
   rpc DeleteRole(DeleteRoleRequest) returns (DeleteRoleResponse) {
     option (google.api.http) = {
-      delete: "/api/v1/roles/{RoleId}"
+      delete: "/api/v1/mercury/roles/{RoleId}"
     };
   };
   rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse){
     option (google.api.http) = {
-      put: "/api/v1/roles/{RoleId}",
+      put: "/api/v1/mercury/roles/{RoleId}",
       body: "*"
     };
   };
@@ -40,15 +41,17 @@ message Roles {
 message Role {
   string Id = 1;
   string Name = 2;
-  repeated PermissionSet Permissions = 4;
+  map<string, bool> Permissions = 3;
   int32 Hierarchy = 6;
   google.protobuf.Timestamp CreatedOn = 7;
   optional google.protobuf.Timestamp ModifiedOn = 8;
+  repeated google.protobuf.Any Members = 9;
+  repeated google.protobuf.Any Channels = 10;
 }
 
 message CreateRoleRequest {
   string Name = 1;
-  repeated PermissionSet Permissions = 2;
+  map<string, bool> Permissions = 2;
   int32 Hierarchy = 3;
 }
 
@@ -67,7 +70,7 @@ message GetRolesResponse {
 }
 
 message DeleteRoleRequest {
-  string Id = 1;
+  string RoleId = 1;
 }
 
 message DeleteRoleResponse {
@@ -76,7 +79,10 @@ message DeleteRoleResponse {
 }
 
 message UpdateRoleRequest {
-  Role RoleUpdate = 1;
+  string RoleId = 1;
+  string Name = 2;
+  map<string, bool> Permissions = 3;
+  int32 Hierarchy = 4;
 }
 
 message UpdateRoleResponse {

@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using ON.Fragments.Mercury;
 using ON.Mercury.Service.Database;
 
@@ -32,7 +33,8 @@ public class MessageEntity : IPostgresEntity<Message, MessageEntity>
 
     public Message ToPb()
     {
-        throw new System.NotImplementedException();
+        var json = JsonConvert.SerializeObject(this);
+        return Google.Protobuf.JsonParser.Default.Parse<Message>(json);
     }
 
     public static void SetColumnMetadata(ModelBuilder modelBuilder)

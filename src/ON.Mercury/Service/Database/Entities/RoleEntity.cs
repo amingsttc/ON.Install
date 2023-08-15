@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using ON.Fragments.Mercury;
 using ON.Mercury.Service.Database;
 using ON.Mercury.Service.Database.Entities;
@@ -28,6 +29,7 @@ public class RoleEntity : IPostgresEntity<Role, RoleEntity>
         Id = Guid.NewGuid().ToString();
         Name = name;
         Hierarchy = hierarchy;
+        CreatedOn = DateTime.UtcNow;
     }
     
     public RoleEntity() {}
@@ -56,17 +58,9 @@ public class RoleEntity : IPostgresEntity<Role, RoleEntity>
 
     public Role ToPb()
     {
-        var modifiedDate = ModifiedOn;
-        if (modifiedDate is null)
-            ModifiedOn = CreatedOn;
-        
-        return new Role()
-        {
-            Id = Id,
-            Name = Name,
-            Hierarchy = Hierarchy,
-            CreatedOn = Timestamp.FromDateTime(CreatedOn),
-        };
+        var json = JsonConvert.SerializeObject(this);
+        var proto = Google.Protobuf.JsonParser.Default.Parse<Role>(json);
+        return proto;
     }
 
     public static void SetColumnMetadata(ModelBuilder modelBuilder)
