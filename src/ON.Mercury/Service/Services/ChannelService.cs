@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Grpc.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using ON.Fragments.Mercury;
 using ON.Mercury.Service.Database;
 using Service.Database.Entities;
@@ -147,14 +148,75 @@ public class ChannelService : ChannelInterface.ChannelInterfaceBase
         }
     }
 
-    public override Task<SendMessageResponse> SendMessage(SendMessageRequest request, ServerCallContext context)
+    public override async Task<SendMessageResponse> SendMessage(SendMessageRequest request, ServerCallContext context)
     {
-        return base.SendMessage(request, context);
+        try
+        {
+            var newMessage = new MessageEntity(request.ChannelId, request.SenderId, request.Body);
+
+            await _postgres.Messages.AddAsync(newMessage);
+            await _postgres.SaveChangesAsync();
+            
+            return new SendMessageResponse()
+            {
+                IsSuccess = true,
+                Error = ""
+            };
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return new SendMessageResponse()
+            {
+                IsSuccess = false,
+            };
+        }
     }
 
-    public override Task<GetMessagesResponse> GetMessages(GetMessagesRequest request, ServerCallContext context)
+    public override async Task<GetMessagesResponse> GetMessages(GetMessagesRequest request, ServerCallContext context)
     {
-        return base.GetMessages(request, context);
+        try
+        {
+            var channel = await _postgres.Channels.Where(c => c.Id == request.ChannelId).Include(m => m.Messages)
+                .FirstOrDefaultAsync();
+            if (channel is null)
+            {
+                return new GetMessagesResponse()
+                {
+                    IsSuccess = false,
+                    Error = "Channel Not Found"
+                };
+            }
+            _logger.LogInformation(JsonConvert.SerializeObject(channel));
+            if (channel.Messages.Count == 0)
+            {
+                return new GetMessagesResponse()
+                {
+                    IsSuccess = true,
+                };
+            }
+
+            var response = new GetMessagesResponse()
+            {
+                IsSuccess = true,
+                Error = ""
+            };
+
+            foreach (var message in channel.Messages)
+            {
+                response.Messages.Add(message.ToPb());
+            }
+
+            return response;
+        }
+        catch (Exception e)
+        {
+            _logger.LogInformation(JsonConvert.SerializeObject(e));
+            return new GetMessagesResponse()
+            {
+                IsSuccess = false
+            };
+        }
     }
 
     public override Task<UpdateMessageResponse> UpdateMessage(UpdateMessageRequest request, ServerCallContext context)

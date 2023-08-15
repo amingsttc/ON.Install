@@ -54,7 +54,7 @@ service ChannelInterface {
 };
 
 message Message {
-  string MessageId = 1;
+  string Id = 1;
   string ChannelId = 2;
   string SenderId = 3;
   string Body = 4;

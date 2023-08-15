@@ -27,7 +27,6 @@ public class Startup
         {
             opts.UseNpgsql(Configuration.GetConnectionString("Postgres"));
         });
-        
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     }
 
@@ -35,7 +34,6 @@ public class Startup
     {
         if (env.IsDevelopment())
             Program.IsDevelopment = true;
-
         app.UseRouting();
         // JWT HERE
         app.UseEndpoints(endpoints =>

@@ -19,7 +19,18 @@ public class MessageEntity : IPostgresEntity<Message, MessageEntity>
     public DateTime? ModifiedOn { get; set; }
     public DateTime? DeletedOn { get; set; }
     
-    [NotMapped] public ChannelEntity Channel { get; set; }
+    [NotMapped] [JsonIgnore] public ChannelEntity Channel { get; set; }
+    
+    public MessageEntity() {}
+
+    public MessageEntity(string channelId, string senderId, string body)
+    {
+        Id = Guid.NewGuid().ToString();
+        ChannelId = channelId;
+        SenderId = senderId;
+        Body = body;
+        SentOn = DateTime.UtcNow;
+    }
     
     public MessageEntity Clone()
     {
