@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -13,6 +14,7 @@ using Service.Database.Entities;
 
 namespace ON.Mercury.Service.Services;
 
+[Authorize]
 public class MemberService : MemberInterface.MemberInterfaceBase
 {
     private readonly ILogger<MemberService> _logger;
@@ -23,7 +25,7 @@ public class MemberService : MemberInterface.MemberInterfaceBase
         _logger = logger;
         _postgres = postgres;
     }
-
+    
     public override async Task<CreateMemberResponse> CreateMember(CreateMemberRequest request, ServerCallContext context)
     {
         try

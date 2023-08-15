@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -12,6 +13,7 @@ using Service.Database.Entities;
 
 namespace ON.Mercury.Service.Services;
 
+[Authorize]
 public class RoleService : RoleInterface.RoleInterfaceBase
 {
     private readonly ILogger<RoleService> _logger;
