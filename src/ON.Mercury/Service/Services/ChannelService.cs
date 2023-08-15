@@ -277,7 +277,8 @@ public class ChannelService : ChannelInterface.ChannelInterfaceBase
             return new DeleteMessageResponse()
             {
                 IsSuccess = true,
-                Error = ""
+                Error = "",
+                Deleted = messageFound.ToPb()
             };
         }
         catch (Exception e)
