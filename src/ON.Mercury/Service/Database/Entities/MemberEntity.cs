@@ -36,6 +36,7 @@ public class MemberEntity : IPostgresEntity<Member, MemberEntity>
 
     public Member ToPb()
     {
+        // TODO: Figure out how to speed this up
         var json = JsonConvert.SerializeObject(this);
         return Google.Protobuf.JsonParser.Default.Parse<Member>(json);
     }

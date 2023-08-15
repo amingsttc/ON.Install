@@ -58,6 +58,7 @@ public class RoleEntity : IPostgresEntity<Role, RoleEntity>
 
     public Role ToPb()
     {
+        // TODO: Figure out how to speed this up
         var json = JsonConvert.SerializeObject(this);
         var proto = Google.Protobuf.JsonParser.Default.Parse<Role>(json);
         return proto;

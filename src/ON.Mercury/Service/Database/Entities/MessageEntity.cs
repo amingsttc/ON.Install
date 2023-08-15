@@ -44,6 +44,7 @@ public class MessageEntity : IPostgresEntity<Message, MessageEntity>
 
     public Message ToPb()
     {
+        // TODO: Figure out how to speed this up
         var json = JsonConvert.SerializeObject(this);
         return Google.Protobuf.JsonParser.Default.Parse<Message>(json);
     }

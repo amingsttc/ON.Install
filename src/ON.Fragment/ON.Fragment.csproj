@@ -144,7 +144,6 @@
     <Protobuf Include="Protos\ON\Fragments\Mercury\Member.proto" />
     <Protobuf Include="Protos\ON\Fragments\Mercury\Channel.proto" />
     <Protobuf Include="Protos\ON\Fragments\Mercury\Role.proto" />
-    <Protobuf Include="Protos\ON\Fragments\Mercury\Event.proto" />
   </ItemGroup>
 
   <ItemGroup>

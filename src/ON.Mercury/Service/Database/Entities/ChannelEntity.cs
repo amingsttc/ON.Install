@@ -45,6 +45,7 @@ public class ChannelEntity : IPostgresEntity<Channel, ChannelEntity>
 
     public Channel ToPb()
     {
+        // TODO: Figure out how to speed this up
         var json = JsonConvert.SerializeObject(this);
         return Google.Protobuf.JsonParser.Default.Parse<Channel>(json);
     }
