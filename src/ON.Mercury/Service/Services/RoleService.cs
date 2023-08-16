@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Google.Protobuf.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using ON.Fragments.Mercury;
+using ON.Mercury.Service.Caching;
 using ON.Mercury.Service.Database;
 using Service.Database.Entities;
 
@@ -18,13 +20,16 @@ public class RoleService : RoleInterface.RoleInterfaceBase
 {
     private readonly ILogger<RoleService> _logger;
     private readonly PostgresContext _postgres;
+    private readonly ICachingService _cache;
 
-    public RoleService(ILogger<RoleService> logger, PostgresContext postgres)
+    public RoleService(ILogger<RoleService> logger, PostgresContext postgres, ICachingService cache)
     {
         _logger = logger;
         _postgres = postgres;
+        _cache = cache;
     }
 
+    [AllowAnonymous]
     public override async Task<CreateRoleResponse> CreateRole(CreateRoleRequest request, ServerCallContext context)
     {
         try
@@ -36,6 +41,10 @@ public class RoleService : RoleInterface.RoleInterfaceBase
 
             await _postgres.Roles.AddAsync(newRole);
             await _postgres.SaveChangesAsync();
+            await _cache.AddOrSetAsync("roles", new List<Role>()
+            {
+                newRole.ToPb()
+            });
             return new CreateRoleResponse()
             {
                 IsSuccess = true,
@@ -53,25 +62,31 @@ public class RoleService : RoleInterface.RoleInterfaceBase
         }
     }
 
+    [AllowAnonymous]
     public override async Task<GetRolesResponse> GetRoles(GetRolesRequest request, ServerCallContext context)
     {
         try
         {
-            var roles = await _postgres.Roles.ToListAsync();
+            var roles = await _cache.GetAsync("roles", async () =>
+            {
+                var roles = await _postgres.Roles.ToListAsync();
+                var repeated = new RepeatedField<Role>();
+                if (roles.Count > 0)
+                {
+                    foreach (var role in roles)
+                    {
+                        repeated.Add(role.ToPb());
+                    }
+                }
+
+                return repeated;
+            });
             var response = new GetRolesResponse()
             {
                 IsSuccess = true,
-                Error = ""
+                Error = "",
+                Roles = { roles }
             };
-
-            if (roles.Count > 0)
-            {
-                foreach (var role in roles)
-                {
-                    var proto = role.ToPb();
-                    response.Roles.Add(proto);
-                }
-            }
 
             return response;
         }

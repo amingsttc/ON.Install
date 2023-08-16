@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using ON.Fragments.Mercury;
+using ON.Mercury.Service.Caching;
 using ON.Mercury.Service.Database;
 using ON.Mercury.Service.Database.Entities;
 using Service.Database.Entities;
@@ -19,13 +20,16 @@ public class MemberService : MemberInterface.MemberInterfaceBase
 {
     private readonly ILogger<MemberService> _logger;
     private readonly PostgresContext _postgres;
+    private readonly ICachingService _cache;
 
-    public MemberService(ILogger<MemberService> logger, PostgresContext postgres)
+    public MemberService(ILogger<MemberService> logger, PostgresContext postgres, ICachingService cache)
     {
         _logger = logger;
         _postgres = postgres;
+        _cache = cache;
     }
     
+    [AllowAnonymous]
     public override async Task<CreateMemberResponse> CreateMember(CreateMemberRequest request, ServerCallContext context)
     {
         try
@@ -38,6 +42,7 @@ public class MemberService : MemberInterface.MemberInterfaceBase
 
             await _postgres.Members.AddAsync(newMember);
             await _postgres.SaveChangesAsync();
+            await _cache.SetAsync($"members:{newMember.Id}", newMember);
             
             return new CreateMemberResponse()
             {
@@ -56,11 +61,16 @@ public class MemberService : MemberInterface.MemberInterfaceBase
         }
     }
 
+    [AllowAnonymous]
     public override async Task<GetMemberResponse> GetMember(GetMemberRequest request, ServerCallContext context)
     {
         try
         {
-            var member = await _postgres.Members.Where(m => m.Id == request.MemberId).FirstOrDefaultAsync();
+            var member = await _cache.GetAsync($"members:{request.MemberId}", async () =>
+            {
+                var found = await _postgres.Members.Where(m => m.Id == request.MemberId).FirstOrDefaultAsync();
+                return found;
+            });
             if (member is null)
             {
                 return new GetMemberResponse()
