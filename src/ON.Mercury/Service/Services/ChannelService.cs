@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Google.Protobuf.Collections;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using ON.Fragments.Mercury;
+using ON.Mercury.Service.Caching;
 using ON.Mercury.Service.Database;
 using Service.Database.Entities;
+using Channel = ON.Fragments.Mercury.Channel;
 
 namespace ON.Mercury.Service.Services;
 
@@ -17,11 +20,13 @@ public class ChannelService : ChannelInterface.ChannelInterfaceBase
 {
     private readonly ILogger<ChannelService> _logger;
     private readonly PostgresContext _postgres;
+    private readonly ICachingService _cache;
 
-    public ChannelService(ILogger<ChannelService> logger, PostgresContext postgres)
+    public ChannelService(ILogger<ChannelService> logger, PostgresContext postgres, ICachingService cache)
     {
         _logger = logger;
         _postgres = postgres;
+        _cache = cache;
     }
 
     public override async Task<CreateChannelResponse> CreateChannel(CreateChannelRequest request, ServerCallContext context)
@@ -50,20 +55,28 @@ public class ChannelService : ChannelInterface.ChannelInterfaceBase
     {
         try
         {
-            var channels = await _postgres.Channels.ToListAsync();
+            var channels = await _cache.GetAsync("channels", async () =>
+            {
+                var channels = await _postgres.Channels.ToListAsync();
+                var repeated = new RepeatedField<Channel>();
+                if (channels.Count > 0)
+                {
+                    foreach (var channel in channels)
+                    {
+                        repeated.Add(channel.ToPb());
+                    }
+                }
+            
+                return repeated;
+            });
+            
             var response = new GetChannelsResponse()
             {
                 IsSuccess = true,
                 Error = ""
             };
 
-            if (channels.Count > 0)
-            {
-                foreach (var channel in channels)
-                {
-                    response.Channels.Add(channel.ToPb());
-                }
-            }
+            response.Channels.Add(channels);
 
             return response;
         }

@@ -9,12 +9,10 @@ namespace ON.Mercury.Service.Hubs;
 public class EventHub : Hub
 {
     private readonly ILogger<EventHub> _logger;
-    private readonly MemberStateProvider _memberStateProvider;
 
-    public EventHub(ILogger<EventHub> logger, MemberStateProvider memberStateProvider)
+    public EventHub(ILogger<EventHub> logger)
     {
         _logger = logger;
-        _memberStateProvider = memberStateProvider;
     }
 
     public override Task OnConnectedAsync()

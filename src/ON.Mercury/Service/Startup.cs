@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using ON.Authentication;
+using ON.Mercury.Service.Caching;
 using ON.Mercury.Service.Database;
 using ON.Mercury.Service.Hubs;
 using ON.Mercury.Service.Services;
@@ -26,6 +27,8 @@ public class Startup
     {
         services.AddGrpcHttpApi();
         services.AddLogging();
+        services.AddDistributedMemoryCache();
+        services.AddSingleton<ICachingService, CachingService>();
         services.AddJwtAuthentication();
         services.AddSignalR().AddNewtonsoftJsonProtocol(opts =>
         {
