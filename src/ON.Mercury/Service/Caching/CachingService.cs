@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using Google.Protobuf;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -50,6 +51,20 @@ public class CachingService : ICachingService
             var cacheValue = JsonConvert.SerializeObject(value);
             await _distributedCache.SetStringAsync(key, cacheValue, cancellationToken);
             CacheKeys.TryAdd(key, false);
+        }
+
+        public async Task AddOrSetAsync<T>(string key, IEnumerable<T> value, CancellationToken cancellationToken = default) where T : IMessage<T>
+        {
+            var cached = await _distributedCache.GetStringAsync(key, cancellationToken);
+            if (!string.IsNullOrEmpty(cached))
+            {
+                var list = JsonConvert.DeserializeObject<RepeatedField<T>>(cached);
+                list.Add(value);
+                await SetAsync(key, list, cancellationToken);
+                return;
+            }
+
+            await SetAsync(key, value, cancellationToken);
         }
 
         public async Task RemoveAsync(string key, CancellationToken cancellationToken = default)

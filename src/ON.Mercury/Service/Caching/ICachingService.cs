@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using Google.Protobuf;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -16,6 +17,8 @@ public interface ICachingService
 
     Task SetAsync<T>(string key, T value, CancellationToken cancellationToken = default)
         where T : class;
+
+    Task AddOrSetAsync<T>(string key, IEnumerable<T> value, CancellationToken cancellationToken = default) where T : IMessage<T>;
 
     Task RemoveAsync(string key, CancellationToken cancellationToken = default);
 

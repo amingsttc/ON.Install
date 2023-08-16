@@ -11,6 +11,7 @@ using ON.Fragments.Mercury;
 using ON.Mercury.Service.Caching;
 using ON.Mercury.Service.Database;
 using Service.Database.Entities;
+using System.Collections.Generic;
 using Channel = ON.Fragments.Mercury.Channel;
 
 namespace ON.Mercury.Service.Services;
@@ -36,6 +37,10 @@ public class ChannelService : ChannelInterface.ChannelInterfaceBase
             var newChannel = new ChannelEntity(request.Name, request.Category, request.Description);
             await _postgres.Channels.AddAsync(newChannel);
             await _postgres.SaveChangesAsync();
+            await _cache.AddOrSetAsync("channels", new List<Channel>()
+            {
+                newChannel.ToPb()
+            });
 
             return new CreateChannelResponse()
             {
@@ -51,6 +56,8 @@ public class ChannelService : ChannelInterface.ChannelInterfaceBase
         }
     }
 
+    
+    [AllowAnonymous]
     public override async Task<GetChannelsResponse> GetChannels(GetChannelsRequest request, ServerCallContext context)
     {
         try
@@ -171,6 +178,10 @@ public class ChannelService : ChannelInterface.ChannelInterfaceBase
 
             await _postgres.Messages.AddAsync(newMessage);
             await _postgres.SaveChangesAsync();
+            await _cache.AddOrSetAsync($"messages:{request.ChannelId}", new List<Message>()
+            {
+                newMessage.ToPb()
+            });
             
             return new SendMessageResponse()
             {
@@ -192,6 +203,7 @@ public class ChannelService : ChannelInterface.ChannelInterfaceBase
     {
         try
         {
+            // TODO: Rework this to use the cache
             var channel = await _postgres.Channels.Where(c => c.Id == request.ChannelId).Include(m => m.Messages)
                 .FirstOrDefaultAsync();
             if (channel is null)
