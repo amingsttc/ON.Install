@@ -67,7 +67,7 @@ public class Startup
             endpoints.MapGrpcService<ChannelService>();
             endpoints.MapGrpcService<RoleService>();
             endpoints.MapGrpcService<MemberService>();
-            endpoints.MapHub<EventHub>("/api/v1/hub");
+            endpoints.MapHub<EventHub>("/api/v1/mercury/hub");
             endpoints.MapControllers();
         });
     }

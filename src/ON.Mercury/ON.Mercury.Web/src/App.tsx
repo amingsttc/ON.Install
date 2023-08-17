@@ -16,7 +16,7 @@ function App() {
     } else {
       if (globalThis.hubConnection === undefined) {
         globalThis.hubConnection = buildSignalR(
-          "http://localhost:8015/api/v1/hub",
+          "http://localhost:8015/api/v1/mercury/hub",
           token as string,
         );
       }
