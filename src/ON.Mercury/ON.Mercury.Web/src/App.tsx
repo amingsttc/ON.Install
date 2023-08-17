@@ -3,6 +3,8 @@ import "./App.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { buildSignalR } from "./signalR/signalR";
 import HubContextProvider from "./components/providers/HubContextProvider";
+import RootLayout from "./layouts/_root";
+import { config } from "./config/config";
 
 const queryClient = new QueryClient();
 
@@ -10,13 +12,11 @@ function App() {
   const [token, setToken] = useState(globalThis.token);
 
   useEffect(() => {
-    console.log(globalThis.hubConnection);
     if (token === undefined) {
-      console.log(false);
     } else {
       if (globalThis.hubConnection === undefined) {
         globalThis.hubConnection = buildSignalR(
-          "http://localhost:8015/api/v1/mercury/hub",
+          `${config.mercuryApi}/hub`,
           token as string,
         );
       }
@@ -26,7 +26,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <HubContextProvider hubConnection={globalThis.hubConnection}>
-        <h1>Base View</h1>
+        <RootLayout>
+          <h1>Base View</h1>
+        </RootLayout>
       </HubContextProvider>
     </QueryClientProvider>
   );

@@ -15,5 +15,9 @@ export function buildSignalR(url: string, token: string): HubConnection {
 
   connection.start();
 
+  connection.onclose(() => {
+    globalThis.hubConnection = undefined;
+  });
+
   return connection;
 }
