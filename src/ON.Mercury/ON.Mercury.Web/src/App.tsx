@@ -1,45 +1,33 @@
-import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { buildSignalR } from "./signalR/signalR";
+import HubContextProvider from "./components/providers/HubContextProvider";
 
 const queryClient = new QueryClient();
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [token, setToken] = useState(localStorage.getItem("jwt"));
+  const [token, setToken] = useState(globalThis.token);
 
   useEffect(() => {
+    console.log(globalThis.hubConnection);
     if (token === undefined) {
       console.log(false);
+    } else {
+      if (globalThis.hubConnection === undefined) {
+        globalThis.hubConnection = buildSignalR(
+          "http://localhost:8015/api/v1/hub",
+          token as string,
+        );
+      }
     }
-    console.log(token);
-    console.log(true);
-  }, [token, setToken]);
+  }, [token, setToken, globalThis.hubConnection]);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <HubContextProvider hubConnection={globalThis.hubConnection}>
+        <h1>Base View</h1>
+      </HubContextProvider>
     </QueryClientProvider>
   );
 }

@@ -29,6 +29,16 @@ public class Startup
         services.AddGrpcHttpApi();
         services.AddLogging();
         services.AddControllers();
+        services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(builder =>
+            {
+                builder.WithOrigins("http://127.0.0.1:5173")
+                    .AllowAnyHeader()
+                    .WithMethods("GET", "POST", "PUT", "DELETE")
+                    .AllowCredentials();
+            });
+        });
         services.AddDistributedMemoryCache();
         services.AddHttpContextAccessor();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -51,6 +61,7 @@ public class Startup
             Program.IsDevelopment = true;
         app.UseRouting();
         app.UseJwtAuthentication();
+        app.UseCors();
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapGrpcService<ChannelService>();

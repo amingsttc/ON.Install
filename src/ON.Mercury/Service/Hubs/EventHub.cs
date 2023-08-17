@@ -17,6 +17,7 @@ public class EventHub : Hub
 
     public override Task OnConnectedAsync()
     {
+        _logger.LogInformation("Connected");
         return base.OnConnectedAsync();
     }
 
