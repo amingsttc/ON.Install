@@ -27,6 +27,7 @@ public class Startup
     {
         services.AddGrpcHttpApi();
         services.AddLogging();
+        services.AddControllers();
         services.AddDistributedMemoryCache();
         services.AddSingleton<ICachingService, CachingService>();
         services.AddJwtAuthentication();
@@ -53,6 +54,7 @@ public class Startup
             endpoints.MapGrpcService<RoleService>();
             endpoints.MapGrpcService<MemberService>();
             endpoints.MapHub<EventHub>("/api/v1/hub");
+            endpoints.MapControllers();
         });
     }
 }
