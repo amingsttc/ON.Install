@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using ON.Authentication;
 using ON.Mercury.Service.Database;
+using ON.Mercury.Service.Models.Auth;
 using System.Threading.Tasks;
 
 namespace ON.Mercury.Service.Controllers
@@ -12,20 +15,28 @@ namespace ON.Mercury.Service.Controllers
     {
         private readonly ILogger<AuthController> _logger;
         private readonly PostgresContext _postgres;         // TODO: Replace with new MemberService
+        private readonly ONUserHelper _userHelper;
         
-        
-        public AuthController(ILogger<AuthController> logger, PostgresContext postgres)
+        public AuthController(ILogger<AuthController> logger, PostgresContext postgres, IHttpContextAccessor contextAccessor)
         {
             _logger = logger;
             _postgres = postgres;
+            _userHelper = new ONUserHelper(contextAccessor);
         }
 
         [HttpPost("authenticate")]
-        public Task Authenticate([FromHeader] string Authentication)
+        public async Task<IActionResult> Authenticate()
         {
-            var user = ONUserHelper.ParseUser(HttpContext);
-            _logger.LogInformation(user.Id.ToString());
-            return Task.CompletedTask;
+            var user = _userHelper.MyUser;
+            
+            HttpContext.Response.Redirect("http://localhost:8015/api/v1/mercury/auth/login");
+            return Ok();
+        }
+
+        [HttpPost("login")]
+        public async Task Login()
+        {
+            _logger.LogInformation("HIT");
         }
     }
 }

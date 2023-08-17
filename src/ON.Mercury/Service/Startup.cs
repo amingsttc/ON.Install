@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +30,8 @@ public class Startup
         services.AddLogging();
         services.AddControllers();
         services.AddDistributedMemoryCache();
+        services.AddHttpContextAccessor();
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddSingleton<ICachingService, CachingService>();
         services.AddJwtAuthentication();
         services.AddSignalR().AddNewtonsoftJsonProtocol(opts =>
