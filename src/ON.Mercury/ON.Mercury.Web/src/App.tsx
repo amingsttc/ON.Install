@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./App.css";
+import "./assets/App.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { buildSignalR } from "./signalR/signalR";
 import HubContextProvider from "./components/providers/HubContextProvider";

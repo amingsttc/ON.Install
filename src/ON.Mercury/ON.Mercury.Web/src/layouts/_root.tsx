@@ -1,4 +1,5 @@
 import React from "react";
+import Sidebar from "../components/sidebar/sidebar";
 
 type RootLayoutProps = {
   children;
@@ -7,7 +8,7 @@ type RootLayoutProps = {
 function RootLayout({ children }: RootLayoutProps) {
   return (
     <>
-      <h1>RootLayout</h1>
+      <Sidebar />
       {children}
     </>
   );

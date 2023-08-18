@@ -13,11 +13,11 @@ export function buildSignalR(url: string, token: string): HubConnection {
     .withAutomaticReconnect()
     .build();
 
-  connection.start();
-
   connection.onclose(() => {
     globalThis.hubConnection = undefined;
   });
+
+  //connection.start();
 
   return connection;
 }
