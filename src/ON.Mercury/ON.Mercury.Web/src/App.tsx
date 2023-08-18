@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./assets/App.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { buildSignalR } from "./signalR/signalR";
-import HubContextProvider from "./components/providers/HubContextProvider";
+import HubContextProvider from "./providers/HubContextProvider";
 import RootLayout from "./layouts/_root";
 import { config } from "./config/config";
 
