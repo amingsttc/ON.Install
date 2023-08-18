@@ -1,4 +1,5 @@
-﻿using ON.Mercury.Service.Database.Entities;
+﻿using Newtonsoft.Json;
+using ON.Mercury.Service.Database.Entities;
 
 namespace ON.Mercury.Service.Models.Auth
 {

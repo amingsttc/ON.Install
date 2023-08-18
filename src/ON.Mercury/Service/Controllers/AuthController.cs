@@ -14,47 +14,48 @@ using Grpc.Core;
 using Microsoft.EntityFrameworkCore;
 using ON.Fragments.Mercury;
 using ON.Mercury.Service.Database.Entities;
+using ON.Mercury.Service.Database.Repositories;
 using ON.Mercury.Service.Services;
 
 namespace ON.Mercury.Service.Controllers
 {
     [ApiController]
-    [Route("/api/v1/mercury/{Controller}")]
+    [Route("/api/{Controller}")]
     public class AuthController :  ControllerBase
     {
         private readonly ILogger<AuthController> _logger;
         private readonly PostgresContext _postgres;         // TODO: Replace with new MemberService
+        private readonly MemberRepository _members;
         
-        public AuthController(ILogger<AuthController> logger, PostgresContext postgres)
+        public AuthController(ILogger<AuthController> logger, PostgresContext postgres, MemberRepository members)
         {
             _logger = logger;
             _postgres = postgres;
+            _members = members;
         }
 
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate()
         {
             var user = ONUserHelper.ParseUser(HttpContext);
+            
             if (user is not null)
             {
-                var member = await _postgres.Members.Where(m => m.Id == user.Id.ToString()).FirstOrDefaultAsync();
-                if (member is null)
+                var username = user.ToClaims().Where(c => c.Type == "Display").Select(c => c.Value).FirstOrDefault();
+                var member = await _members.GetOrCreateMember(user.Id.ToString(), username);
+                return Ok(new AuthenticateResponse()
                 {
-                    var username = user.ToClaims().Where(c => c.Type == "Display").Select(c => c.Value).FirstOrDefault();
-                    var newMember = new MemberEntity()
-                    {
-                        Id = user.Id.ToString(),
-                        Username = username
-                    };
-                    await _postgres.Members.AddAsync(newMember);
-                    await _postgres.SaveChangesAsync();
-                    return Ok(newMember);
-                }
-
-                return Ok(member);
+                    IsSuccess = true,
+                    Errors = "",
+                    Member = member
+                });
             }
-
-            return BadRequest("False");
+            
+            return BadRequest(new AuthenticateResponse()
+            {
+                IsSuccess = false,
+                Errors = "No User Data"
+            });
         }
     }
 }

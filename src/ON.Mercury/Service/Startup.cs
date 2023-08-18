@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using ON.Authentication;
 using ON.Mercury.Service.Caching;
 using ON.Mercury.Service.Database;
+using ON.Mercury.Service.Database.Repositories;
 using ON.Mercury.Service.Hubs;
 using ON.Mercury.Service.Services;
 
@@ -43,6 +44,7 @@ public class Startup
         services.AddHttpContextAccessor();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddSingleton<ICachingService, CachingService>();
+        services.AddScoped<MemberRepository>();
         services.AddJwtAuthentication();
         services.AddSignalR().AddNewtonsoftJsonProtocol(opts =>
         {
@@ -67,7 +69,7 @@ public class Startup
             endpoints.MapGrpcService<ChannelService>();
             endpoints.MapGrpcService<RoleService>();
             endpoints.MapGrpcService<MemberService>();
-            endpoints.MapHub<EventHub>("/api/v1/mercury/hub");
+            endpoints.MapHub<EventHub>("/api/hub");
             endpoints.MapControllers();
         });
     }
