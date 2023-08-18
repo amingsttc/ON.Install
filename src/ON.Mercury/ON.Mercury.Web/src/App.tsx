@@ -5,6 +5,7 @@ import { buildSignalR } from "./signalR/signalR";
 import HubContextProvider from "./providers/HubContextProvider";
 import RootLayout from "./layouts/_root";
 import { config } from "./config/config";
+import MessageLog from "./components/messages/MessageLog";
 
 const queryClient = new QueryClient();
 
@@ -27,7 +28,10 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <HubContextProvider hubConnection={globalThis.hubConnection}>
         <RootLayout>
-          <h1>Base View</h1>
+          <MessageLog
+            connection={globalThis.hubConnection}
+            userId="123"
+          ></MessageLog>
         </RootLayout>
       </HubContextProvider>
     </QueryClientProvider>
