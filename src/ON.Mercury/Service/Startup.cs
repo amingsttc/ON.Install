@@ -50,6 +50,7 @@ public class Startup
         services.AddSingleton<ICachingService, CachingService>();
         services.AddScoped<MemberRepository>();
         services.AddScoped<RoleRepository>();
+        services.AddScoped<ChannelRepository>();
         services.AddJwtAuthentication();
         services.AddSignalR().AddNewtonsoftJsonProtocol(opts =>
         {
