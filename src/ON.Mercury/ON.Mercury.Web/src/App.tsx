@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from "react";
 import "./assets/App.css";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import { buildSignalR } from "./signalR/signalR";
-import HubContextProvider from "./providers/HubContextProvider";
-import RootLayout from "./layouts/_root";
 import { config } from "./config/config";
-import MessageLog from "./components/messages/MessageLog";
+import { AppView } from "./views/AppView";
+import LoadingView from "./views/LoadingView";
+import SettingsView from "./views/SettingsView";
 
 const queryClient = new QueryClient();
-
+globalThis.token = config.authToken;
 function App() {
   const [token, setToken] = useState(globalThis.token);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showServerSettings, setShowServerSettings] = useState(false);
 
   useEffect(() => {
     if (token === undefined) {
+      setIsLoading(true);
     } else {
+      setIsLoading(false);
       if (globalThis.hubConnection === undefined) {
         globalThis.hubConnection = buildSignalR(
           `${config.mercuryApi}/hub`,
@@ -25,16 +29,9 @@ function App() {
   }, [token, setToken, globalThis.hubConnection]);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <HubContextProvider hubConnection={globalThis.hubConnection}>
-        <RootLayout>
-          <MessageLog
-            connection={globalThis.hubConnection}
-            userId="123"
-          ></MessageLog>
-        </RootLayout>
-      </HubContextProvider>
-    </QueryClientProvider>
+    (!isLoading && <AppView queryClient={queryClient} />) ||
+    (isLoading && <LoadingView />) ||
+    (showServerSettings && <SettingsView />)
   );
 }
 

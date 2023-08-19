@@ -4,14 +4,6 @@ import App from "./App";
 import "./index.css";
 import "./assets/app.css";
 
-// TODO: Make this dynamic
-// Current is only dev
-localStorage.setItem(
-  "jwt",
-  "eyJhbGciOiJFUzI1NiIsImtpZCI6ImY2MGIyM2Q3LWE3YmMtNDJjYy1hNGI0LWU3YmYyNDg2YmM4OSIsInR5cCI6IkpXVCJ9.eyJJZCI6IjQ2OTMwYzM0LTVjYzAtNDE0Yy04YWRmLTEwZDMzYWI3M2IxYSIsInN1YiI6ImFtaW5nc3QiLCJEaXNwbGF5IjoiYV9taW5nc3QiLCJuYmYiOjE2OTIyNDQyNjYsImV4cCI6MTY5Mjg0OTA2NiwiaWF0IjoxNjkyMjQ0MjY2fQ.o6BbcVXKhVkSYQZvq5aklrGmzINhh1iDFsM_N2auoQ6gZmnPGDS1VVzzhkO2r8sNhpM5_6L6uXvo0fGIFvZ4Tg",
-);
-globalThis.token = localStorage.getItem("jwt");
-
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <App />
