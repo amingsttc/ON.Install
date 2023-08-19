@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./assets/App.css";
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient, useQueries, useQuery } from "@tanstack/react-query";
 import { buildSignalR } from "./signalR/signalR";
 import { config } from "./config/config";
 import { AppView } from "./views/AppView";
 import LoadingView from "./views/LoadingView";
 import SettingsView from "./views/SettingsView";
+import { fetchAllChannels } from "./api/channels.api";
 
 const queryClient = new QueryClient();
 globalThis.token = config.authToken;

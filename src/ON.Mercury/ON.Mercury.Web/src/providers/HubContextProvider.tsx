@@ -1,5 +1,7 @@
 import React, { createContext, useContext } from "react";
 import { HubConnection } from "@microsoft/signalr";
+import { useQuery } from "@tanstack/react-query";
+import { fetchAllChannels } from "../api/channels.api";
 
 type HubContextProviderProps = {
   hubConnection: HubConnection | undefined;
@@ -14,6 +16,7 @@ function HubContextProvider({
   hubConnection,
   children,
 }: HubContextProviderProps) {
+  const channels = useQuery(["channels"], async () => await fetchAllChannels());
   return (
     <HubConnectionContext.Provider value={hubConnection}>
       {children}
