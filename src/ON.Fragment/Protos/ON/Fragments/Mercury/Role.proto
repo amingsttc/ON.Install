@@ -5,28 +5,10 @@ import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 
 service RoleInterface {
-  rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse) {
-    option (google.api.http) = {
-      post: "/api/v1/mercury/roles",
-      body: "*"
-    };
-  };
-  rpc GetRoles(GetRolesRequest) returns (GetRolesResponse) {
-    option (google.api.http) = {
-      get: "/api/v1/mercury/roles"
-    };
-  };
-  rpc DeleteRole(DeleteRoleRequest) returns (DeleteRoleResponse) {
-    option (google.api.http) = {
-      delete: "/api/v1/mercury/roles/{RoleId}"
-    };
-  };
-  rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse){
-    option (google.api.http) = {
-      put: "/api/v1/mercury/roles/{RoleId}",
-      body: "*"
-    };
-  };
+  rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse) {};
+  rpc GetRoles(GetRolesRequest) returns (GetRolesResponse) {};
+  rpc DeleteRole(DeleteRoleRequest) returns (DeleteRoleResponse) {};
+  rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse) {};
 }
 
 message PermissionSet {

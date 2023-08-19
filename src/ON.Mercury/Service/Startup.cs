@@ -29,7 +29,11 @@ public class Startup
     {
         services.AddGrpcHttpApi();
         services.AddLogging();
-        services.AddControllers();
+        services.AddControllers().AddNewtonsoftJson(options =>
+        {
+            options.UseCamelCasing(false);
+            options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+        });
         services.AddCors(options =>
         {
             options.AddDefaultPolicy(builder =>
@@ -45,6 +49,7 @@ public class Startup
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddSingleton<ICachingService, CachingService>();
         services.AddScoped<MemberRepository>();
+        services.AddScoped<RoleRepository>();
         services.AddJwtAuthentication();
         services.AddSignalR().AddNewtonsoftJsonProtocol(opts =>
         {
