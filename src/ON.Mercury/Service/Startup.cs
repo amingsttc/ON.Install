@@ -89,6 +89,7 @@ public class Startup
             endpoints.MapGrpcService<ChannelService>();
             endpoints.MapGrpcService<RoleService>();
             endpoints.MapGrpcService<MemberService>();
+            endpoints.MapGrpcService<ClaimsService>();
             endpoints.MapHub<ChatHub>("/api/hub");
             endpoints.MapControllers();
         });
