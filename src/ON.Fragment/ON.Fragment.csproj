@@ -68,6 +68,11 @@
     <None Remove="Protos\ON\Fragments\CreatorDashboard\Subscribers\Manage.proto" />
     <None Remove="Protos\ON\Fragments\CreatorDashboard\Subscribers\Mute.proto" />
     <None Remove="Protos\ON\Fragments\Generic\ServiceOps.proto" />
+    <None Remove="Protos\ON\Fragments\Mercury\Channel.proto" />
+    <None Remove="Protos\ON\Fragments\Mercury\Member.proto" />
+    <None Remove="Protos\ON\Fragments\Mercury\Message.proto" />
+    <None Remove="Protos\ON\Fragments\Mercury\Role.proto" />
+    <None Remove="Protos\ON\Fragments\Mercury\Event.proto" />
   </ItemGroup>
 
   <ItemGroup>
@@ -136,6 +141,9 @@
     <Protobuf Include="Protos\ON\Fragments\CreatorDashboard\Subscribers\Mute.proto" />
     <Protobuf Include="Protos\ON\Fragments\Generic\ServiceOps.proto" />
     <Protobuf Include="Protos\ON\Fragments\Authorization\Payment\Paypal\PaypalInterface.proto" GrpcServices="Both" />
+    <Protobuf Include="Protos\ON\Fragments\Mercury\Member.proto" />
+    <Protobuf Include="Protos\ON\Fragments\Mercury\Channel.proto" />
+    <Protobuf Include="Protos\ON\Fragments\Mercury\Role.proto" />
   </ItemGroup>
 
   <ItemGroup>
@@ -149,5 +157,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+
 
 </Project>

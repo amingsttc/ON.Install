@@ -1,0 +1,126 @@
+﻿syntax = "proto3";
+
+package ON.Fragments.Mercury;
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "Protos/ON/Fragments/Mercury/Role.proto";
+
+service ChannelInterface {
+  rpc CreateChannel(CreateChannelRequest) returns (CreateChannelResponse);
+  rpc GetChannels(GetChannelsRequest) returns (GetChannelsResponse);
+  rpc UpdateChannel(UpdateChannelRequest) returns (UpdateChannelResponse);
+  rpc DeleteChannel(DeleteChannelRequest) returns (DeleteChannelResponse);
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
+  rpc GetMessages(GetMessagesRequest) returns (GetMessagesResponse);
+  rpc UpdateMessage(UpdateMessageRequest) returns (UpdateMessageResponse);
+  rpc DeleteMessage(DeleteMessageRequest) returns (DeleteMessageResponse);
+};
+
+message Message {
+  string Id = 1;
+  string ChannelId = 2;
+  string SenderId = 3;
+  string Body = 4;
+  google.protobuf.Timestamp SentOn = 5;
+  google.protobuf.Timestamp ModifiedOn = 6;
+  google.protobuf.Timestamp DeletedOn = 7;
+}
+
+message Channel {
+  string Id = 1;
+  string Name = 2;
+  optional string Category = 3;
+  optional string Description = 4;
+  repeated Message Messages = 5;
+  repeated Role Roles = 6;
+  google.protobuf.Timestamp CreatedOn = 7;
+  optional google.protobuf.Timestamp ModifiedOn = 8;
+}
+
+message CreateChannelRequest {
+  string Name = 1;
+  optional string Category = 2;
+  optional string Description = 3;
+  optional Roles Roles = 4;
+}
+
+message CreateChannelResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  optional Channel Channel = 3;
+}
+
+message GetChannelsRequest {}
+
+message GetChannelsResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  repeated Channel Channels = 3;
+}
+
+message UpdateChannelRequest {
+  string ChannelId = 1;
+  string Name = 2;
+  optional string Category = 3;
+  optional string Description = 4;
+  repeated Roles Roles = 5;
+}
+
+message UpdateChannelResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  optional Channel Channel = 3;
+}
+
+message DeleteChannelRequest {
+  string ChannelId = 1;
+}
+
+message DeleteChannelResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  optional string ChannelId = 3;
+}
+
+message SendMessageRequest {
+  string ChannelId = 1;
+  string SenderId = 2;
+  string Body = 3;
+}
+
+message SendMessageResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  optional Message Message = 3;
+}
+
+message GetMessagesRequest {
+  string ChannelId = 1;
+}
+
+message GetMessagesResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  repeated Message Messages = 3;
+}
+
+message UpdateMessageRequest {
+  string MessageId = 1;
+  string Body = 2;
+}
+
+message UpdateMessageResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  optional Message Updated = 3;
+}
+
+message DeleteMessageRequest {
+  string MessageId = 1;
+}
+
+message DeleteMessageResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  optional Message Deleted = 3;
+}
