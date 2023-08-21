@@ -27,42 +27,25 @@ namespace ON.Mercury.Service.Services
         {
             if (string.IsNullOrEmpty(request.UserID))
                 return new GetClaimsResponse();
-
-            //var user = ONUserHelper.ParseUser(context.GetHttpContext());
             
             var res = new GetClaimsResponse();
             var member = await _members.GetMember(request.UserID);
 
-            // if (member is null)
-            //     return new GetClaimsResponse();
+            if (member is null)
+                return new GetClaimsResponse();
             
+            var serialized = JsonConvert.SerializeObject(member, settings: new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore
+            });
+                
             res.Claims.Add(new ClaimRecord()
             {
-                Name = "MercuryUsername",
-                Value = member.Username,
+                Name = "MercuryProfile",
+                Value = serialized,
                 ExpiresOnUTC = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(DateTime.MaxValue.ToUniversalTime())
             });
-
-            // TODO: Fix this
-            // if (!member.Roles.IsNullOrEmpty())
-            // {
-            //     RepeatedField<Role> roles = new RepeatedField<Role>();
-            //     foreach (var role in member.Roles)
-            //     {
-            //         //  TODO: Maybe add a claim for each role to reduce Parse time
-            //         roles.Add(role.ToPb());
-            //     }
-            //
-            //     res.Claims.Add(new ClaimRecord()
-            //     {
-            //         Name = "MercuryRoles",
-            //         Value = JsonConvert.SerializeObject(roles, settings: new JsonSerializerSettings()
-            //         {
-            //             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            //             NullValueHandling = NullValueHandling.Ignore
-            //         })
-            //     });
-            // }
 
             return res;
         }
