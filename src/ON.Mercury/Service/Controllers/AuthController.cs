@@ -10,7 +10,7 @@ using ON.Mercury.Service.Database.Repositories;
 namespace ON.Mercury.Service.Controllers
 {
     [ApiController]
-    [Route("/api/{Controller}")]
+    [Route("/api/mercury/{Controller}")]
     public class AuthController :  ControllerBase
     {
         private readonly ILogger<AuthController> _logger;

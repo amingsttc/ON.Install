@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using ON.Authentication;
 using ON.Mercury.Service.Caching;
@@ -52,6 +53,10 @@ public class Startup
         services.AddScoped<RoleRepository>();
         services.AddScoped<ChannelRepository>();
         services.AddJwtAuthentication();
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("mercury", new OpenApiInfo { Title = "Mercury API" });
+        });
         services.AddSignalR().AddNewtonsoftJsonProtocol(opts =>
         {
             opts.PayloadSerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -65,6 +70,15 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+        app.UseSwagger(c =>
+        {
+            c.RouteTemplate = "api/{documentName}/swagger.json";
+        });
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/api/mercury/swagger.json", "Mercury API");
+            c.RoutePrefix = "api/mercury";
+        });
         if (env.IsDevelopment())
             Program.IsDevelopment = true;
         app.UseRouting();

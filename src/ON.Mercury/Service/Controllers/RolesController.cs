@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace ON.Mercury.Service.Controllers
 {
     [ApiController]
-    [Route("/api/{Controller}")]
+    [Route("/api/mercury/{Controller}")]
     public class RolesController : ControllerBase
     {
         // TODO: Look Into CQRS

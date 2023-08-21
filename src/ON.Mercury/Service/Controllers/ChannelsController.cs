@@ -11,7 +11,7 @@ namespace ON.Mercury.Service.Controllers
 {
     
     [ApiController]
-    [Route("/api/{Controller}")]
+    [Route("/api/mercury/{Controller}")]
     public class ChannelsController : ControllerBase
     {
         private readonly ILogger<ChannelsController> _logger;
