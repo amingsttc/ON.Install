@@ -39,7 +39,7 @@ public class Startup
         {
             options.AddDefaultPolicy(builder =>
             {
-                builder.WithOrigins("http://127.0.0.1:5173")
+                builder.WithOrigins("http://127.0.0.1:5173", "http://localhost:5173")
                     .AllowAnyHeader()
                     .WithMethods("GET", "POST", "PUT", "DELETE")
                     .AllowCredentials();
@@ -82,15 +82,15 @@ public class Startup
         if (env.IsDevelopment())
             Program.IsDevelopment = true;
         app.UseRouting();
-        app.UseJwtAuthentication();
         app.UseCors();
+        app.UseJwtAuthentication();
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapGrpcService<ChannelService>();
             endpoints.MapGrpcService<RoleService>();
             endpoints.MapGrpcService<MemberService>();
             endpoints.MapGrpcService<ClaimsService>();
-            endpoints.MapHub<ChatHub>("/api/hub");
+            endpoints.MapHub<ChatHub>("/api/mercury/hub");
             endpoints.MapControllers();
         });
     }

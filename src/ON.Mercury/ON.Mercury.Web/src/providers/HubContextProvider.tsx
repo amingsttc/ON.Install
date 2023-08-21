@@ -16,7 +16,6 @@ function HubContextProvider({
   hubConnection,
   children,
 }: HubContextProviderProps) {
-  const channels = useQuery(["channels"], async () => await fetchAllChannels());
   return (
     <HubConnectionContext.Provider value={hubConnection}>
       {children}
