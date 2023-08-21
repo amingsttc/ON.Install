@@ -6,51 +6,14 @@ import "google/api/annotations.proto";
 import "Protos/ON/Fragments/Mercury/Role.proto";
 
 service ChannelInterface {
-  rpc CreateChannel(CreateChannelRequest) returns (CreateChannelResponse) {
-    option (google.api.http) = {
-      post: "/api/v1/mercury/channels",
-      body: "*"
-    };
-  };
-  rpc GetChannels(GetChannelsRequest) returns (GetChannelsResponse) {
-    option (google.api.http) = {
-      get: "/api/channels"
-    };
-  };
-  rpc UpdateChannel(UpdateChannelRequest) returns (UpdateChannelResponse) {
-    option (google.api.http) = {
-      put: "/api/v1/mercury/channels/{ChannelId}/update",
-      body: "*"
-    };
-  }
-  rpc DeleteChannel(DeleteChannelRequest) returns (DeleteChannelResponse) {
-    option (google.api.http) = {
-      delete: "/api/v1/mercury/channels/{ChannelId}/delete",
-    };
-  };
-  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {
-    option (google.api.http) = {
-      post: "/api/v1/mercury/channels/{ChannelId}/messages",
-      body: "*"
-    };
-  };
-  rpc GetMessages(GetMessagesRequest) returns (GetMessagesResponse) {
-    option (google.api.http) = {
-      get: "/api/v1/mercury/channels/{ChannelId}/messages"
-    }; 
-  };
-  rpc UpdateMessage(UpdateMessageRequest) returns (UpdateMessageResponse) {
-    option (google.api.http) = {
-      put: "/api/v1/mercury/messages/{MessageId}/update",
-      body: "*"
-    };
-  };
-  rpc DeleteMessage(DeleteMessageRequest) returns (DeleteMessageResponse) {
-    option (google.api.http) = {
-      put: "/api/v1/mercury/messages/{MessageId}/delete",
-      body: "*"
-    };
-  };
+  rpc CreateChannel(CreateChannelRequest) returns (CreateChannelResponse);
+  rpc GetChannels(GetChannelsRequest) returns (GetChannelsResponse);
+  rpc UpdateChannel(UpdateChannelRequest) returns (UpdateChannelResponse);
+  rpc DeleteChannel(DeleteChannelRequest) returns (DeleteChannelResponse);
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
+  rpc GetMessages(GetMessagesRequest) returns (GetMessagesResponse);
+  rpc UpdateMessage(UpdateMessageRequest) returns (UpdateMessageResponse);
+  rpc DeleteMessage(DeleteMessageRequest) returns (DeleteMessageResponse);
 };
 
 message Message {

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using ON.Fragments.Mercury;
 using ON.Mercury.Service.Database.Repositories;
 using ON.Mercury.Service.Models.Channels;
 using System.Threading;
@@ -10,12 +12,12 @@ namespace ON.Mercury.Service.Controllers
     
     [ApiController]
     [Route("/api/{Controller}")]
-    public class ChannelController : ControllerBase
+    public class ChannelsController : ControllerBase
     {
-        private readonly ILogger<ChannelController> _logger;
+        private readonly ILogger<ChannelsController> _logger;
         private readonly ChannelRepository _channels;
         
-        public ChannelController(ILogger<ChannelController> logger, ChannelRepository channels)
+        public ChannelsController(ILogger<ChannelsController> logger, ChannelRepository channels)
         {
             _logger = logger;
             _channels = channels;
@@ -35,7 +37,7 @@ namespace ON.Mercury.Service.Controllers
             return Ok(channels);
         }
 
-        [HttpPut("/{channelId}")]
+        [HttpPut("{channelId}")]
         public async Task<IActionResult> UpdateChannelAsync(string channelId, [FromBody] CreateOrUpdateChannel request, CancellationToken cancellationToken = default)
         {
             var channel = await _channels.UpdateChannelAsync(channelId, request.Name, request.Category, request.Description, cancellationToken);
@@ -43,12 +45,33 @@ namespace ON.Mercury.Service.Controllers
             return Ok(channel);
         }
 
-        [HttpDelete("/{channelId}")]
+        [HttpDelete("{channelId}")]
         public async Task<IActionResult> DeleteChannelAsync(string channelId, CancellationToken cancellationToken = default)
         {
             var deletedChannelId = await _channels.DeleteChannelAsync(channelId, cancellationToken);
             if (string.IsNullOrEmpty(deletedChannelId)) return BadRequest("Channel failed to delete");
             return Ok($"Channel Id: {deletedChannelId}");
+        }
+
+        [HttpGet("{channelId}/messages")]
+        public async Task<IActionResult> GetMessagesAsync([FromRoute]string channelId, CancellationToken cancellationToken = default)
+        {
+            var messages = await _channels.GetMessagesAsync(channelId, cancellationToken: cancellationToken);
+            if (messages == null)
+                return BadRequest("No messages found");
+
+            return Ok(messages);
+        }
+
+        [HttpPost("{channelId}/messages")]
+        public async Task<IActionResult> SendMessageAsync(string channelId, [FromBody] SendMessageRequest request, CancellationToken cancellationToken = default)
+        {
+            var newMessage = await _channels.SendMessageAsync(channelId, request.SenderId, request.Body, cancellationToken);
+            if (newMessage == null)
+            {
+                return BadRequest("Error");
+            }
+            return Ok(newMessage);
         }
     }
 }

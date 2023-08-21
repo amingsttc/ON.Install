@@ -27,7 +27,7 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddGrpcHttpApi();
+        services.AddGrpc();
         services.AddLogging();
         services.AddControllers().AddNewtonsoftJson(options =>
         {

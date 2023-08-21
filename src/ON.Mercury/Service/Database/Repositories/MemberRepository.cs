@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using ON.Mercury.Service.Caching;
 using ON.Mercury.Service.Database.Entities;
 using System.Threading.Tasks;
@@ -40,6 +41,12 @@ namespace ON.Mercury.Service.Database.Repositories
             }
 
             member = await CreateMember(id, username);
+            return member;
+        }
+
+        public async Task<MemberEntity?> GetMember(string id)
+        {
+            var member = await _postgres.Members.Include(m => m.Roles).FirstOrDefaultAsync(m => m.Id == id);
             return member;
         }
     }

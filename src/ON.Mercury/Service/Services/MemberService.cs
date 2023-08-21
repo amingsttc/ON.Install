@@ -97,10 +97,10 @@ public class MemberService : MemberInterface.MemberInterfaceBase
         }
     }
 
-    public override Task<GetMemberResponse> GetMembers(GetMembersRequest request, ServerCallContext context)
-    {
-        return base.GetMembers(request, context);
-    }
+    // public override Task<GetMemberResponse> GetMembers(GetMembersRequest request, ServerCallContext context)
+    // {
+    //     return base.GetMembers(request, context);
+    // }
 
     public override async Task<UpdateMemberResponse> UpdateMember(UpdateMemberRequest request, ServerCallContext context)
     {

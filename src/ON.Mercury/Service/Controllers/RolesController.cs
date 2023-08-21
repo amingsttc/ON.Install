@@ -45,7 +45,7 @@ namespace ON.Mercury.Service.Controllers
             return Ok($"Role Created: {newRoleId}");
         }
 
-        [HttpPut("/{roleId}")]
+        [HttpPut("{roleId}")]
         public async Task<IActionResult> UpdateRoleAsync(string roleId, [FromBody] UpdateRoleRequest request, CancellationToken cancellationToken = default)
         {
             var updatedRole = await _roles.UpdateRoleAsync(roleId, request.Name, request.Permissions, request.Hierarchy, cancellationToken);
@@ -53,7 +53,7 @@ namespace ON.Mercury.Service.Controllers
             return Ok(updatedRole);
         }
 
-        [HttpDelete("/{roleId}")]
+        [HttpDelete("{roleId}")]
         public async Task<IActionResult> DeleteRoleAsync(string roleId, CancellationToken cancellationToken = default)
         {
             var deletedRoleId = await _roles.DeleteRoleAsync(roleId, cancellationToken);

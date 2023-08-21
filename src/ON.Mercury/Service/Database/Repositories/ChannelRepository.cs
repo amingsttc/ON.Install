@@ -65,10 +65,19 @@ namespace ON.Mercury.Service.Database.Repositories
 
         public async Task<IReadOnlyList<MessageEntity>?> GetMessagesAsync(string channelId, MessageSenderParams messageSenderParams = MessageSenderParams.SenderId, CancellationToken cancellationToken = default)
         {
-            var channel = await _postgres.Channels.Include(c => c.Messages.Where(m => m.DeletedOn == null).TakeLast(10)).FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
+            var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
             if (channel is null) return null;
+            var messages = await _postgres.Messages.Where(m => m.ChannelId == channelId && m.DeletedOn == null).OrderByDescending(m => m.SentOn).ToListAsync(cancellationToken);
+            return messages;
+        }
 
-            return channel.Messages.ToList();
+        public async Task<MessageEntity> SendMessageAsync(string channelId, string senderId, string body, CancellationToken cancellationToken = default)
+        {
+            var newMessage = new MessageEntity(channelId, senderId, body);
+            await _postgres.Messages.AddAsync(newMessage, cancellationToken);
+            await _postgres.SaveChangesAsync(cancellationToken);
+
+            return newMessage;
         }
     }
 }
