@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ON.Mercury.Service.Caching;
 using ON.Mercury.Service.Database.Entities;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace ON.Mercury.Service.Database.Repositories
 {
@@ -46,7 +48,8 @@ namespace ON.Mercury.Service.Database.Repositories
 
         public async Task<MemberEntity?> GetMember(string id)
         {
-            var member = await _postgres.Members.Include(m => m.Roles).FirstOrDefaultAsync(m => m.Id == id);
+            var member = await _postgres.Members.Where(m => m.Id == id).Include(m => m.Roles).FirstOrDefaultAsync();
+            _logger.LogInformation(JsonConvert.SerializeObject(member));
             return member;
         }
     }

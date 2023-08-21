@@ -21,8 +21,8 @@ public class RoleEntity : IPostgresEntity<Role, RoleEntity>
     public DateTime CreatedOn { get; private set; }
     public DateTime? ModifiedOn { get; set; }
 
-    [NotMapped] public ICollection<MemberEntity> Members { get; set; } = new List<MemberEntity>();
-    [NotMapped] public ICollection<ChannelEntity> Channels { get; set; } = new List<ChannelEntity>();
+    [NotMapped] [JsonIgnore] public ICollection<MemberEntity> Members { get; set; } = new List<MemberEntity>();
+    [NotMapped] [JsonIgnore] public ICollection<ChannelEntity> Channels { get; set; } = new List<ChannelEntity>();
 
     public RoleEntity(string name, int hierarchy)
     {

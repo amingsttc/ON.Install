@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using ON.Mercury.Service.Database.Entities;
 using Service.Database.Entities;
 
 namespace ON.Mercury.Service.Database.UnionTables;
 
+[Table("members_roles")]
 public class MembersRoles
 {
     public string MemberId { get; set; }
@@ -15,7 +17,7 @@ public class MembersRoles
     {
         modelBuilder.Entity<MembersRoles>()
             .Property(x => x.MemberId)
-            .HasColumnName("member_id");
+            .HasColumnName("profile_id");
 
         modelBuilder.Entity<MembersRoles>()
             .Property(x => x.RoleId)
