@@ -67,7 +67,10 @@ namespace ON.Mercury.Service.Database.Repositories
         {
             var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
             if (channel is null) return null;
-            var messages = await _postgres.Messages.Where(m => m.ChannelId == channelId && m.DeletedOn == null).OrderByDescending(m => m.SentOn).ToListAsync(cancellationToken);
+            var messages = await _postgres.Messages
+                .Where(m => m.ChannelId == channelId && m.DeletedOn == null)
+                .OrderBy(m => m.SentOn)
+                .ToListAsync(cancellationToken);
             return messages;
         }
 
