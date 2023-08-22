@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ON.Authentication.Shared", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "on.mercury.web", "ON.Mercury.Web\on.mercury.web.esproj", "{9860045E-E061-4694-84C7-6C4501792E28}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ON.Settings.Shared", "..\ON.Settings\Shared\ON.Settings.Shared.csproj", "{B6BC6206-4F39-4826-A883-9661166A0565}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,5 +36,9 @@ Global
 		{9860045E-E061-4694-84C7-6C4501792E28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9860045E-E061-4694-84C7-6C4501792E28}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{9860045E-E061-4694-84C7-6C4501792E28}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{B6BC6206-4F39-4826-A883-9661166A0565}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6BC6206-4F39-4826-A883-9661166A0565}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6BC6206-4F39-4826-A883-9661166A0565}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6BC6206-4F39-4826-A883-9661166A0565}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
