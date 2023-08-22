@@ -59,52 +59,52 @@ public class ChatService : ChatInterface.ChatInterfaceBase
         }
     }
 
-    public override async Task<GetMessagesResponse> GetMessages(GetMessagesRequest request, ServerCallContext context)
-    {
-        try
-        {
-            // TODO: Rework this to use the cache
-            var channel = await _postgres.Channels.Where(c => c.Id == request.ChannelId).Include(m => m.Messages)
-                .FirstOrDefaultAsync();
-            if (channel is null)
-            {
-                return new GetMessagesResponse()
-                {
-                    IsSuccess = false,
-                    Error = "Channel Not Found"
-                };
-            }
-            _logger.LogInformation(JsonConvert.SerializeObject(channel));
-            if (channel.Messages.Count == 0)
-            {
-                return new GetMessagesResponse()
-                {
-                    IsSuccess = true,
-                };
-            }
-
-            var response = new GetMessagesResponse()
-            {
-                IsSuccess = true,
-                Error = ""
-            };
-
-            foreach (var message in channel.Messages)
-            {
-                response.Messages.Add(message.ToPb());
-            }
-
-            return response;
-        }
-        catch (Exception e)
-        {
-            _logger.LogInformation(JsonConvert.SerializeObject(e));
-            return new GetMessagesResponse()
-            {
-                IsSuccess = false
-            };
-        }
-    }
+    // public override async Task<GetMessagesResponse> GetMessages(GetMessagesRequest request, ServerCallContext context)
+    // {
+    //     try
+    //     {
+    //         // TODO: Rework this to use the cache
+    //         var channel = await _postgres.Channels.Where(c => c.Id == request.ChannelId).Include(m => m.Messages)
+    //             .FirstOrDefaultAsync();
+    //         if (channel is null)
+    //         {
+    //             return new GetMessagesResponse()
+    //             {
+    //                 IsSuccess = false,
+    //                 Error = "Channel Not Found"
+    //             };
+    //         }
+    //         _logger.LogInformation(JsonConvert.SerializeObject(channel));
+    //         if (channel.Messages.Count == 0)
+    //         {
+    //             return new GetMessagesResponse()
+    //             {
+    //                 IsSuccess = true,
+    //             };
+    //         }
+    //
+    //         var response = new GetMessagesResponse()
+    //         {
+    //             IsSuccess = true,
+    //             Error = ""
+    //         };
+    //
+    //         foreach (var message in channel.Messages)
+    //         {
+    //             response.Messages.Add(message);
+    //         }
+    //
+    //         return response;
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         _logger.LogInformation(JsonConvert.SerializeObject(e));
+    //         return new GetMessagesResponse()
+    //         {
+    //             IsSuccess = false
+    //         };
+    //     }
+    // }
 
     public override async Task<UpdateMessageResponse> UpdateMessage(UpdateMessageRequest request, ServerCallContext context)
     {

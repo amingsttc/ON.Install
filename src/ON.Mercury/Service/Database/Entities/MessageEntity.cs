@@ -19,7 +19,7 @@ public class MessageEntity : IPostgresEntity<Message, MessageEntity>
     public DateTime? ModifiedOn { get; set; }
     public DateTime? DeletedOn { get; set; }
     
-    [NotMapped] [JsonIgnore] public ChannelEntity Channel { get; set; }
+    [NotMapped] [JsonIgnore] public Channel Channel { get; set; }
     
     public MessageEntity() {}
 
@@ -84,10 +84,10 @@ public class MessageEntity : IPostgresEntity<Message, MessageEntity>
             .Property(x => x.DeletedOn)
             .HasColumnName("deleted_on");
 
-        modelBuilder.Entity<MessageEntity>()
-            .HasOne(x => x.Channel)
-            .WithMany(x => x.Messages)
-            .HasForeignKey(x => x.ChannelId)
-            .IsRequired();
+        // modelBuilder.Entity<MessageEntity>()
+        //     .HasOne(x => x.Channel)
+        //     .WithMany(x => x.Messages)
+        //     .HasForeignKey(x => x.ChannelId)
+        //     .IsRequired();
     }
 }

@@ -6,13 +6,14 @@ using ON.Mercury.Service.Database.Entities;
 using ON.Mercury.Service.Database.UnionTables;
 using Service.Database.Entities;
 using System;
+using Channel = ON.Mercury.Service.Models.Channels.Channel;
 
 namespace ON.Mercury.Service.Database;
 
 public sealed class PostgresContext : DbContext
 {
     private readonly IConfiguration _configuration;
-    public DbSet<ChannelEntity> Channels { get; set; }
+    public DbSet<Channel> Channels { get; set; }
     public DbSet<MessageEntity> Messages { get; set; }
     public DbSet<MemberEntity> Members { get; set; }
     public DbSet<RoleEntity> Roles { get; set; }
@@ -23,7 +24,7 @@ public sealed class PostgresContext : DbContext
     public PostgresContext(IConfiguration configuration)
     {
         _configuration = configuration;
-        Channels = Set<ChannelEntity>();
+        Channels = Set<Channel>();
         Messages = Set<MessageEntity>();
         Members = Set<MemberEntity>();
         Roles = Set<RoleEntity>();
@@ -39,12 +40,14 @@ public sealed class PostgresContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        ChannelEntity.SetColumnMetadata(modelBuilder);
+        //ChannelEntity.SetColumnMetadata(modelBuilder);
         MessageEntity.SetColumnMetadata(modelBuilder);
         MemberEntity.SetColumnMetadata(modelBuilder);
         RoleEntity.SetColumnMetadata(modelBuilder);
         ChannelsRoles.SetColumnMetadata(modelBuilder);
         MembersRoles.SetColumnMetadata(modelBuilder);
+        Channel.SetColumnMetadata(modelBuilder);
+        
 
         modelBuilder.Entity<AuditItem>()
             .ToTable("audit_items");

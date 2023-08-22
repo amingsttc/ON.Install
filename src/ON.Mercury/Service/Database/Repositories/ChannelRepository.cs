@@ -1,12 +1,15 @@
 ﻿#nullable enable
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ON.Mercury.Service.Models.Channels;
 using Service.Database.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Channel = ON.Mercury.Service.Models.Channels;
 
 namespace ON.Mercury.Service.Database.Repositories
 {
@@ -22,22 +25,29 @@ namespace ON.Mercury.Service.Database.Repositories
             _postgres = postgres;
         }
 
-        public async Task<ChannelEntity> CreateChannelAsync(string name, string category = "", string description = "", CancellationToken cancellationToken = default)
+        public async Task<Channel.Channel> CreateChannelAsync(string name, string category = "", string description = "", CancellationToken cancellationToken = default)
         {
-            var newChannel = new ChannelEntity(name, category, description);
+            var newChannel = new Channel.Channel()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Category = category,
+                Description = description,
+                CreatedOn = Timestamp.FromDateTime(DateTime.UtcNow),
+                ModifiedOn = Timestamp.FromDateTime(DateTime.UtcNow)
+            };
             await _postgres.Channels.AddAsync(newChannel, cancellationToken);
             await _postgres.SaveChangesAsync(cancellationToken);
 
             return newChannel;
         }
 
-        public async Task<IReadOnlyList<ChannelEntity>> GetChannelsAsync(CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyList<Channel.Channel>> GetChannelsAsync(CancellationToken cancellationToken = default)
         {
             var channels = await _postgres.Channels.ToListAsync(cancellationToken);
             return channels;
         }
 
-        public async Task<ChannelEntity?> UpdateChannelAsync(string id, string name, string category = "", string description = "", CancellationToken cancellationToken = default)
+        public async Task<Channel.Channel> UpdateChannelAsync(string id, string name, string category = "", string description = "", CancellationToken cancellationToken = default)
         {
             var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
             if (channel is null) return null;
@@ -65,13 +75,14 @@ namespace ON.Mercury.Service.Database.Repositories
 
         public async Task<IReadOnlyList<MessageEntity>?> GetMessagesAsync(string channelId, MessageSenderParams messageSenderParams = MessageSenderParams.SenderId, CancellationToken cancellationToken = default)
         {
-            var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
-            if (channel is null) return null;
-            var messages = await _postgres.Messages
-                .Where(m => m.ChannelId == channelId && m.DeletedOn == null)
-                .OrderBy(m => m.SentOn)
-                .ToListAsync(cancellationToken);
-            return messages;
+            // var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
+            // if (channel is null) return null;
+            // var messages = await _postgres.Messages
+            //     .Where(m => m.ChannelId == channelId && m.DeletedOn == null)
+            //     .OrderBy(m => m.SentOn)
+            //     .ToListAsync(cancellationToken);
+            // return messages;
+            throw new NotImplementedException();
         }
 
         public async Task<MessageEntity> SendMessageAsync(string channelId, string senderId, string body, CancellationToken cancellationToken = default)
