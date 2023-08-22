@@ -7,6 +7,7 @@ import {
 export function buildSignalR(url: string, token: string): HubConnection {
   var connection: HubConnection = new HubConnectionBuilder()
     .withUrl(url, {
+      accessTokenFactory: () => token,
       headers: {
         Authorization: token,
       },
@@ -20,7 +21,7 @@ export function buildSignalR(url: string, token: string): HubConnection {
     globalThis.hubConnection = undefined;
   });
 
-  connection.start();
+  //connection.start();
 
   return connection;
 }

@@ -36,20 +36,20 @@ namespace ON.Mercury.Service.Database.Repositories
 
         public async Task<MemberEntity> GetOrCreateMember(string id, string username)
         {
-            var member = await _postgres.Members.FindAsync(id);
-            if (member is not null)
+            var member = await GetMember(id);
+            if (member is null)
             {
+                member = await CreateMember(id, username);
                 return member;
             }
 
-            member = await CreateMember(id, username);
             return member;
         }
 
         public async Task<MemberEntity?> GetMember(string id)
         {
             var member = await _postgres.Members.Where(m => m.Id == id).Include(m => m.Roles).FirstOrDefaultAsync();
-            _logger.LogInformation(JsonConvert.SerializeObject(member));
+            //_logger.LogInformation(JsonConvert.SerializeObject(member));
             return member;
         }
     }

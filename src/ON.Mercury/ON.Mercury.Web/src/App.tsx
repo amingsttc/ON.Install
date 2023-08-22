@@ -6,18 +6,21 @@ import { config } from "./config/config";
 import { AppView } from "./views/AppView";
 import LoadingView from "./views/LoadingView";
 import SettingsView from "./views/SettingsView";
+import Cookies from "js-cookie";
 import { fetchAllChannels } from "./api/channels.api";
 
 const queryClient = new QueryClient();
-globalThis.token = config.authToken;
+
 function App() {
-  const [token, setToken] = useState(globalThis.token);
+  const [token, setToken] = useState(Cookies.get("token"));
   const [isLoading, setIsLoading] = useState(false);
   const [showServerSettings, setShowServerSettings] = useState(false);
 
   useEffect(() => {
+    Cookies.set("token", config.authToken, { domain: "http://localhost:5173" });
     if (token === undefined) {
       setIsLoading(true);
+      console.log(Cookies.get());
     } else {
       setIsLoading(false);
       if (globalThis.hubConnection === undefined) {
@@ -25,6 +28,8 @@ function App() {
           `${config.mercuryApi}/hub`,
           token as string,
         );
+
+        globalThis.hubConnection.start();
       }
     }
   }, [token, setToken, globalThis.hubConnection]);

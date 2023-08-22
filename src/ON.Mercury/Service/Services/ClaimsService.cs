@@ -47,6 +47,8 @@ namespace ON.Mercury.Service.Services
                 ExpiresOnUTC = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(DateTime.MaxValue.ToUniversalTime())
             });
 
+            var user = ONUserHelper.ParseUser(context.GetHttpContext());
+
             return res;
         }
     }
