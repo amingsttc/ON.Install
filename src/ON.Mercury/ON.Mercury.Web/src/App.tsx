@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./assets/App.css";
-import { QueryClient, useQueries, useQuery } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQueries,
+  useQuery,
+} from "@tanstack/react-query";
 import { buildSignalR } from "./signalR/signalR";
 import { config } from "./config/config";
 import { AppView } from "./views/AppView";
@@ -8,21 +13,24 @@ import LoadingView from "./views/LoadingView";
 import SettingsView from "./views/SettingsView";
 import Cookies from "js-cookie";
 import { fetchAllChannels } from "./api/channels.api";
+import axios from "axios";
+import { authMutation } from "./layouts/_root";
 
 const queryClient = new QueryClient();
 
+globalThis.token = localStorage.getItem("jwt");
+
 function App() {
-  const [token, setToken] = useState(Cookies.get("token"));
+  const [token, setToken] = useState(globalThis.token);
   const [isLoading, setIsLoading] = useState(false);
   const [showServerSettings, setShowServerSettings] = useState(false);
 
   useEffect(() => {
-    Cookies.set("token", config.authToken, { domain: "http://localhost:5173" });
     if (token === undefined) {
       setIsLoading(true);
-      console.log(Cookies.get());
     } else {
-      setIsLoading(false);
+      let c = authMutation.mutateAsync();
+      console.log(c);
       if (globalThis.hubConnection === undefined) {
         globalThis.hubConnection = buildSignalR(
           `${config.mercuryApi}/hub`,

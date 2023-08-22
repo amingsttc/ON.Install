@@ -5,11 +5,7 @@ import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
 import "Protos/ON/Fragments/Mercury/Role.proto";
 
-service ChannelInterface {
-  rpc CreateChannel(CreateChannelRequest) returns (CreateChannelResponse);
-  rpc GetChannels(GetChannelsRequest) returns (GetChannelsResponse);
-  rpc UpdateChannel(UpdateChannelRequest) returns (UpdateChannelResponse);
-  rpc DeleteChannel(DeleteChannelRequest) returns (DeleteChannelResponse);
+service ChatInterface {
   rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
   rpc GetMessages(GetMessagesRequest) returns (GetMessagesResponse);
   rpc UpdateMessage(UpdateMessageRequest) returns (UpdateMessageResponse);

@@ -62,16 +62,5 @@ namespace ON.Mercury.Service.Controllers
 
             return Ok(messages);
         }
-
-        [HttpPost("{channelId}/messages")]
-        public async Task<IActionResult> SendMessageAsync(string channelId, [FromBody] SendMessageRequest request, CancellationToken cancellationToken = default)
-        {
-            var newMessage = await _channels.SendMessageAsync(channelId, request.SenderId, request.Body, cancellationToken);
-            if (newMessage == null)
-            {
-                return BadRequest("Error");
-            }
-            return Ok(newMessage);
-        }
     }
 }

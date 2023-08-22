@@ -1,17 +1,12 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ON.Authentication;
-using ON.Mercury.Service.Database;
 using ON.Mercury.Service.Models.Auth;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using ON.Fragments.Authentication;
+using ON.Mercury.Service.Database.Entities;
 using ON.Mercury.Service.Database.Repositories;
-using ON.Settings;
 
 namespace ON.Mercury.Service.Controllers
 {
@@ -28,14 +23,15 @@ namespace ON.Mercury.Service.Controllers
             _members = members;
         }
 
-        [HttpPost("authenticate")]
+        [HttpPost]
         public async Task<IActionResult> Authenticate()
         {
             var user = ONUserHelper.ParseUser(HttpContext);
             if (user is not null)
             {
                 var username = user.ToClaims().Where(c => c.Type == "Display").Select(c => c.Value).FirstOrDefault();
-                var member = await _members.GetOrCreateMember(user.Id.ToString(), username);
+                var profileStr = user.ToClaims().Where(c => c.Type == "MercuryProfile").Select(c => c.Value).FirstOrDefault();
+                var member = JsonConvert.DeserializeObject<MemberEntity>(profileStr);
                 return Ok(new AuthenticateResponse()
                 {
                     IsSuccess = true,

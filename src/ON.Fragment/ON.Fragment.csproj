@@ -70,7 +70,7 @@
     <None Remove="Protos\ON\Fragments\CreatorDashboard\Subscribers\Manage.proto" />
     <None Remove="Protos\ON\Fragments\CreatorDashboard\Subscribers\Mute.proto" />
     <None Remove="Protos\ON\Fragments\Generic\ServiceOps.proto" />
-    <None Remove="Protos\ON\Fragments\Mercury\Channel.proto" />
+    <None Remove="Protos\ON\Fragments\Mercury\Chat.proto" />
     <None Remove="Protos\ON\Fragments\Mercury\Member.proto" />
     <None Remove="Protos\ON\Fragments\Mercury\Message.proto" />
     <None Remove="Protos\ON\Fragments\Mercury\Role.proto" />
@@ -146,8 +146,8 @@
     <Protobuf Include="Protos\ON\Fragments\Generic\ServiceOps.proto" />
     <Protobuf Include="Protos\ON\Fragments\Authorization\Payment\Paypal\PaypalInterface.proto" GrpcServices="Both" />
     <Protobuf Include="Protos\ON\Fragments\Mercury\Member.proto" />
-    <Protobuf Include="Protos\ON\Fragments\Mercury\Channel.proto" />
     <Protobuf Include="Protos\ON\Fragments\Mercury\Role.proto" />
+    <Protobuf Include="Protos\ON\Fragments\Mercury\Chat.proto" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,15 +7,19 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using ON.Authentication;
+using ON.Mercury.Service.Services;
+
 namespace ON.Mercury.Service.Hubs;
 
 public class ChatHub : Hub
 {
     private readonly ILogger<ChatHub> _logger;
+    private readonly ChatService _chatService;
 
-    public ChatHub(ILogger<ChatHub> logger)
+    public ChatHub(ILogger<ChatHub> logger, ChatService chatService)
     {
         _logger = logger;
+        _chatService = chatService;
     }
 
     public override Task OnConnectedAsync()

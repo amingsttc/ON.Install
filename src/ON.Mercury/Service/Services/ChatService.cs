@@ -17,159 +17,19 @@ using Channel = ON.Fragments.Mercury.Channel;
 namespace ON.Mercury.Service.Services;
 
 [Authorize]
-public class ChannelService : ChannelInterface.ChannelInterfaceBase
+public class ChatService : ChatInterface.ChatInterfaceBase
 {
-    private readonly ILogger<ChannelService> _logger;
+    private readonly ILogger<ChatService> _logger;
     private readonly PostgresContext _postgres;
     private readonly ICachingService _cache;
 
-    public ChannelService(ILogger<ChannelService> logger, PostgresContext postgres, ICachingService cache)
+    public ChatService(ILogger<ChatService> logger, PostgresContext postgres, ICachingService cache)
     {
         _logger = logger;
         _postgres = postgres;
         _cache = cache;
     }
-
-    public override async Task<CreateChannelResponse> CreateChannel(CreateChannelRequest request, ServerCallContext context)
-    {
-        try
-        {
-            var newChannel = new ChannelEntity(request.Name, request.Category, request.Description);
-            await _postgres.Channels.AddAsync(newChannel);
-            await _postgres.SaveChangesAsync();
-            await _cache.AddOrSetAsync("channels", new List<Channel>()
-            {
-                newChannel.ToPb()
-            });
-
-            return new CreateChannelResponse()
-            {
-                IsSuccess = true,
-                Error = "",
-                Channel = newChannel.ToPb()
-            };
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
-
     
-    [AllowAnonymous]
-    public override async Task<GetChannelsResponse> GetChannels(GetChannelsRequest request, ServerCallContext context)
-    {
-        try
-        {
-            var channels = await _cache.GetAsync("channels", async () =>
-            {
-                var channels = await _postgres.Channels.ToListAsync();
-                var repeated = new RepeatedField<Channel>();
-                if (channels.Count > 0)
-                {
-                    foreach (var channel in channels)
-                    {
-                        repeated.Add(channel.ToPb());
-                    }
-                }
-            
-                return repeated;
-            });
-            
-            var response = new GetChannelsResponse()
-            {
-                IsSuccess = true,
-                Error = ""
-            };
-
-            response.Channels.Add(channels);
-
-            return response;
-        }
-        catch (Exception e)
-        {
-            _logger.LogInformation(e.Message);
-            return new GetChannelsResponse()
-            {
-                IsSuccess = false,
-            };
-        }
-    }
-
-    public override async Task<UpdateChannelResponse> UpdateChannel(UpdateChannelRequest request, ServerCallContext context)
-    {
-        var foundChannel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == request.ChannelId);
-        if (foundChannel is null)
-        {
-            return new UpdateChannelResponse()
-            {
-                    IsSuccess = false,
-                    Error = "Channel Not Found"
-            };
-        }
-        
-        foundChannel.Name = request.Name;
-        foundChannel.Description = request.Description;
-        foundChannel.Category = request.Category;
-        
-        try
-        {
-            _postgres.Channels.Update(foundChannel);
-            await _postgres.SaveChangesAsync();
-            
-            return new UpdateChannelResponse()
-            {
-                IsSuccess = true,
-                Error = "",
-                Channel = foundChannel.ToPb()
-            };
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return new UpdateChannelResponse()
-            {
-                IsSuccess = false,
-                Error = "Error Updating Channel"
-            };
-        }
-    }
-
-    public override async Task<DeleteChannelResponse> DeleteChannel(DeleteChannelRequest request, ServerCallContext context)
-    {
-        try
-        {
-            var foundChannel = await _postgres.Channels.Where(c => c.Id == request.ChannelId).FirstOrDefaultAsync();
-            if (foundChannel is null)
-            {
-                return new DeleteChannelResponse()
-                {
-                    IsSuccess = false,
-                    Error = "Channel Not Found"
-                };
-            }
-
-            _postgres.Channels.Remove(foundChannel);
-            await _postgres.SaveChangesAsync();
-            return new DeleteChannelResponse()
-            {
-                IsSuccess = true,
-                Error = "",
-                ChannelId = foundChannel.Id
-            };
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return new DeleteChannelResponse()
-            {
-                IsSuccess = false,
-                Error = "Server error"
-            };
-        }
-    }
-
     public override async Task<SendMessageResponse> SendMessage(SendMessageRequest request, ServerCallContext context)
     {
         try
