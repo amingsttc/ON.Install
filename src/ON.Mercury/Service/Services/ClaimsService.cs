@@ -28,8 +28,9 @@ namespace ON.Mercury.Service.Services
             if (string.IsNullOrEmpty(request.UserID))
                 return new GetClaimsResponse();
             
+            var user = ONUserHelper.ParseUser(context.GetHttpContext());
             var res = new GetClaimsResponse();
-            var member = await _members.GetMember(request.UserID);
+            var member = await _members.GetOrCreateMember(request.UserID, user.UserName);
 
             if (member is null)
                 return new GetClaimsResponse();
@@ -47,7 +48,6 @@ namespace ON.Mercury.Service.Services
                 ExpiresOnUTC = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(DateTime.MaxValue.ToUniversalTime())
             });
 
-            var user = ONUserHelper.ParseUser(context.GetHttpContext());
 
             return res;
         }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using ON.Mercury.Service.Database.Entities;
 using ON.Mercury.Service.Models.Channels;
 using Service.Database.Entities;
 
@@ -11,7 +12,7 @@ public class ChannelsRoles
     public string ChannelId { get; set; }
     public Channel Channel { get; set; }
     public string RoleId { get; set; }
-    public RoleEntity Role { get; set; }
+    public Role Role { get; set; }
 
     public static void SetColumnMetadata(ModelBuilder modelBuilder)
     {

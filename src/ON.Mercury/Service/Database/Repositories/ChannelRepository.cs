@@ -2,6 +2,7 @@
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using ON.Mercury.Service.Database.Entities;
 using ON.Mercury.Service.Models.Channels;
 using Service.Database.Entities;
 using System;
@@ -9,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Channel = ON.Mercury.Service.Models.Channels;
 
 namespace ON.Mercury.Service.Database.Repositories
 {
@@ -25,9 +25,9 @@ namespace ON.Mercury.Service.Database.Repositories
             _postgres = postgres;
         }
 
-        public async Task<Channel.Channel> CreateChannelAsync(string name, string category = "", string description = "", CancellationToken cancellationToken = default)
+        public async Task<Channel> CreateChannelAsync(string name, string category = "", string description = "", CancellationToken cancellationToken = default)
         {
-            var newChannel = new Channel.Channel()
+            var newChannel = new Channel()
             {
                 Id = Guid.NewGuid().ToString(),
                 Category = category,
@@ -41,13 +41,13 @@ namespace ON.Mercury.Service.Database.Repositories
             return newChannel;
         }
 
-        public async Task<IReadOnlyList<Channel.Channel>> GetChannelsAsync(CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyList<Channel>> GetChannelsAsync(CancellationToken cancellationToken = default)
         {
             var channels = await _postgres.Channels.ToListAsync(cancellationToken);
             return channels;
         }
 
-        public async Task<Channel.Channel> UpdateChannelAsync(string id, string name, string category = "", string description = "", CancellationToken cancellationToken = default)
+        public async Task<Channel> UpdateChannelAsync(string id, string name, string category = "", string description = "", CancellationToken cancellationToken = default)
         {
             var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
             if (channel is null) return null;

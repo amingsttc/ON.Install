@@ -5,6 +5,7 @@ using ON.Mercury.Service.Caching;
 using ON.Mercury.Service.Database.Entities;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Service.Database.Entities;
 
 namespace ON.Mercury.Service.Database.Repositories
 {
@@ -21,9 +22,9 @@ namespace ON.Mercury.Service.Database.Repositories
             _postgres = postgres;
         }
 
-        public async Task<MemberEntity> CreateMember(string id, string username) 
+        public async Task<Member> CreateMember(string id, string username) 
         {
-            var newMember = new MemberEntity()
+            var newMember = new Member()
             {
                 Id = id,
                 Username = username,
@@ -34,7 +35,7 @@ namespace ON.Mercury.Service.Database.Repositories
             return newMember;
         }
 
-        public async Task<MemberEntity> GetOrCreateMember(string id, string username)
+        public async Task<Member> GetOrCreateMember(string id, string username)
         {
             var member = await GetMember(id);
             if (member is null)
@@ -46,9 +47,9 @@ namespace ON.Mercury.Service.Database.Repositories
             return member;
         }
 
-        public async Task<MemberEntity?> GetMember(string id)
+        public async Task<Member?> GetMember(string id)
         {
-            var member = await _postgres.Members.Where(m => m.Id == id).Include(m => m.Roles).FirstOrDefaultAsync();
+            var member = await _postgres.Members.Where(m => m.Id == id).FirstOrDefaultAsync();
             //_logger.LogInformation(JsonConvert.SerializeObject(member));
             return member;
         }

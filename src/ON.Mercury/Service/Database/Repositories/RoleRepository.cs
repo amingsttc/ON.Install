@@ -1,4 +1,6 @@
 ﻿#nullable enable
+using Google.Protobuf.Collections;
+using Google.Protobuf.WellKnownTypes;
 using Google.Rpc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -6,9 +8,12 @@ using Newtonsoft.Json;
 using ON.Fragments.Mercury;
 using ON.Mercury.Service.Caching;
 using Service.Database.Entities;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Role = Service.Database.Entities.Role;
 
 namespace ON.Mercury.Service.Database.Repositories
 {
@@ -26,7 +31,7 @@ namespace ON.Mercury.Service.Database.Repositories
             _cache = cache;
         }
 
-        public async Task<IReadOnlyList<RoleEntity>?> GetRolesAsync(CancellationToken  cancellationToken = default)
+        public async Task<IReadOnlyList<Role>?> GetRolesAsync(CancellationToken  cancellationToken = default)
         {
             // Check the cache for stored roles
             // var roles = await _cache.GetAsync("roles", async () =>
@@ -41,11 +46,16 @@ namespace ON.Mercury.Service.Database.Repositories
             return rolesFromDb;
         }
 
-        public async Task<string?> CreateRoleAsync(string name, Dictionary<string, bool> permissions, int hierarchy, CancellationToken cancellationToken = default)
+        public async Task<string?> CreateRoleAsync(string name, MapField<string, bool> permissions, int hierarchy, CancellationToken cancellationToken = default)
         {
-            var roleEntry = await _postgres.Roles.AddAsync(new RoleEntity(name, hierarchy)
+            var roleEntry = await _postgres.Roles.AddAsync(new Role
             {
-                Permissions = permissions
+                Id = Guid.NewGuid().ToString(),
+                Name = name,
+                Permissions = permissions,
+                Hierarchy = hierarchy,
+                CreatedOn =  Timestamp.FromDateTime(DateTime.UtcNow),
+                ModifiedOn = Timestamp.FromDateTime(DateTime.UtcNow)
             }, cancellationToken);
             await _postgres.SaveChangesAsync(cancellationToken);
             var role = roleEntry.Entity;
@@ -56,7 +66,7 @@ namespace ON.Mercury.Service.Database.Repositories
             return role.Id;
         }
 
-        public async Task<RoleEntity?> UpdateRoleAsync(string id, string name, Dictionary<string, bool> permissions, int hierarchy, CancellationToken cancellationToken = default)
+        public async Task<Role?> UpdateRoleAsync(string id, string name, MapField<string, bool> permissions, int hierarchy, CancellationToken cancellationToken = default)
         {
             var role = await _postgres.Roles.FirstOrDefaultAsync(r => r.Id == id, cancellationToken: cancellationToken);
             if (role is null) return null;

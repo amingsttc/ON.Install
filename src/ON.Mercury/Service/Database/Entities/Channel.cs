@@ -7,7 +7,7 @@ using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using pb = global::Google.Protobuf;
 
-namespace ON.Mercury.Service.Models.Channels
+namespace ON.Mercury.Service.Database.Entities
 {
     [Table("channels")]
     public sealed partial class Channel : IMessage<Fragments.Mercury.Channel>

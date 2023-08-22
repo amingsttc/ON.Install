@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ON.Mercury.Service.Database.Entities;
 using ON.Mercury.Service.Database.Repositories;
+using Service.Database.Entities;
 
 namespace ON.Mercury.Service.Controllers
 {
@@ -27,17 +28,26 @@ namespace ON.Mercury.Service.Controllers
         public async Task<IActionResult> Authenticate()
         {
             var user = ONUserHelper.ParseUser(HttpContext);
+            var res = new AuthenticateResponse()
+            {
+                IsSuccess = true,
+                Errors = "",
+            };
             if (user is not null)
             {
                 var username = user.ToClaims().Where(c => c.Type == "Display").Select(c => c.Value).FirstOrDefault();
                 var profileStr = user.ToClaims().Where(c => c.Type == "MercuryProfile").Select(c => c.Value).FirstOrDefault();
-                var member = JsonConvert.DeserializeObject<MemberEntity>(profileStr);
-                return Ok(new AuthenticateResponse()
+                if (string.IsNullOrEmpty(profileStr))
                 {
-                    IsSuccess = true,
-                    Errors = "",
-                    Member = member
-                });
+                    var newMember = await _members.CreateMember(user.Id.ToString(), username);
+                    res.Member = newMember;
+                }
+                else
+                {
+                    res.Member = JsonConvert.DeserializeObject<Member>(profileStr);
+                }
+                
+                return Ok(res);
             }
             
             return BadRequest(new AuthenticateResponse()

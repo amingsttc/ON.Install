@@ -9,15 +9,18 @@ namespace ON.Mercury.Service.Database.UnionTables;
 public class MembersRoles
 {
     public string MemberId { get; set; }
-    public MemberEntity Member { get; set; }
+    public Member Member { get; set; }
     public string RoleId { get; set; }
-    public RoleEntity Role { get; set; }
+    public Role Role { get; set; }
 
     public static void SetColumnMetadata(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<MembersRoles>()
+            .HasNoKey();
+        
+        modelBuilder.Entity<MembersRoles>()
             .Property(x => x.MemberId)
-            .HasColumnName("profile_id");
+            .HasColumnName("member_id");
 
         modelBuilder.Entity<MembersRoles>()
             .Property(x => x.RoleId)

@@ -6,7 +6,9 @@ using ON.Mercury.Service.Database.Entities;
 using ON.Mercury.Service.Database.UnionTables;
 using Service.Database.Entities;
 using System;
-using Channel = ON.Mercury.Service.Models.Channels.Channel;
+using Channel = ON.Mercury.Service.Database.Entities.Channel;
+using Member = Service.Database.Entities.Member;
+using Role = Service.Database.Entities.Role;
 
 namespace ON.Mercury.Service.Database;
 
@@ -15,8 +17,8 @@ public sealed class PostgresContext : DbContext
     private readonly IConfiguration _configuration;
     public DbSet<Channel> Channels { get; set; }
     public DbSet<MessageEntity> Messages { get; set; }
-    public DbSet<MemberEntity> Members { get; set; }
-    public DbSet<RoleEntity> Roles { get; set; }
+    public DbSet<Member> Members { get; set; }
+    public DbSet<Role> Roles { get; set; }
     public DbSet<ChannelsRoles> ChannelRoles { get; set; }
     public DbSet<MembersRoles> MemberRoles { get; set; }
     public DbSet<AuditItem> AuditLog { get; set; }
@@ -26,8 +28,8 @@ public sealed class PostgresContext : DbContext
         _configuration = configuration;
         Channels = Set<Channel>();
         Messages = Set<MessageEntity>();
-        Members = Set<MemberEntity>();
-        Roles = Set<RoleEntity>();
+        Members = Set<Member>();
+        Roles = Set<Role>();
         ChannelRoles = Set<ChannelsRoles>();
         MemberRoles = Set<MembersRoles>();
         AuditLog = Set<AuditItem>();
@@ -42,8 +44,8 @@ public sealed class PostgresContext : DbContext
     {
         //ChannelEntity.SetColumnMetadata(modelBuilder);
         MessageEntity.SetColumnMetadata(modelBuilder);
-        MemberEntity.SetColumnMetadata(modelBuilder);
-        RoleEntity.SetColumnMetadata(modelBuilder);
+        Member.SetColumnMetadata(modelBuilder);
+        Role.SetColumnMetadata(modelBuilder);
         ChannelsRoles.SetColumnMetadata(modelBuilder);
         MembersRoles.SetColumnMetadata(modelBuilder);
         Channel.SetColumnMetadata(modelBuilder);
