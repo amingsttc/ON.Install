@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using ON.Mercury.Service.Database.Entities;
 
 namespace Service.Database.Entities
 {
@@ -20,8 +21,12 @@ namespace Service.Database.Entities
         public int Hierarchy { get; set; }
         [NotMapped]
         public MapField<string, bool> Permissions { get; set; }
-        public Timestamp CreatedOn { get; set; } = Timestamp.FromDateTime(DateTime.UtcNow);
-        public Timestamp ModifiedOn { get; set; } = Timestamp.FromDateTime(DateTime.UtcNow);
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+        public DateTime? ModifiedOn { get; set; } = DateTime.UtcNow;
+        public DateTime? DeletedOn { get; set; }
+        [NotMapped] public string MemberId { get; set; }
+        [NotMapped] public RepeatedField<Channel> Channels { get; set; } = new();
+        [NotMapped] public RepeatedField<Member> Members { get; set; } = new();
         public static void SetColumnMetadata(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Role>()
@@ -42,17 +47,18 @@ namespace Service.Database.Entities
             modelBuilder.Entity<Role>()
                 .Property(x => x.CreatedOn)
                 .HasColumnName("created_on")
-                .HasConversion(
-                    v => v.ToDateTime(),
-                    v => Timestamp.FromDateTime(v.ToUniversalTime()))
                 .IsRequired();
 
             modelBuilder.Entity<Role>()
                 .Property(x => x.ModifiedOn)
-                .HasColumnName("modified_on")
-                .HasConversion(
-                    v => v.ToDateTime(),
-                    v => Timestamp.FromDateTime(v.ToUniversalTime()));
+                .HasColumnName("modified_on");
+            
+            modelBuilder.Entity<Role>()
+                .Property(x => x.DeletedOn)
+                .HasColumnName("deleted_on");
+
+            modelBuilder.Entity<Role>()
+                .Ignore(x => x.MemberId);
             
             modelBuilder.Entity<Role>()
                 .Property(x => x.Permissions)

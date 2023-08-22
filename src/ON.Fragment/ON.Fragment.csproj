@@ -75,6 +75,7 @@
     <None Remove="Protos\ON\Fragments\Mercury\Message.proto" />
     <None Remove="Protos\ON\Fragments\Mercury\Role.proto" />
     <None Remove="Protos\ON\Fragments\Mercury\AuditLog.proto" />
+    <None Remove="Protos\ON\Fragments\Mercury\Types.proto" />
   </ItemGroup>
 
   <ItemGroup>
@@ -149,6 +150,7 @@
     <Protobuf Include="Protos\ON\Fragments\Mercury\Role.proto" />
     <Protobuf Include="Protos\ON\Fragments\Mercury\Chat.proto" />
     <Protobuf Include="Protos\ON\Fragments\Mercury\AuditLog.proto" />
+    <Protobuf Include="Protos\ON\Fragments\Mercury\Types.proto" />
   </ItemGroup>
 
   <ItemGroup>

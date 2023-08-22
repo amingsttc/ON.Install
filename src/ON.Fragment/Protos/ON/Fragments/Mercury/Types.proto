@@ -1,0 +1,44 @@
+﻿syntax = "proto3";
+
+package ON.Fragments.Mercury;
+import "google/protobuf/timestamp.proto";
+
+message Role {
+  string Id = 1;
+  string Name = 2;
+  map<string, bool> Permissions = 3;
+  int32 Hierarchy = 6;
+  google.protobuf.Timestamp CreatedOn = 7;
+  optional google.protobuf.Timestamp ModifiedOn = 8;
+  repeated Member Members = 9;
+  repeated Channel Channels = 10;
+}
+
+message Member {
+  string Id = 1;
+  string Username = 2;
+  repeated Role Roles = 3;
+  google.protobuf.Timestamp CreatedOn = 5;
+  google.protobuf.Timestamp ModifiedOn = 6;
+}
+
+message Channel {
+  string Id = 1;
+  string Name = 2;
+  optional string Category = 3;
+  optional string Description = 4;
+  repeated Message Messages = 5;
+  repeated Role Roles = 6;
+  google.protobuf.Timestamp CreatedOn = 7;
+  optional google.protobuf.Timestamp ModifiedOn = 8;
+}
+
+message Message {
+  string Id = 1;
+  string ChannelId = 2;
+  string SenderId = 3;
+  string Body = 4;
+  google.protobuf.Timestamp SentOn = 5;
+  google.protobuf.Timestamp ModifiedOn = 6;
+  google.protobuf.Timestamp DeletedOn = 7;
+}

@@ -12,7 +12,9 @@ using ON.Mercury.Service.Caching;
 using ON.Mercury.Service.Database;
 using Service.Database.Entities;
 using System.Collections.Generic;
+using Google.Protobuf.WellKnownTypes;
 using Channel = ON.Fragments.Mercury.Channel;
+using Message = Service.Database.Entities.Message;
 
 namespace ON.Mercury.Service.Services;
 
@@ -34,13 +36,20 @@ public class ChatService : ChatInterface.ChatInterfaceBase
     {
         try
         {
-            var newMessage = new MessageEntity(request.ChannelId, request.SenderId, request.Body);
+            var newMessage = new Message()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Body = request.Body,
+                ChannelId = request.ChannelId,
+                SenderId = request.ChannelId,
+                SentOn = DateTime.UtcNow
+            };
 
             await _postgres.Messages.AddAsync(newMessage);
             await _postgres.SaveChangesAsync();
             await _cache.AddOrSetAsync($"messages:{request.ChannelId}", new List<Message>()
             {
-                newMessage.ToPb()
+                newMessage
             });
             
             return new SendMessageResponse()
@@ -130,7 +139,7 @@ public class ChatService : ChatInterface.ChatInterfaceBase
             {
                 IsSuccess = true,
                 Error = "",
-                Updated = messageFound.ToPb()
+                //Updated = messageFound
             };
         }
         catch (Exception e)
@@ -165,7 +174,7 @@ public class ChatService : ChatInterface.ChatInterfaceBase
             {
                 IsSuccess = true,
                 Error = "",
-                Deleted = messageFound.ToPb()
+                // Deleted = messageFound
             };
         }
         catch (Exception e)

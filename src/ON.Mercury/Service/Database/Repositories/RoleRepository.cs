@@ -42,7 +42,7 @@ namespace ON.Mercury.Service.Database.Repositories
             // });
 
             // return roles;
-            var rolesFromDb = await _postgres.Roles.ToListAsync(cancellationToken: cancellationToken);
+            var rolesFromDb = _postgres.Roles.ToList();
             return rolesFromDb;
         }
 
@@ -54,8 +54,8 @@ namespace ON.Mercury.Service.Database.Repositories
                 Name = name,
                 Permissions = permissions,
                 Hierarchy = hierarchy,
-                CreatedOn =  Timestamp.FromDateTime(DateTime.UtcNow),
-                ModifiedOn = Timestamp.FromDateTime(DateTime.UtcNow)
+                CreatedOn =  DateTime.UtcNow,
+                ModifiedOn = DateTime.UtcNow
             }, cancellationToken);
             await _postgres.SaveChangesAsync(cancellationToken);
             var role = roleEntry.Entity;

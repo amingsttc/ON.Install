@@ -4,6 +4,7 @@ package ON.Fragments.Mercury;
 import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
 import "Protos/ON/Fragments/Mercury/Role.proto";
+import "Protos/ON/Fragments/Mercury/Types.proto";
 
 service ChatInterface {
   rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
@@ -11,27 +12,6 @@ service ChatInterface {
   rpc UpdateMessage(UpdateMessageRequest) returns (UpdateMessageResponse);
   rpc DeleteMessage(DeleteMessageRequest) returns (DeleteMessageResponse);
 };
-
-message Message {
-  string Id = 1;
-  string ChannelId = 2;
-  string SenderId = 3;
-  string Body = 4;
-  google.protobuf.Timestamp SentOn = 5;
-  google.protobuf.Timestamp ModifiedOn = 6;
-  google.protobuf.Timestamp DeletedOn = 7;
-}
-
-message Channel {
-  string Id = 1;
-  string Name = 2;
-  optional string Category = 3;
-  optional string Description = 4;
-  repeated Message Messages = 5;
-  repeated Role Roles = 6;
-  google.protobuf.Timestamp CreatedOn = 7;
-  optional google.protobuf.Timestamp ModifiedOn = 8;
-}
 
 message CreateChannelRequest {
   string Name = 1;

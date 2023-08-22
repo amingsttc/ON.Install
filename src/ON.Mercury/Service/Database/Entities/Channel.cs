@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using ON.Mercury.Service.Database.UnionTables;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using pb = global::Google.Protobuf;
+using Google.Protobuf.Collections;
+using Service.Database.Entities;
 
 namespace ON.Mercury.Service.Database.Entities
 {
@@ -16,8 +17,11 @@ namespace ON.Mercury.Service.Database.Entities
         public string Name { get; set; }
         public string Category { get; set; }
         public string Description { get; set; }
-        public Timestamp CreatedOn { get; set; }
-        public Timestamp? ModifiedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
+
+        [NotMapped] public RepeatedField<Message> Messages { get; set; } = new();
+        [NotMapped] public RepeatedField<Role> Roles { get; set; } = new();
 
         public static void SetColumnMetadata(ModelBuilder modelBuilder)
         {
@@ -42,30 +46,24 @@ namespace ON.Mercury.Service.Database.Entities
             modelBuilder.Entity<Channel>()
                 .Property(x => x.CreatedOn)
                 .HasColumnName("created_on")
-                .HasConversion(
-                    v => v.ToDateTime(),
-                    v => Timestamp.FromDateTime(v.ToUniversalTime()))
                 .IsRequired();
 
             modelBuilder.Entity<Channel>()
                 .Property(x => x.ModifiedOn)
-                .HasColumnName("modified_on")
-                .HasConversion(
-                    v => v.ToDateTime(),
-                    v => Timestamp.FromDateTime(v.ToUniversalTime()));
+                .HasColumnName("modified_on");
             
-            // modelBuilder.Entity<ChannelEntity>()
-            //     .HasMany(x => x.Messages)
-            //     .WithOne(x => x.Channel)
-            //     .HasForeignKey(x => x.ChannelId);
-            //
-            // modelBuilder.Entity<ChannelEntity>()
-            //     .HasMany(x => x.Roles)
-            //     .WithMany(x => x.Channels)
-            //     .UsingEntity<ChannelsRoles>(
-            //         j => j.HasOne(x => x.Role).WithMany().HasForeignKey(x => x.RoleId),
-            //         j => j.HasOne(x => x.Channel).WithMany().HasForeignKey(x => x.ChannelId)
-            //     );
+            modelBuilder.Entity<Channel>()
+                .HasMany(x => x.Messages)
+                .WithOne(x => x.Channel)
+                .HasForeignKey(x => x.ChannelId);
+            
+            modelBuilder.Entity<Channel>()
+                .HasMany(x => x.Roles)
+                .WithMany(x => x.Channels)
+                .UsingEntity<ChannelsRoles>(
+                    j => j.HasOne(x => x.Role).WithMany().HasForeignKey(x => x.RoleId),
+                    j => j.HasOne(x => x.Channel).WithMany().HasForeignKey(x => x.ChannelId)
+                );
 
             // modelBuilder.Entity<Channel>()
             //     .HasMany(x => x.Messages)

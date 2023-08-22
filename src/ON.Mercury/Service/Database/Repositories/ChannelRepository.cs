@@ -32,8 +32,8 @@ namespace ON.Mercury.Service.Database.Repositories
                 Id = Guid.NewGuid().ToString(),
                 Category = category,
                 Description = description,
-                CreatedOn = Timestamp.FromDateTime(DateTime.UtcNow),
-                ModifiedOn = Timestamp.FromDateTime(DateTime.UtcNow)
+                CreatedOn = DateTime.UtcNow,
+                ModifiedOn = DateTime.UtcNow
             };
             await _postgres.Channels.AddAsync(newChannel, cancellationToken);
             await _postgres.SaveChangesAsync(cancellationToken);
@@ -73,7 +73,7 @@ namespace ON.Mercury.Service.Database.Repositories
             return channel.Id;
         }
 
-        public async Task<IReadOnlyList<MessageEntity>?> GetMessagesAsync(string channelId, MessageSenderParams messageSenderParams = MessageSenderParams.SenderId, CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyList<Message>?> GetMessagesAsync(string channelId, MessageSenderParams messageSenderParams = MessageSenderParams.SenderId, CancellationToken cancellationToken = default)
         {
             // var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
             // if (channel is null) return null;
@@ -85,13 +85,20 @@ namespace ON.Mercury.Service.Database.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<MessageEntity> SendMessageAsync(string channelId, string senderId, string body, CancellationToken cancellationToken = default)
+        public async Task<Message> SendMessageAsync(string channelId, string senderId, string body, CancellationToken cancellationToken = default)
         {
-            var newMessage = new MessageEntity(channelId, senderId, body);
+            var newMessage = new Message()
+            {
+                Id = Guid.NewGuid().ToString(),
+                ChannelId = channelId,
+                SenderId = senderId,
+                Body = body,
+                SentOn = DateTime.UtcNow
+            };
             await _postgres.Messages.AddAsync(newMessage, cancellationToken);
             await _postgres.SaveChangesAsync(cancellationToken);
 
-            return newMessage;
+            return new Message();
         }
     }
 }

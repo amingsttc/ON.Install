@@ -8,6 +8,7 @@ using Service.Database.Entities;
 using System;
 using Channel = ON.Mercury.Service.Database.Entities.Channel;
 using Member = Service.Database.Entities.Member;
+using Message = Service.Database.Entities.Message;
 using Role = Service.Database.Entities.Role;
 
 namespace ON.Mercury.Service.Database;
@@ -16,7 +17,7 @@ public sealed class PostgresContext : DbContext
 {
     private readonly IConfiguration _configuration;
     public DbSet<Channel> Channels { get; set; }
-    public DbSet<MessageEntity> Messages { get; set; }
+    public DbSet<Message> Messages { get; set; }
     public DbSet<Member> Members { get; set; }
     public DbSet<Role> Roles { get; set; }
     public DbSet<ChannelsRoles> ChannelRoles { get; set; }
@@ -27,7 +28,7 @@ public sealed class PostgresContext : DbContext
     {
         _configuration = configuration;
         Channels = Set<Channel>();
-        Messages = Set<MessageEntity>();
+        Messages = Set<Message>();
         Members = Set<Member>();
         Roles = Set<Role>();
         ChannelRoles = Set<ChannelsRoles>();
@@ -42,8 +43,7 @@ public sealed class PostgresContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        //ChannelEntity.SetColumnMetadata(modelBuilder);
-        MessageEntity.SetColumnMetadata(modelBuilder);
+        Message.SetColumnMetadata(modelBuilder);
         Member.SetColumnMetadata(modelBuilder);
         Role.SetColumnMetadata(modelBuilder);
         ChannelsRoles.SetColumnMetadata(modelBuilder);

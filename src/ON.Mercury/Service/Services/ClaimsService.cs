@@ -47,8 +47,7 @@ namespace ON.Mercury.Service.Services
                 Value = serialized,
                 ExpiresOnUTC = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(DateTime.MaxValue.ToUniversalTime())
             });
-
-
+            
             return res;
         }
     }

@@ -1,15 +1,18 @@
-﻿using Google.Protobuf;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Google.Protobuf;
 using Google.Protobuf.Collections;
 using Google.Protobuf.Reflection;
 using Microsoft.EntityFrameworkCore;
+using ON.Mercury.Service.Database.UnionTables;
 
 namespace Service.Database.Entities
 {
+    [Table("members")]
     public sealed partial class Member : IMessage<Member>
     {
         public string Id { get; set; }
         public string Username { get; set; }
-        public RepeatedField<Role> Roles { get; set; }
+        public RepeatedField<Role> Roles { get; set; } = new();
 
         public static void SetColumnMetadata(ModelBuilder modelBuilder)
         {
@@ -26,6 +29,11 @@ namespace Service.Database.Entities
                 .Property(e => e.Username)
                 .HasColumnName("username")
                 .IsRequired();
+
+            modelBuilder.Entity<Member>()
+                .HasMany(e => e.Roles)
+                .WithMany(e => e.Members)
+                .UsingEntity<MembersRoles>();
         }
         
         public void MergeFrom(Member message)
