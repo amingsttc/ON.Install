@@ -88,6 +88,7 @@ public class Startup
         {
             endpoints.MapGrpcService<ChatService>();
             endpoints.MapGrpcService<ClaimsService>();
+            endpoints.MapGrpcService<AuditLogService>();
             endpoints.MapHub<ChatHub>("/api/mercury/hub");
             endpoints.MapControllers();
         });

@@ -1,8 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Google.Protobuf.WellKnownTypes;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using ON.Fragments.Mercury;
 using ON.Mercury.Service.Database.Entities;
 using ON.Mercury.Service.Database.UnionTables;
 using Service.Database.Entities;
+using System;
 
 namespace ON.Mercury.Service.Database;
 
@@ -15,6 +18,7 @@ public sealed class PostgresContext : DbContext
     public DbSet<RoleEntity> Roles { get; set; }
     public DbSet<ChannelsRoles> ChannelRoles { get; set; }
     public DbSet<MembersRoles> MemberRoles { get; set; }
+    public DbSet<AuditItem> AuditLog { get; set; }
 
     public PostgresContext(IConfiguration configuration)
     {
@@ -25,6 +29,7 @@ public sealed class PostgresContext : DbContext
         Roles = Set<RoleEntity>();
         ChannelRoles = Set<ChannelsRoles>();
         MemberRoles = Set<MembersRoles>();
+        AuditLog = Set<AuditItem>();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -40,5 +45,32 @@ public sealed class PostgresContext : DbContext
         RoleEntity.SetColumnMetadata(modelBuilder);
         ChannelsRoles.SetColumnMetadata(modelBuilder);
         MembersRoles.SetColumnMetadata(modelBuilder);
+
+        modelBuilder.Entity<AuditItem>()
+            .ToTable("audit_items");
+        
+        modelBuilder.Entity<AuditItem>()
+            .HasKey(i => i.Id)
+            .HasName("PK_audit_item_id");
+        
+        modelBuilder.Entity<AuditItem>()
+            .Property(i => i.Id)
+            .HasColumnName("id")
+            .IsRequired();
+
+        modelBuilder.Entity<AuditItem>()
+            .Property(i => i.CallerId)
+            .HasColumnName("caller_id");
+
+        modelBuilder.Entity<AuditItem>()
+            .Property(i => i.Action)
+            .HasColumnName("action");
+        
+        modelBuilder.Entity<AuditItem>()
+            .Property(i => i.CreatedOn)
+            .HasColumnName("created_on")
+            .HasConversion(
+                v => v.ToDateTime(),
+                v => Timestamp.FromDateTime(v.ToUniversalTime())); 
     }
 }
