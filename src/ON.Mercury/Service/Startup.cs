@@ -86,10 +86,10 @@ public class Startup
         app.UseJwtAuthentication();
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapHub<ChatHub>("/api/mercury/hub");
             endpoints.MapGrpcService<ChatService>();
             endpoints.MapGrpcService<ClaimsService>();
             endpoints.MapGrpcService<AuditLogService>();
-            endpoints.MapHub<ChatHub>("/api/mercury/hub");
             endpoints.MapControllers();
         });
     }

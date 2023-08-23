@@ -14,12 +14,10 @@ namespace ON.Mercury.Service.Hubs;
 public class ChatHub : Hub
 {
     private readonly ILogger<ChatHub> _logger;
-    private readonly ChatService _chatService;
 
-    public ChatHub(ILogger<ChatHub> logger, ChatService chatService)
+    public ChatHub(ILogger<ChatHub> logger)
     {
         _logger = logger;
-        _chatService = chatService;
     }
 
     public override Task OnConnectedAsync()

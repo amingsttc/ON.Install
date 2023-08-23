@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useEffect } from "react";
 import { HubConnection } from "@microsoft/signalr";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAllChannels } from "../api/channels.api";

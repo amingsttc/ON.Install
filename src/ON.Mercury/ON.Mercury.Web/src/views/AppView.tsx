@@ -3,16 +3,19 @@ import React from "react";
 import MessageLog from "../components/messages/MessageLog";
 import Sidebar from "../components/sidebar/sidebar";
 import RootLayout from "../layouts/_root";
+import MercuryProvider from "../providers/MercuryContextProvider";
+import { HubConnection } from "@microsoft/signalr";
 
 type AppViewProps = {
+  hubConnection: HubConnection | undefined;
   queryClient: QueryClient;
 };
 
-export function AppView({ queryClient }: AppViewProps) {
+export function AppView({ hubConnection, queryClient }: AppViewProps) {
   return (
-    <RootLayout queryClient={queryClient}>
+    <MercuryProvider queryClient={queryClient} hubConnection={hubConnection}>
       <Sidebar />
       <MessageLog connection={globalThis.hubConnection} userId="123" />
-    </RootLayout>
+    </MercuryProvider>
   );
 }

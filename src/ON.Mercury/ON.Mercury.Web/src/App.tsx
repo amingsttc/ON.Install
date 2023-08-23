@@ -14,7 +14,6 @@ import SettingsView from "./views/SettingsView";
 import Cookies from "js-cookie";
 import { fetchAllChannels } from "./api/channels.api";
 import axios from "axios";
-import { authMutation } from "./layouts/_root";
 
 const queryClient = new QueryClient();
 
@@ -29,8 +28,6 @@ function App() {
     if (token === undefined) {
       setIsLoading(true);
     } else {
-      let c = authMutation.mutateAsync();
-      console.log(c);
       if (globalThis.hubConnection === undefined) {
         globalThis.hubConnection = buildSignalR(
           `${config.mercuryApi}/hub`,
@@ -43,7 +40,12 @@ function App() {
   }, [token, setToken, globalThis.hubConnection]);
 
   return (
-    (!isLoading && <AppView queryClient={queryClient} />) ||
+    (!isLoading && (
+      <AppView
+        queryClient={queryClient}
+        hubConnection={globalThis.hubConnection}
+      />
+    )) ||
     (isLoading && <LoadingView />) ||
     (showServerSettings && <SettingsView />)
   );
