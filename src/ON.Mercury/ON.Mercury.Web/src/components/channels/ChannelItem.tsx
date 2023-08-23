@@ -1,8 +1,12 @@
-import { channel } from "diagnostics_channel";
 import React, { useRef, useState } from "react";
 import "./ChannelItem.css";
+import { Channel } from "../../types/channel";
 
-export default function ChannelItem() {
+type ChannelItemProps = {
+  channel: Channel;
+};
+
+export default function ChannelItem({ channel }: ChannelItemProps) {
   const [showChannelContextMenu, setShowChannelContextMenu] = useState(false);
   // const deleteChannel = useDeleteChannelMutation();
   const contextMenuRef = useRef<HTMLDivElement>(null);

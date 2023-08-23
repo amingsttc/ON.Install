@@ -8,7 +8,10 @@
     "typeRoots": [
       "src/env.d.ts",
       "src/globals.d.ts",
-      "src/types/appconfig.d.ts"
+      "src/types/appconfig.d.ts",
+      "src/types/channel.d.ts",
+      "src/types/member.d.ts",
+      "src/types/roles.d.ts"
     ],
     /* Bundler mode */
     "moduleResolution": "bundler",

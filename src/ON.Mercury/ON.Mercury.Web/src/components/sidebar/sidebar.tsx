@@ -1,7 +1,11 @@
+import { ChannelsContext } from "../../providers/Contexts";
+import { Channel } from "../../types/channel";
+import ChannelItem from "../channels/ChannelItem";
 import "./Sidebar.css";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 function Sidebar() {
+  const channels = useContext(ChannelsContext);
   const [showSidebarContextMenu, setShowSidebarContextMenu] = useState(false);
   const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -40,10 +44,9 @@ function Sidebar() {
             <span className="custom-bullet">+</span>
             <li className="channel-name">Add Channel</li>
           </div>
-          {/* </Link>
-          {channels.map((channel: ChannelDto) => (
-            <ChannelItem channel={channel} />
-          ))} */}
+          {channels.map((channel: Channel) => (
+            <ChannelItem key={channel.id} channel={channel} />
+          ))}
         </ul>
       </div>
       <div className="sidebar-footer">
