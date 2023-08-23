@@ -56,5 +56,12 @@ namespace ON.Mercury.Service.Controllers
                 Errors = "No User Data"
             });
         }
+
+        [HttpGet("members")]
+        public async Task<IActionResult> GetMembers()
+        {
+            var members = await _members.GetMembers();
+            return Ok(members);
+        }
     }
 }

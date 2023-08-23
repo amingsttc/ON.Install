@@ -41,7 +41,7 @@ namespace ON.Mercury.Service.Database.Repositories
             return newChannel;
         }
 
-        public async Task<IReadOnlyList<Channel>> GetChannelsAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Channel>> GetChannelsAsync(CancellationToken cancellationToken = default)
         {
             var channels = await _postgres.Channels.ToListAsync(cancellationToken);
             return channels;

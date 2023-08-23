@@ -1,21 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./assets/App.css";
-import {
-  QueryClient,
-  useMutation,
-  useQueries,
-  useQuery,
-} from "@tanstack/react-query";
 import { buildSignalR } from "./signalR/signalR";
 import { config } from "./config/config";
 import { AppView } from "./views/AppView";
 import LoadingView from "./views/LoadingView";
 import SettingsView from "./views/SettingsView";
-import Cookies from "js-cookie";
-import { fetchAllChannels } from "./api/channels.api";
-import axios from "axios";
-
-const queryClient = new QueryClient();
 
 globalThis.token = localStorage.getItem("jwt");
 
@@ -40,12 +29,7 @@ function App() {
   }, [token, setToken, globalThis.hubConnection]);
 
   return (
-    (!isLoading && (
-      <AppView
-        queryClient={queryClient}
-        hubConnection={globalThis.hubConnection}
-      />
-    )) ||
+    (!isLoading && <AppView hubConnection={globalThis.hubConnection} />) ||
     (isLoading && <LoadingView />) ||
     (showServerSettings && <SettingsView />)
   );

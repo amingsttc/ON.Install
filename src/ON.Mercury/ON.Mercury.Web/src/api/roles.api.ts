@@ -1,7 +1,8 @@
 import { config } from "../config/config";
+import { Role } from "../types/roles";
 
-export async function fetchAllChannels() {
-  const result = await fetch(`${config.mercuryApi}/channels`, {
+export async function fetchAllRoles(): Promise<Role[]> {
+  const result = await fetch(`${config.mercuryApi}/roles`, {
     headers: {
       Authorization: config.authToken,
     },

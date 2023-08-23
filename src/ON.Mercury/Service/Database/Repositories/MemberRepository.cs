@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ON.Mercury.Service.Caching;
@@ -52,6 +53,12 @@ namespace ON.Mercury.Service.Database.Repositories
             var member = await _postgres.Members.Where(m => m.Id == id).FirstOrDefaultAsync();
             //_logger.LogInformation(JsonConvert.SerializeObject(member));
             return member;
+        }
+
+        public async Task<IEnumerable<Member>> GetMembers()
+        {
+            var members = await _postgres.Members.ToListAsync();
+            return members;
         }
     }
 }

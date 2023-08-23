@@ -1,5 +1,4 @@
 import { HubConnection } from "@microsoft/signalr";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useState } from "react";
 import {
   ChannelsContext,
@@ -7,34 +6,39 @@ import {
   MembersContext,
   HubConnectionContext,
 } from "./Contexts";
+import { Channel } from "../types/channel";
+import { Role } from "../types/roles";
+import { Member } from "../types/member";
 
 type MercuryProviderProps = {
   hubConnection: HubConnection | undefined;
-  queryClient: QueryClient;
+  channels: Channel[];
+  roles: Role[];
+  members: Member[];
   children;
 };
 
 function MercuryProvider({
   hubConnection,
-  queryClient,
+  channels,
+  roles,
+  members,
   children,
 }: MercuryProviderProps) {
-  const [channels, setChannels] = useState([]);
-  const [roles, setRoles] = useState([]);
-  const [members, setMembers] = useState([]);
+  //const [channels, setChannels] = useState<Channel[]>([]);
+  //const [roles, setRoles] = useState([]);
+  // const [members, setMembers] = useState([]);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <HubConnectionContext.Provider value={hubConnection}>
-        <ChannelsContext.Provider value={channels}>
-          <RolesContext.Provider value={roles}>
-            <MembersContext.Provider value={members}>
-              {children}
-            </MembersContext.Provider>
-          </RolesContext.Provider>
-        </ChannelsContext.Provider>
-      </HubConnectionContext.Provider>
-    </QueryClientProvider>
+    <HubConnectionContext.Provider value={hubConnection}>
+      <ChannelsContext.Provider value={channels}>
+        <RolesContext.Provider value={roles}>
+          <MembersContext.Provider value={members}>
+            {children}
+          </MembersContext.Provider>
+        </RolesContext.Provider>
+      </ChannelsContext.Provider>
+    </HubConnectionContext.Provider>
   );
 }
 
