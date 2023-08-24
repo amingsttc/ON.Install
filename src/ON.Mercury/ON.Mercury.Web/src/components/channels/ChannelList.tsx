@@ -1,23 +1,55 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./ChannelList.css";
 import { useAppSelector } from "../../app/hooks";
 import { selectChannels } from "../../features/channels/channelsSlice";
-import { Channel } from "../../types/channel";
+import { CategoryList, CategoryListEntry, Channel } from "../../types/channel";
 import { Link } from "react-router-dom";
+const groupChannels = (channels: Channel[]) => {
+  const groupedChannels: { [category: string]: Channel[] } = channels.reduce(
+    (result, channel) => {
+      const category = channel.category || "Uncategorized";
+
+      if (!result[category]) {
+        result[category] = [];
+      }
+
+      result[category].push(channel);
+      return result;
+    },
+    {} as { [category: string]: Channel[] },
+  );
+
+  const categoryList: CategoryList = {
+    categories: Object.keys(groupedChannels).map((category) => ({
+      category,
+      channels: groupedChannels[category],
+    })),
+  };
+
+  const categories = Object.keys(groupedChannels).map((category) => ({
+    category,
+    channels: groupedChannels[category],
+  }));
+
+  return categories;
+};
 
 export function ChannelList() {
-  const channels = useAppSelector(selectChannels);
+  const categories = groupChannels(useAppSelector(selectChannels));
+
   return (
     <div className="channel-list">
-      {channels.map((channel: Channel) => (
-        <Link to={`/channels/${channel.id}`}>
-          <div className="list-item">
-            <h1>
-              {channel.name} {channel.category}
-            </h1>
-            <p>{channel.description}</p>
-          </div>
-        </Link>
+      {categories.map((category: CategoryListEntry) => (
+        <div className="list-item" key={category.category}>
+          <h1>{category.category}</h1>
+          {category.channels.map((channel: Channel) => (
+            <Link to={`/channels/${channel.id}`}>
+              <div className="list-item">
+                <h1>{channel.name}</h1>
+              </div>
+            </Link>
+          ))}
+        </div>
       ))}
     </div>
   );

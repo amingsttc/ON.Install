@@ -18,13 +18,6 @@
     color: white;
   }
 
-  /* .channel-list h1:hover {
-    background-color: var(--primary-dark-1);
-    cursor: pointer;
-    margin-right: auto;
-    margin-left: auto;
-  } */
-
   .list-item {
     margin-left: 300px;
     padding-left: 10px;

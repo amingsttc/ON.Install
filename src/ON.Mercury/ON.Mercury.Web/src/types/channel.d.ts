@@ -4,3 +4,12 @@ export type Channel = {
   category: string | undefined;
   description: string | undefined;
 };
+
+export type CategoryListEntry = {
+  category: string;
+  channels: Channel[];
+};
+
+export type CategoryList = {
+  categories: CategoryListEntry[];
+};
