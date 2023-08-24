@@ -45,3 +45,24 @@
   border-radius: 5px;
   cursor: pointer;
 }
+
+.scroll-to-bottom-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 35px;
+  left: 92%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.arrow-down-icon {
+  font-size: 24px;
+  color: white;
+}

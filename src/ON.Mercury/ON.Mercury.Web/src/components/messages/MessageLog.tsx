@@ -31,7 +31,7 @@ export default function MessageLog({ connection }: MessageLogProps) {
   let messages: Message[] = useAppSelector((state) =>
     selectChannel(state, channelId as string),
   );
-
+  const [showScrollButton, setShowScrollButton] = useState(false);
   const loggedInUser = useAppSelector(selectLoggedInUser);
   const [newMessage, setNewMessage] = useState("");
   const messageQuery = useQuery(["messages"], {
@@ -59,6 +59,12 @@ export default function MessageLog({ connection }: MessageLogProps) {
     }
   };
 
+  const handleScrollToBottomClick = () => {
+    setIsLockedToBottom(true);
+    scrollToBottom();
+    setShowScrollButton(false); // Hide the button after clicking
+  };
+
   const handleScroll = () => {
     const messageLog = messageLogRef.current;
     if (messageLog) {
@@ -66,6 +72,9 @@ export default function MessageLog({ connection }: MessageLogProps) {
         messageLog.scrollHeight - messageLog.scrollTop <=
         messageLog.clientHeight + 10;
       setIsLockedToBottom(isScrolledToBottom);
+
+      // Toggle the visibility of the scroll button
+      setShowScrollButton(!isScrolledToBottom);
     }
   };
 
@@ -124,6 +133,14 @@ export default function MessageLog({ connection }: MessageLogProps) {
       <div className="message-log" ref={messageLogRef}>
         {messages &&
           messages.map((message) => <MessageItem message={message} />)}
+        {!isLockedToBottom && showScrollButton && (
+          <div
+            className="scroll-to-bottom-button"
+            onClick={handleScrollToBottomClick}
+          >
+            <div className="arrow-down-icon">▼</div>
+          </div>
+        )}
       </div>
       <div className="message-input-container">
         <input
