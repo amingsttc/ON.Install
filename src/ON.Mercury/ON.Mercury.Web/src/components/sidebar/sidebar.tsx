@@ -1,11 +1,14 @@
-import { ChannelsContext } from "../../providers/Contexts";
+import { useAppSelector } from "../../app/hooks";
+import { selectChannels } from "../../features/channels/channelsSlice";
 import { Channel } from "../../types/channel";
 import ChannelItem from "../channels/ChannelItem";
 import "./Sidebar.css";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
+import { selectLoggedInUsername } from "../../features/app/appSlice";
 
 function Sidebar() {
-  const channels = useContext(ChannelsContext);
+  const channels = useAppSelector(selectChannels);
+  const username = useAppSelector(selectLoggedInUsername);
   const [showSidebarContextMenu, setShowSidebarContextMenu] = useState(false);
   const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -51,7 +54,7 @@ function Sidebar() {
       </div>
       <div className="sidebar-footer">
         {/* <h2>{username}</h2> */}
-        <h2>username</h2>
+        <h2>{username}</h2>
         <button className="logout-button" onClick={handleLogout}>
           Logout
         </button>

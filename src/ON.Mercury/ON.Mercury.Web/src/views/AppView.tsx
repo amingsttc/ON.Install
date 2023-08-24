@@ -1,70 +1,88 @@
-import { QueryClient, useQuery } from "@tanstack/react-query";
-import React, { useContext, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import React, { useEffect } from "react";
 import MessageLog from "../components/messages/MessageLog";
 import Sidebar from "../components/sidebar/sidebar";
-import RootLayout from "../layouts/_root";
-import MercuryProvider from "../providers/MercuryContextProvider";
 import { HubConnection } from "@microsoft/signalr";
-import {
-  ChannelsContext,
-  MembersContext,
-  RolesContext,
-} from "../providers/Contexts";
 import { fetchAllChannels } from "../api/channels.api";
 import { fetchAllRoles } from "../api/roles.api";
-import { fetchAllMembers } from "../api/member.api";
+import { fetchAllMembers, fetchCurrentMember } from "../api/member.api";
+import { useAppDispatch } from "../app/hooks";
+import { setChannels } from "../features/channels/channelsSlice";
+import {
+  setRoles,
+  setMembers,
+  setLoggedInUser,
+} from "../features/app/appSlice";
 
 type AppViewProps = {
   hubConnection: HubConnection | undefined;
 };
 
 export function AppView({ hubConnection }: AppViewProps) {
-  const channelsContext = useContext(ChannelsContext);
-  const rolesContext = useContext(RolesContext);
-  const membersContext = useContext(MembersContext);
+  const dispatch = useAppDispatch();
   const queryChannels = useQuery(["channels"], {
     queryFn: async () => {
       var found = await fetchAllChannels();
       if (found) {
-        channelsContext.push(...found);
+        dispatch(setChannels(found));
       }
       return found;
     },
     enabled: true,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
   });
 
   const queryRoles = useQuery(["roles"], {
     queryFn: async () => {
       var found = await fetchAllRoles();
       if (found) {
-        rolesContext.push(...found);
+        dispatch(setRoles(found));
       }
 
       return found;
     },
     enabled: true,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
   });
 
   const queryMembers = useQuery(["members"], {
     queryFn: async () => {
       var found = await fetchAllMembers();
       if (found) {
-        membersContext.push(...found);
+        dispatch(setMembers(found));
       }
 
       return found;
     },
     enabled: true,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
   });
+
+  const queryLoggedInUser = useQuery(["app:loggedInUser"], {
+    queryFn: async () => {
+      var found = await fetchCurrentMember();
+      if (found) {
+        dispatch(setLoggedInUser(found));
+      }
+
+      return found;
+    },
+    enabled: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
+  });
+
+  useEffect(() => {
+    queryLoggedInUser.refetch();
+  });
+
   return (
-    <MercuryProvider
-      hubConnection={hubConnection}
-      channels={channelsContext}
-      roles={rolesContext}
-      members={membersContext}
-    >
+    <>
       <Sidebar />
       <MessageLog connection={globalThis.hubConnection} userId="123" />
-    </MercuryProvider>
+    </>
   );
 }

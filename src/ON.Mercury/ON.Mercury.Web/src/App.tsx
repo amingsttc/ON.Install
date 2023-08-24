@@ -3,10 +3,16 @@ import "./assets/App.css";
 import { buildSignalR } from "./signalR/signalR";
 import { config } from "./config/config";
 import { AppView } from "./views/AppView";
-import LoadingView from "./views/LoadingView";
-import SettingsView from "./views/SettingsView";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 globalThis.token = localStorage.getItem("jwt");
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <AppView hubConnection={globalThis.hubConnection} />,
+  },
+]);
 
 function App() {
   const [token, setToken] = useState(globalThis.token);
@@ -28,11 +34,7 @@ function App() {
     }
   }, [token, setToken, globalThis.hubConnection]);
 
-  return (
-    (!isLoading && <AppView hubConnection={globalThis.hubConnection} />) ||
-    (isLoading && <LoadingView />) ||
-    (showServerSettings && <SettingsView />)
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

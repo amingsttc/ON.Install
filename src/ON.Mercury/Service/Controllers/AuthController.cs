@@ -24,7 +24,7 @@ namespace ON.Mercury.Service.Controllers
             _members = members;
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Authenticate()
         {
             var user = ONUserHelper.ParseUser(HttpContext);

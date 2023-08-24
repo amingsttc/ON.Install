@@ -1,5 +1,5 @@
 import { config } from "../config/config";
-import { Member } from "../types/member";
+import { GetCurrentMemberResponse, Member } from "../types/member";
 
 export async function fetchAllMembers(): Promise<Member[]> {
   const result = await fetch(`${config.mercuryApi}/auth/members`, {
@@ -11,4 +11,17 @@ export async function fetchAllMembers(): Promise<Member[]> {
   });
 
   return await result.json();
+}
+
+export async function fetchCurrentMember(): Promise<Member> {
+  const result = await fetch(`${config.mercuryApi}/auth`, {
+    headers: {
+      Authorization: config.authToken,
+    },
+    mode: "cors",
+    method: "get",
+  });
+
+  const res: GetCurrentMemberResponse = await result.json();
+  return res.member;
 }

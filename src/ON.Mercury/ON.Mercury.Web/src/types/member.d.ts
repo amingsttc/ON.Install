@@ -3,3 +3,9 @@ export type Member = {
   username: string;
   roles: Role[];
 };
+
+export type GetCurrentMemberResponse = {
+  isSuccess: boolean;
+  errors: string;
+  member: Member;
+};
