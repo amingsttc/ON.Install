@@ -2,15 +2,21 @@ import React, { useEffect, useState } from "react";
 import "./assets/App.css";
 import { buildSignalR } from "./signalR/signalR";
 import { config } from "./config/config";
-import { AppView } from "./views/AppView";
+import { RootView } from "./views/RootView";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ChatChannelView } from "./views/ChatChannelView";
+import Sidebar from "./components/sidebar/sidebar";
 
 globalThis.token = localStorage.getItem("jwt");
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <AppView hubConnection={globalThis.hubConnection} />,
+    element: <RootView hubConnection={globalThis.hubConnection} />,
+  },
+  {
+    path: "/channels/:id",
+    element: <ChatChannelView />,
   },
 ]);
 
@@ -34,7 +40,11 @@ function App() {
     }
   }, [token, setToken, globalThis.hubConnection]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <div className="App">
+      <RouterProvider router={router} />
+    </div>
+  );
 }
 
 export default App;

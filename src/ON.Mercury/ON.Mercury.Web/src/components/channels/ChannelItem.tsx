@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import "./ChannelItem.css";
 import { Channel } from "../../types/channel";
+import { Link } from "react-router-dom";
 
 type ChannelItemProps = {
   channel: Channel;
@@ -53,37 +54,38 @@ export default function ChannelItem({ channel }: ChannelItemProps) {
   }, []);
 
   return (
-    // <Link
-    // 	to={`/channels/${channel.channelId}`}
-    // 	className="sidebar-link"
-    // 	key={channel.channelId}>
-    <div
-      className="sidebar-channel"
-      onContextMenu={handleContextMenu}
-      onMouseLeave={() => setShowChannelContextMenu(false)}
+    <Link
+      to={`/channels/${channel.id}`}
+      className="sidebar-link"
+      key={channel.id}
     >
-      <li className="channel-name">
-        <span className="custom-bullet">#</span>
-        {channel.name}
-      </li>
-      {showChannelContextMenu && (
-        <div
-          ref={contextMenuRef}
-          id="channel-context-menu"
-          className="context-menu"
-        >
+      <div
+        className="sidebar-channel"
+        onContextMenu={handleContextMenu}
+        onMouseLeave={() => setShowChannelContextMenu(false)}
+      >
+        <li className="channel-name">
+          <span className="custom-bullet">#</span>
+          {channel.name}
+        </li>
+        {showChannelContextMenu && (
           <div
-            className="context-menu-item"
-            onClick={() => setShowChannelContextMenu(false)}
+            ref={contextMenuRef}
+            id="channel-context-menu"
+            className="context-menu"
           >
-            Edit Channel
+            <div
+              className="context-menu-item"
+              onClick={() => setShowChannelContextMenu(false)}
+            >
+              Edit Channel
+            </div>
+            <div className="context-menu-item" onClick={handleDeleteChannel}>
+              Delete Channel
+            </div>
           </div>
-          <div className="context-menu-item" onClick={handleDeleteChannel}>
-            Delete Channel
-          </div>
-        </div>
-      )}
-    </div>
-    //</Link>
+        )}
+      </div>
+    </Link>
   );
 }

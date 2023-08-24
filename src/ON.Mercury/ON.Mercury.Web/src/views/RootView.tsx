@@ -13,12 +13,13 @@ import {
   setMembers,
   setLoggedInUser,
 } from "../features/app/appSlice";
+import { ChannelList } from "../components/channels/ChannelList";
 
-type AppViewProps = {
+type RootViewProps = {
   hubConnection: HubConnection | undefined;
 };
 
-export function AppView({ hubConnection }: AppViewProps) {
+export function RootView({ hubConnection }: RootViewProps) {
   const dispatch = useAppDispatch();
   const queryChannels = useQuery(["channels"], {
     queryFn: async () => {
@@ -82,7 +83,7 @@ export function AppView({ hubConnection }: AppViewProps) {
   return (
     <>
       <Sidebar />
-      <MessageLog connection={globalThis.hubConnection} userId="123" />
+      <ChannelList />
     </>
   );
 }

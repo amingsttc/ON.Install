@@ -8,10 +8,11 @@ import { HubConnection } from "@microsoft/signalr";
 // import { ProfileDto } from '../../../lib/dto/profile.dto';
 import MessageItem from "./MessageItem";
 import "./MessageLog.css";
+import { selectLoggedInUser } from "../../features/app/appSlice";
+import { useAppSelector } from "../../app/hooks";
 
 interface MessageLogProps {
   connection: HubConnection;
-  userId: string;
 }
 
 const getUsernameBySenderId = (profiles: any[], senderId: string) => {
@@ -43,9 +44,9 @@ const getUsernameBySenderId = (profiles: any[], senderId: string) => {
 // 	}
 // );
 
-export default function MessageLog({ connection, userId }: MessageLogProps) {
+export default function MessageLog({ connection }: MessageLogProps) {
   const channelId = useParams().id;
-
+  const loggedInUser = useAppSelector(selectLoggedInUser);
   // const messages = useAppSelector((state) =>
   // 	selectMessagesByChannel.resultFunc(
   // 		state.channels.channels,
@@ -70,7 +71,7 @@ export default function MessageLog({ connection, userId }: MessageLogProps) {
     // const msg: SendMessageDto = {
     const msg = {
       channelId: channelId as string,
-      senderId: userId,
+      senderId: loggedInUser?.id,
       body: newMessage,
     };
 

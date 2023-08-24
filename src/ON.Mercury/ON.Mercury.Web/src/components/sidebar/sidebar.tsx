@@ -5,8 +5,11 @@ import ChannelItem from "../channels/ChannelItem";
 import "./Sidebar.css";
 import React, { useState } from "react";
 import { selectLoggedInUsername } from "../../features/app/appSlice";
+import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
 function Sidebar() {
+  const navigate = useNavigate();
   const channels = useAppSelector(selectChannels);
   const username = useAppSelector(selectLoggedInUsername);
   const [showSidebarContextMenu, setShowSidebarContextMenu] = useState(false);
@@ -38,22 +41,17 @@ function Sidebar() {
       </div>
       <div className="container">
         <ul className="list">
-          {/* <Link
-            to={`/channels/new`}
-            className="sidebar-link"
-            key={"new-channel"}
-          > */}
-          <div className="sidebar-channel">
-            <span className="custom-bullet">+</span>
-            <li className="channel-name">Add Channel</li>
-          </div>
+          <Link to={`/`} className="sidebar-link">
+            <li className="channel-name">
+              <span className="custom-bullet">#</span>Directory
+            </li>
+          </Link>
           {channels.map((channel: Channel) => (
             <ChannelItem key={channel.id} channel={channel} />
           ))}
         </ul>
       </div>
       <div className="sidebar-footer">
-        {/* <h2>{username}</h2> */}
         <h2>{username}</h2>
         <button className="logout-button" onClick={handleLogout}>
           Logout
@@ -65,7 +63,7 @@ function Sidebar() {
             className="context-menu-item"
             onClick={() => {
               setShowSidebarContextMenu(false);
-              // navigate('/channels/new');
+              navigate("/channels/new");
             }}
           >
             Create Channel
