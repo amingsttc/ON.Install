@@ -7,14 +7,15 @@ import { useParams } from "react-router-dom";
 import { fetchMessages } from "../api/message.api";
 import {
   MessageMapEntry,
+  addMessage,
   setMessages,
 } from "../features/messages/messagesSlice";
 import { Message } from "postcss";
 
 export function ChatChannelView() {
   const dispatch = useAppDispatch();
-
   const { channelId } = useParams<{ channelId: string }>();
+
   // const messageQuery = useQuery(["messages"], {
   //   queryFn: async () => {
   //     let messages: Message[] = [];

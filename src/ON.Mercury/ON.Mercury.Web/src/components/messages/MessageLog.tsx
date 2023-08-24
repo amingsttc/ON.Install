@@ -29,6 +29,7 @@ export default function MessageLog({ connection }: MessageLogProps) {
   let messages: Message[] = useAppSelector((state) =>
     selectChannel(state, channelId as string),
   );
+
   const loggedInUser = useAppSelector(selectLoggedInUser);
   const [newMessage, setNewMessage] = useState("");
   const messageQuery = useQuery(["messages"], {
@@ -66,7 +67,7 @@ export default function MessageLog({ connection }: MessageLogProps) {
       body: newMessage,
     };
 
-    await connection.invoke("SendMessage", JSON.stringify(msg));
+    await connection.invoke("SendMessage", msg);
 
     setNewMessage("");
   };

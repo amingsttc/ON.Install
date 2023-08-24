@@ -6,6 +6,7 @@ using Google.Protobuf.WellKnownTypes;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using ON.Mercury.Service.Database.Entities;
+using MessageProto = ON.Fragments.Mercury.Message;
 
 namespace Service.Database.Entities;
 
@@ -61,6 +62,20 @@ public sealed partial class Message : IMessage<Message>
             .WithMany(x => x.Messages)
             .HasForeignKey(x => x.ChannelId)
             .IsRequired();
+    }
+
+    public static MessageProto ToPb(Message msg)
+    {
+        return new MessageProto()
+        {
+            Id = msg.Id,
+            ChannelId = msg.ChannelId,
+            SenderId = msg.SenderId,
+            Body = msg.Body,
+            SentOn = Timestamp.FromDateTime(msg.SentOn),
+            ModifiedOn = Timestamp.FromDateTime(msg.SentOn),
+            DeletedOn = null
+        };
     }
 
 public void MergeFrom(Message message)

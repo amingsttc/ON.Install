@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using ON.Authentication;
+using ON.Fragments.Mercury;
 using ON.Mercury.Service.Caching;
 using ON.Mercury.Service.Database;
 using ON.Mercury.Service.Database.Repositories;
@@ -52,6 +53,10 @@ public class Startup
         services.AddScoped<MemberRepository>();
         services.AddScoped<RoleRepository>();
         services.AddScoped<ChannelRepository>();
+        // services.AddGrpcClient<ChatInterface.ChatInterfaceClient>(options =>
+        // {
+        //     options.Address = new Uri("http://localhost:7015/ChatService");
+        // });
         services.AddJwtAuthentication();
         services.AddSwaggerGen(c =>
         {

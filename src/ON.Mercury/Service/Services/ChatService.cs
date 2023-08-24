@@ -18,7 +18,6 @@ using Message = Service.Database.Entities.Message;
 
 namespace ON.Mercury.Service.Services;
 
-[Authorize]
 public class ChatService : ChatInterface.ChatInterfaceBase
 {
     private readonly ILogger<ChatService> _logger;
@@ -41,7 +40,7 @@ public class ChatService : ChatInterface.ChatInterfaceBase
                 Id = Guid.NewGuid().ToString(),
                 Body = request.Body,
                 ChannelId = request.ChannelId,
-                SenderId = request.ChannelId,
+                SenderId = request.SenderId,
                 SentOn = DateTime.UtcNow
             };
 
@@ -55,7 +54,8 @@ public class ChatService : ChatInterface.ChatInterfaceBase
             return new SendMessageResponse()
             {
                 IsSuccess = true,
-                Error = ""
+                Error = "",
+                Message = Message.ToPb(newMessage)
             };
         }
         catch (Exception e)
