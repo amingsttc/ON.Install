@@ -12,7 +12,7 @@
       "src/types/channel.d.ts",
       "src/types/member.d.ts",
       "src/types/roles.d.ts",
-      "src/components/channels/channel-components.d.ts"
+      "src/types/message.d.ts"
     ],
     /* Bundler mode */
     "moduleResolution": "bundler",

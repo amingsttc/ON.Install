@@ -7,6 +7,7 @@ import { RootView } from "./views/RootView";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ChatChannelView } from "./views/ChatChannelView";
 import Sidebar from "./components/sidebar/sidebar";
+import { Message } from "./types/message";
 
 globalThis.token = localStorage.getItem("jwt");
 

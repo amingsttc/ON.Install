@@ -31,6 +31,7 @@ const groupChannels = (channels: Channel[]) => {
 export function ChannelList() {
   const categories = groupChannels(useAppSelector(selectChannels));
 
+  // TODO: Fix each element should have a unique key warning on <div className="list-item" key={category.category}>
   return (
     <div className="channel-list">
       {categories.map((category: CategoryListEntry) => (

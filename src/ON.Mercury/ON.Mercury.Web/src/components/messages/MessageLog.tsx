@@ -10,9 +10,11 @@ import MessageItem from "./MessageItem";
 import "@styles/MessageLog.css";
 import { selectLoggedInUser } from "../../features/app/appSlice";
 import { useAppSelector } from "../../app/hooks";
+import { UseQueryResult } from "@tanstack/react-query";
 
 interface MessageLogProps {
   connection: HubConnection;
+  messageQuery: UseQueryResult;
 }
 
 const getUsernameBySenderId = (profiles: any[], senderId: string) => {
@@ -44,17 +46,13 @@ const getUsernameBySenderId = (profiles: any[], senderId: string) => {
 // 	}
 // );
 
-export default function MessageLog({ connection }: MessageLogProps) {
+export default function MessageLog({
+  connection,
+  messageQuery,
+}: MessageLogProps) {
   const channelId = useParams().id;
   const loggedInUser = useAppSelector(selectLoggedInUser);
-  // const messages = useAppSelector((state) =>
-  // 	selectMessagesByChannel.resultFunc(
-  // 		state.channels.channels,
-  // 		state.profiles.profiles,
-  // 		channelId as string
-  // 	)
-  // );
-  const messages = [];
+  let messages = messageQuery.refetch();
   const [newMessage, setNewMessage] = useState("");
 
   const handleKeyPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -68,7 +66,6 @@ export default function MessageLog({ connection }: MessageLogProps) {
   };
 
   const handleSubmit = async () => {
-    // const msg: SendMessageDto = {
     const msg = {
       channelId: channelId as string,
       senderId: loggedInUser?.id,
@@ -83,14 +80,14 @@ export default function MessageLog({ connection }: MessageLogProps) {
   return (
     <>
       <div className="message-log">
-        {messages.map((message) => (
+        {/* {messages.map((message) => (
           // <MessageItem
           //   key={message.messageId}
           //   username={message.username as string}
           //   message={message}
           // />
           <h1>a</h1>
-        ))}
+        ))} */}
       </div>
       <div className="message-input-container">
         <input
