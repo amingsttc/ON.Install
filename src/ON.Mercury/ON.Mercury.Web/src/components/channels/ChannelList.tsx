@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
-import "./ChannelList.css";
+import React from "react";
+import "@styles/ChannelList.css";
 import { useAppSelector } from "../../app/hooks";
 import { selectChannels } from "../../features/channels/channelsSlice";
-import { CategoryList, CategoryListEntry, Channel } from "../../types/channel";
+import { CategoryListEntry, Channel } from "../../types/channel";
 import { Link } from "react-router-dom";
+
 const groupChannels = (channels: Channel[]) => {
   const groupedChannels: { [category: string]: Channel[] } = channels.reduce(
     (result, channel) => {
@@ -18,13 +19,6 @@ const groupChannels = (channels: Channel[]) => {
     },
     {} as { [category: string]: Channel[] },
   );
-
-  const categoryList: CategoryList = {
-    categories: Object.keys(groupedChannels).map((category) => ({
-      category,
-      channels: groupedChannels[category],
-    })),
-  };
 
   const categories = Object.keys(groupedChannels).map((category) => ({
     category,

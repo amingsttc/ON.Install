@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 // import { MessageDto } from "../../../lib/dto/message.dto";
-import "./MessageItem.css";
+import "@styles/MessageItem.css";
 // import { useDeleteMessageMutation } from "../../features/channelSlice";
 // import { useAppSelector } from "../../App/hooks";
 

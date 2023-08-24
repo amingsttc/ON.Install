@@ -1,5 +1,5 @@
 import { config } from "../config/config";
-import { GetCurrentMemberResponse, Member } from "../types/member";
+import { GetCurrentMemberResponse, Member } from "@mercury/types/member";
 
 export async function fetchAllMembers(): Promise<Member[]> {
   const result = await fetch(`${config.mercuryApi}/auth/members`, {

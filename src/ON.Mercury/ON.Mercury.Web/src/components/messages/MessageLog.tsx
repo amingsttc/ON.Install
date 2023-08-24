@@ -7,7 +7,7 @@ import { HubConnection } from "@microsoft/signalr";
 // import { RootState } from '../../App/store';
 // import { ProfileDto } from '../../../lib/dto/profile.dto';
 import MessageItem from "./MessageItem";
-import "./MessageLog.css";
+import "@styles/MessageLog.css";
 import { selectLoggedInUser } from "../../features/app/appSlice";
 import { useAppSelector } from "../../app/hooks";
 

@@ -1,5 +1,5 @@
 import { config } from "../config/config";
-import { Channel } from "../types/channel";
+import { Channel } from "@mercury/types/channel";
 
 export async function fetchAllChannels() {
   const result = await fetch(`${config.mercuryApi}/channels`, {

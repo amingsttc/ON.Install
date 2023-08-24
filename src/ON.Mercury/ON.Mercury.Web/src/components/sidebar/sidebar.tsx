@@ -1,15 +1,22 @@
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectChannels } from "../../features/channels/channelsSlice";
 import { Channel } from "../../types/channel";
 import ChannelItem from "../channels/ChannelItem";
-import "./Sidebar.css";
+import "@styles/Sidebar.css";
 import React, { useState } from "react";
-import { selectLoggedInUsername } from "../../features/app/appSlice";
-import { useNavigate } from "react-router";
+import {
+  selectLoggedInUsername,
+  setLoggedInUser,
+} from "../../features/app/appSlice";
+import { redirect, useHref, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+import { HubConnection } from "@microsoft/signalr";
+import CustomBulletItem from "../lists/CustomBulletItem";
 
 function Sidebar() {
+  const routerHref = useHref;
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const channels = useAppSelector(selectChannels);
   const username = useAppSelector(selectLoggedInUsername);
   const [showSidebarContextMenu, setShowSidebarContextMenu] = useState(false);
@@ -28,6 +35,9 @@ function Sidebar() {
 
   const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    // dispatch(setLoggedInUser(undefined));
+    // let connection: HubConnection = globalThis.hubConnection;
+    // connection.stop();
   };
 
   return (
@@ -42,9 +52,7 @@ function Sidebar() {
       <div className="container">
         <ul className="list">
           <Link to={`/`} className="sidebar-link">
-            <li className="channel-name">
-              <span className="custom-bullet">#</span>Directory
-            </li>
+            <CustomBulletItem bullet="#">Directory</CustomBulletItem>
           </Link>
           {channels.map((channel: Channel) => (
             <ChannelItem key={channel.id} channel={channel} />

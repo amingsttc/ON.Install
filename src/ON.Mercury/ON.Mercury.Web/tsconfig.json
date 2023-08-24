@@ -11,7 +11,8 @@
       "src/types/appconfig.d.ts",
       "src/types/channel.d.ts",
       "src/types/member.d.ts",
-      "src/types/roles.d.ts"
+      "src/types/roles.d.ts",
+      "src/components/channels/channel-components.d.ts"
     ],
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -25,8 +26,23 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@assets/*": ["./src/assets/*"],
+      "@components/*": ["src/components/*"],
+      "@channels/*": ["src/components/channels/*"],
+      "@mercury/types/*": ["src/types/*"]
+    }
   },
-  "include": ["src/**/*.ts", "src/**/*.svg", "./public", "src/api/auth.api.js"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.svg",
+    "src/**/*.d.tsx",
+    "vite.config.ts",
+    "./public",
+    "src/assets/*.css",
+    "@mercury/types/*"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

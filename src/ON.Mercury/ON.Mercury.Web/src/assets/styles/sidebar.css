@@ -68,14 +68,6 @@
   display: none;
 }
 
-.custom-bullet {
-  display: inline-block;
-  width: 20px; /* Adjust the width as needed */
-  text-align: center;
-  margin-right: 5px; /* Adjust the spacing as needed */
-  font-weight: bold;
-}
-
 .logout-button {
   margin-left: 150px;
   padding: 8px 12px;

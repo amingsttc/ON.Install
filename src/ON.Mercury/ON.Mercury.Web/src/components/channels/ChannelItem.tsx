@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import "./ChannelItem.css";
+import "@styles/ChannelItem.css";
 import { Channel } from "../../types/channel";
 import { Link } from "react-router-dom";
 

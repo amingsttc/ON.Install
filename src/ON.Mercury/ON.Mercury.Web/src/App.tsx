@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "./assets/App.css";
+//import "./assets/App.css";
+import "@styles/App.css";
 import { buildSignalR } from "./signalR/signalR";
 import { config } from "./config/config";
 import { RootView } from "./views/RootView";

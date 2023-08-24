@@ -1,8 +1,8 @@
 import { HubConnection } from "@microsoft/signalr";
 
 declare global {
-  var hubConnection: HubConnection | undefined;
-  var token: string | undefined;
+  const hubConnection: HubConnection | undefined;
+  const token: string | undefined;
 }
 
 export {};

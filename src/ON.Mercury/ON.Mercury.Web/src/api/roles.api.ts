@@ -1,5 +1,5 @@
 import { config } from "../config/config";
-import { Role } from "../types/roles";
+import { Role } from "@mercury/types/roles";
 
 export async function fetchAllRoles(): Promise<Role[]> {
   const result = await fetch(`${config.mercuryApi}/roles`, {
