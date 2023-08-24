@@ -84,11 +84,28 @@ public void MergeFrom(Message message)
     }
 
     public MessageDescriptor Descriptor { get; }
-    public bool Equals(Message other)
+    public bool Equals(Message obj)
     {
-        throw new System.NotImplementedException();
-    }
+        if (obj is null || GetType() != obj.GetType())
+        {
+            return false;
+        }
 
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
+
+        Message otherMessage = (Message)obj;
+
+        return Id == otherMessage.Id
+               && ChannelId == otherMessage.ChannelId
+               && SenderId == otherMessage.SenderId
+               && Body == otherMessage.Body
+               && SentOn == otherMessage.SentOn
+               && ModifiedOn == otherMessage.ModifiedOn
+               && DeletedOn == otherMessage.DeletedOn;
+    }
     public Message Clone()
     {
         throw new System.NotImplementedException();

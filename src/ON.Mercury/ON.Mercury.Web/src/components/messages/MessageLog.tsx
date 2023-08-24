@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 //import { createSelector } from '@reduxjs/toolkit';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HubConnection } from "@microsoft/signalr";
 // import { useAppSelector } from '../../App/hooks';
 // import { SendMessageDto } from '../../../lib/dto/message.dto';
@@ -9,51 +9,45 @@ import { HubConnection } from "@microsoft/signalr";
 import MessageItem from "./MessageItem";
 import "@styles/MessageLog.css";
 import { selectLoggedInUser } from "../../features/app/appSlice";
-import { useAppSelector } from "../../app/hooks";
-import { UseQueryResult } from "@tanstack/react-query";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useQuery } from "@tanstack/react-query";
+import { Message } from "../../types/message";
+import { fetchMessages } from "../../api/message.api";
+import {
+  MessageMapEntry,
+  selectChannel,
+  setMessages,
+} from "../../features/messages/messagesSlice";
 
 interface MessageLogProps {
   connection: HubConnection;
-  messageQuery: UseQueryResult;
 }
 
-const getUsernameBySenderId = (profiles: any[], senderId: string) => {
-  const profile = profiles.find((profile) => profile.id === senderId);
-  return profile ? profile.username : null;
-};
-
-// export const selectMessagesByChannel = createSelector(
-// 	[
-// 		(state: RootState) => state.channels.channels,
-// 		(state: RootState) => state.profiles.profiles, // Include the profiles in the selector
-// 		(channelId: string) => channelId,
-// 	],
-// 	(channels, profiles, channelId) => {
-// 		const channel = channels.find(
-// 			(channel) => channel.channelId === channelId
-// 		);
-// 		if (channel) {
-// 			const messagesWithUsername = channel.chatMessages?.map(
-// 				(message) => ({
-// 					...message,
-// 					username: getUsernameBySenderId(profiles, message.senderId),
-// 				})
-// 			);
-
-// 			return messagesWithUsername || [];
-// 		}
-// 		return [];
-// 	}
-// );
-
-export default function MessageLog({
-  connection,
-  messageQuery,
-}: MessageLogProps) {
-  const channelId = useParams().id;
+export default function MessageLog({ connection }: MessageLogProps) {
+  const dispatch = useAppDispatch();
+  let channelId = useParams().id;
+  let messages: Message[] = useAppSelector((state) =>
+    selectChannel(state, channelId as string),
+  );
   const loggedInUser = useAppSelector(selectLoggedInUser);
-  let messages = messageQuery.refetch();
   const [newMessage, setNewMessage] = useState("");
+  const messageQuery = useQuery(["messages"], {
+    queryFn: async () => {
+      if (channelId) {
+        messages = await fetchMessages(channelId);
+        const id = channelId as string;
+
+        const stateEntry: MessageMapEntry = {
+          channel: id,
+          messages: [...messages],
+        };
+        dispatch(setMessages(stateEntry));
+      }
+
+      return messages;
+    },
+    enabled: false,
+  });
 
   const handleKeyPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && newMessage !== "") {
@@ -77,17 +71,25 @@ export default function MessageLog({
     setNewMessage("");
   };
 
+  useEffect(() => {
+    if (!messages) {
+      messageQuery.refetch();
+    }
+  }, [messageQuery]);
+
+  if (!messageQuery.isSuccess) {
+    return (
+      <div>
+        <h1>Loading</h1>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="message-log">
-        {/* {messages.map((message) => (
-          // <MessageItem
-          //   key={message.messageId}
-          //   username={message.username as string}
-          //   message={message}
-          // />
-          <h1>a</h1>
-        ))} */}
+        {messages &&
+          messages.map((message) => <MessageItem message={message} />)}
       </div>
       <div className="message-input-container">
         <input

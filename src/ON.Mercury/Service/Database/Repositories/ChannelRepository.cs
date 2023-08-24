@@ -75,14 +75,13 @@ namespace ON.Mercury.Service.Database.Repositories
 
         public async Task<IReadOnlyList<Message>?> GetMessagesAsync(string channelId, MessageSenderParams messageSenderParams = MessageSenderParams.SenderId, CancellationToken cancellationToken = default)
         {
-            // var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
-            // if (channel is null) return null;
-            // var messages = await _postgres.Messages
-            //     .Where(m => m.ChannelId == channelId && m.DeletedOn == null)
-            //     .OrderBy(m => m.SentOn)
-            //     .ToListAsync(cancellationToken);
-            // return messages;
-            throw new NotImplementedException();
+            var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
+            if (channel is null) return null;
+            var messages = await _postgres.Messages
+                .Where(m => m.ChannelId == channelId && m.DeletedOn == null)
+                .OrderBy(m => m.SentOn)
+                .ToListAsync(cancellationToken);
+            return messages;
         }
 
         public async Task<Message> SendMessageAsync(string channelId, string senderId, string body, CancellationToken cancellationToken = default)

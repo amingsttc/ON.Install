@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 // import { MessageDto } from "../../../lib/dto/message.dto";
 import "@styles/MessageItem.css";
+import { Message } from "../../types/message";
+import { useAppSelector } from "../../app/hooks";
+import { selectUsernameById } from "../../features/app/appSlice";
 // import { useDeleteMessageMutation } from "../../features/channelSlice";
 // import { useAppSelector } from "../../App/hooks";
 
 interface MessageItemProps {
-  message: any;
-  username: string;
+  message: Message;
 }
 
 // TODO Only show delete and edit if
 //    - It's the current users message
 //    - The user is an admin or owner
-const MessageItem: React.FC<MessageItemProps> = ({ message, username }) => {
+const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
   const { body, sentOn } = message;
   const [showContextMenu, setShowContextMenu] = useState(false);
   // const deleteMessage = useDeleteMessageMutation();
@@ -58,7 +60,12 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, username }) => {
       onMouseLeave={() => setShowContextMenu(false)}
     >
       <div className="username-date-container">
-        <div className="message-username">{username}</div>
+        <div className="message-username">
+          {useAppSelector(
+            (state) =>
+              selectUsernameById(state, message.senderId as string)?.username,
+          )}
+        </div>
         <div className="message-sent-on">{formatDate(sentOn)}</div>
       </div>
       <div className="message-body">{body}</div>

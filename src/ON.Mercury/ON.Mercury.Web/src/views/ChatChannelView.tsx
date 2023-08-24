@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useAppDispatch } from "../app/hooks";
 import MessageLog from "../components/messages/MessageLog";
 import Sidebar from "../components/sidebar/sidebar";
@@ -14,42 +14,41 @@ import { Message } from "postcss";
 export function ChatChannelView() {
   const dispatch = useAppDispatch();
 
-  const messageQuery = useQuery(["messages"], {
-    queryFn: async () => {
-      const { channelId } = useParams<{ channelId: string }>();
-      let messages: Message[] = [];
-      if (channelId) {
-        messages = await fetchMessages(channelId);
-        const id = channelId as string;
+  const { channelId } = useParams<{ channelId: string }>();
+  // const messageQuery = useQuery(["messages"], {
+  //   queryFn: async () => {
+  //     let messages: Message[] = [];
+  //     if (channelId) {
+  //       messages = await fetchMessages(channelId);
+  //       const id = channelId as string;
 
-        const stateEntry: MessageMapEntry = {
-          channel: id,
-          messages,
-        };
-        dispatch(setMessages(stateEntry));
-      }
+  //       const stateEntry: MessageMapEntry = {
+  //         channel: id,
+  //         messages,
+  //       };
+  //       dispatch(setMessages(stateEntry));
+  //     }
 
-      return messages;
-    },
-    enabled: false,
-  });
+  //     console.log(messages);
 
-  if (messageQuery.isFetching || messageQuery.isRefetching) {
-    return (
-      <>
-        <Sidebar />
-        <h1>hi</h1>
-      </>
-    );
-  }
+  //     return messages;
+  //   },
+  //   enabled: false,
+  // });
+
+  // if (messageQuery.isFetching || messageQuery.isRefetching) {
+  //   return (
+  //     <>
+  //       <Sidebar />
+  //       <h1>hi</h1>
+  //     </>
+  //   );
+  // }
 
   return (
     <>
       <Sidebar />
-      <MessageLog
-        connection={globalThis.hubConnection}
-        messageQuery={messageQuery}
-      />
+      <MessageLog connection={globalThis.hubConnection} />
     </>
   );
 }

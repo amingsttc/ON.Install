@@ -44,4 +44,6 @@ export const selectMembers = (state: RootState) => state.app.members;
 export const selectLoggedInUsername = (state: RootState) =>
   state.app.loggedInUser?.username;
 export const selectLoggedInUser = (state: RootState) => state.app.loggedInUser;
+export const selectUsernameById = (state: RootState, id: string) =>
+  state.app.members.find((m) => m.id === id);
 export default appSlice.reducer;

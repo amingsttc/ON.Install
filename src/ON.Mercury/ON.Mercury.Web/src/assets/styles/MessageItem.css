@@ -9,6 +9,7 @@
   margin-bottom: 8px;
   margin-left: 310px;
   margin-right: auto;
+  width: calc(100vw - 300px);
 }
 
 .message-item:hover {

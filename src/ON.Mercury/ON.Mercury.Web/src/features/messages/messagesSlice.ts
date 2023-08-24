@@ -4,11 +4,11 @@ import { RootState } from "src/app/store";
 
 // TODO: Fix non-serializable value in state error
 interface MessagesState {
-  messages: Map<string, Message[]>;
+  messages: Record<string, Message[]>;
 }
 
 const initialState: MessagesState = {
-  messages: new Map<string, Message[]>(),
+  messages: {},
 };
 
 type MapEntry = {
@@ -23,11 +23,12 @@ export const messagesSlice = createSlice({
   initialState,
   reducers: {
     setMessages: (state: MessagesState, action: PayloadAction<MapEntry>) => {
-      if (state.messages.has(action.payload.channel)) {
-        const channel = state.messages.get(action.payload.channel);
-        channel?.concat(action.payload.messages);
+      const { channel, messages } = action.payload;
+
+      if (channel in state.messages) {
+        state.messages[channel] = state.messages[channel].concat(messages);
       } else {
-        state.messages.set(action.payload.channel, action.payload.messages);
+        state.messages[channel] = messages;
       }
     },
   },
@@ -36,4 +37,6 @@ export const messagesSlice = createSlice({
 export const { setMessages } = messagesSlice.actions;
 export const selectMessagesState = (state: RootState) =>
   state.messages.messages;
+export const selectChannel = (state: RootState, channelId: string) =>
+  state.messages.messages[channelId];
 export default messagesSlice.reducer;
