@@ -26,6 +26,9 @@ export function buildSignalR(url: string, token: string): HubConnection {
 
   connection.on("ReceiveMessage", (message: Message) => {
     console.log(message);
+    message.sentOn = new Date(
+      message.sentOn.seconds * 1000 + message.sentOn.nanos / 1e6,
+    ).toISOString();
     store.dispatch(
       addMessage({ channel: message.channelId, message: message }),
     );
