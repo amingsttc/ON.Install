@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 //import { createSelector } from '@reduxjs/toolkit';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { HubConnection } from "@microsoft/signalr";
 // import { useAppSelector } from '../../App/hooks';
 // import { SendMessageDto } from '../../../lib/dto/message.dto';
@@ -24,6 +24,8 @@ interface MessageLogProps {
 }
 
 export default function MessageLog({ connection }: MessageLogProps) {
+  const messageLogRef = useRef<HTMLDivElement>(null);
+  const [isLockedToBottom, setIsLockedToBottom] = useState(true);
   const dispatch = useAppDispatch();
   let channelId = useParams().id;
   let messages: Message[] = useAppSelector((state) =>
@@ -50,6 +52,23 @@ export default function MessageLog({ connection }: MessageLogProps) {
     enabled: false,
   });
 
+  const scrollToBottom = () => {
+    if (messageLogRef.current && isLockedToBottom) {
+      const messageLog = messageLogRef.current;
+      messageLog.scrollTop = messageLog.scrollHeight;
+    }
+  };
+
+  const handleScroll = () => {
+    const messageLog = messageLogRef.current;
+    if (messageLog) {
+      const isScrolledToBottom =
+        messageLog.scrollHeight - messageLog.scrollTop <=
+        messageLog.clientHeight + 10;
+      setIsLockedToBottom(isScrolledToBottom);
+    }
+  };
+
   const handleKeyPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && newMessage !== "") {
       await handleSubmit();
@@ -75,8 +94,22 @@ export default function MessageLog({ connection }: MessageLogProps) {
   useEffect(() => {
     if (!messages) {
       messageQuery.refetch();
+    } else {
+      scrollToBottom();
     }
-  }, [messageQuery]);
+  }, [messages, messageQuery]);
+
+  useEffect(() => {
+    const messageLog = messageLogRef.current;
+    if (messageLog) {
+      messageLog.addEventListener("scroll", handleScroll);
+    }
+    return () => {
+      if (messageLog) {
+        messageLog.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []);
 
   if (!messageQuery.isSuccess) {
     return (
@@ -88,7 +121,7 @@ export default function MessageLog({ connection }: MessageLogProps) {
 
   return (
     <>
-      <div className="message-log">
+      <div className="message-log" ref={messageLogRef}>
         {messages &&
           messages.map((message) => <MessageItem message={message} />)}
       </div>
