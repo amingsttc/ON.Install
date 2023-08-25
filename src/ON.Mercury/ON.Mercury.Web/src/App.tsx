@@ -9,6 +9,7 @@ import { ChatChannelView } from "./views/ChatChannelView";
 import Sidebar from "./components/sidebar/sidebar";
 import { Message } from "./types/message";
 import { ContextMenuProvider } from "./providers/ContextMenuProvider";
+import { ModalProvider } from "./components/modal/ModalProvider";
 
 globalThis.token = localStorage.getItem("jwt");
 
@@ -45,9 +46,11 @@ function App() {
 
   return (
     <div className="App">
-      <ContextMenuProvider>
-        <RouterProvider router={router} />
-      </ContextMenuProvider>
+      <ModalProvider>
+        <ContextMenuProvider>
+          <RouterProvider router={router} />
+        </ContextMenuProvider>
+      </ModalProvider>
     </div>
   );
 }

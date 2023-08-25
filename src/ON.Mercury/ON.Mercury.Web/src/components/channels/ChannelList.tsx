@@ -34,6 +34,7 @@ export function ChannelList() {
   // TODO: Fix each element should have a unique key warning on <div className="list-item" key={category.category}>
   return (
     <div className="channel-list">
+      <h1 className="list-item">create channel</h1>
       {categories.map((category: CategoryListEntry) => (
         <div className="list-item" key={category.category}>
           <h1>{category.category}</h1>
