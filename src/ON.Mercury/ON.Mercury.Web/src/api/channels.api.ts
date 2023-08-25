@@ -11,6 +11,8 @@ export async function fetchAllChannels() {
   const result = await fetch(`${config.mercuryApi}/channels`, {
     headers: {
       Authorization: config.authToken,
+      "Content-Type": "application/json",
+      Accept: "application/json",
     },
     mode: "cors",
     method: "get",
@@ -22,16 +24,26 @@ export async function fetchAllChannels() {
 }
 
 export async function createChannel(newChannel: NewChannelRequest) {
-  const result = await fetch(`${config.mercuryApi}/channels`, {
-    headers: {
-      Authorization: config.authToken,
-      ContentType: "application/json",
-      Accept: "application/json",
-    },
-    mode: "cors",
-    method: "post",
-    body: JSON.stringify(newChannel),
-  });
-  console.log(await result.json());
-  return result.body;
+  try {
+    const result = await fetch(`${config.mercuryApi}/channels`, {
+      headers: {
+        Authorization: config.authToken,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      mode: "cors",
+      method: "post",
+      body: JSON.stringify(newChannel),
+    });
+
+    if (!result.ok) {
+      throw new Error(`Failed to create channel. Status: ${result.status}`);
+    }
+
+    const responseData = await result.json();
+    return responseData;
+  } catch (error) {
+    console.error("Error creating channel:", error);
+    throw error; // Rethrow the error for further handling if needed
+  }
 }

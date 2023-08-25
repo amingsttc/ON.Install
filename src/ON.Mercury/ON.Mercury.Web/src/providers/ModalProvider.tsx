@@ -41,8 +41,10 @@ export function ModalProvider({ children }: ModalProviderProps) {
         <>
           <div className="modal-overlay" />
           <div className="modal">
+            {/* <button onClick={() => hideModal()} id="close-button">
+              X
+            </button> */}
             {modalContent}
-            <button onClick={hideModal}>Close Modal</button>
           </div>
         </>
       )}
