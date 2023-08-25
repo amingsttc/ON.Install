@@ -6,7 +6,7 @@ import { createChannel } from "../../api/channels.api";
 type NewChannelRequest = {
   name: string;
   category: string;
-  description: string | undefined;
+  description: string;
 };
 
 export function NewChannelForm() {
@@ -15,8 +15,8 @@ export function NewChannelForm() {
     category: "Uncategorized",
     description: "",
   });
-  const createChannelMutation = useMutation((newChannel) => {
-    return createChannel(newChannel as unknown as NewChannelRequest);
+  const createChannelMutation = useMutation(() => {
+    return createChannel(newChannel);
   });
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -49,7 +49,7 @@ export function NewChannelForm() {
           type="text"
           id="category"
           name="category"
-          value={newChannel.category || ""}
+          value={newChannel.category || "undefined"}
           onChange={onChange}
         />
         <label htmlFor="description">Description:</label>

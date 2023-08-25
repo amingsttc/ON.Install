@@ -4,7 +4,7 @@ import { Channel } from "@mercury/types/channel";
 type NewChannelRequest = {
   name: string;
   category: string;
-  description: string | undefined;
+  description: string;
 };
 
 export async function fetchAllChannels() {
@@ -26,11 +26,12 @@ export async function createChannel(newChannel: NewChannelRequest) {
     headers: {
       Authorization: config.authToken,
       ContentType: "application/json",
+      Accept: "application/json",
     },
     mode: "cors",
     method: "post",
     body: JSON.stringify(newChannel),
   });
-  console.log(result);
+  console.log(await result.json());
   return result.body;
 }
