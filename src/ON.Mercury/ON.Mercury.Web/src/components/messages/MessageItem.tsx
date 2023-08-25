@@ -4,6 +4,7 @@ import "@styles/MessageItem.css";
 import { Message } from "../../types/message";
 import { useAppSelector } from "../../app/hooks";
 import { selectUsernameById } from "../../features/app/appSlice";
+import { useContextMenu } from "../../providers/ContextMenuProvider";
 // import { useDeleteMessageMutation } from "../../features/channelSlice";
 // import { useAppSelector } from "../../App/hooks";
 
@@ -16,7 +17,8 @@ interface MessageItemProps {
 //    - The user is an admin or owner
 const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
   const { body, sentOn } = message;
-  const [showContextMenu, setShowContextMenu] = useState(false);
+  //const [showContextMenu, setShowContextMenu] = useState(false);
+  const { showContextMenu, setShowContextMenu } = useContextMenu();
   // const deleteMessage = useDeleteMessageMutation();
   // TODO: Format to local time as well
   const formatDate = (dateString: string) => {
@@ -39,7 +41,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
 
   const handleDeleteMessage = async () => {
     //await deleteMessage.mutateAsync(message.messageId);
-    setShowContextMenu(false);
+    //setShowContextMenu(false);
   };
 
   return (
@@ -47,15 +49,17 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
       className="message-item"
       onContextMenu={(e) => {
         e.preventDefault();
-        setShowContextMenu(true);
         const clickX = e.clientX;
         const clickY = e.clientY;
-        const contextMenu = document.getElementById("context-menu");
 
+        // Calculate the position of the context menu based on mouse coordinates
+        const contextMenu = document.getElementById("context-menu");
         if (contextMenu) {
           contextMenu.style.top = `${clickY}px`;
           contextMenu.style.left = `${clickX}px`;
         }
+
+        setShowContextMenu(true);
       }}
       onMouseLeave={() => setShowContextMenu(false)}
     >
@@ -69,22 +73,6 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
         <div className="message-sent-on">{formatDate(sentOn)}</div>
       </div>
       <div className="message-body">{body}</div>
-
-      {showContextMenu && (
-        <div id="context-menu" className="context-menu">
-          <div
-            className="context-menu-item"
-            onClick={() => {
-              setShowContextMenu(false);
-            }}
-          >
-            Edit Message
-          </div>
-          <div className="context-menu-item" onClick={handleDeleteMessage}>
-            Delete Message
-          </div>
-        </div>
-      )}
     </div>
   );
 };

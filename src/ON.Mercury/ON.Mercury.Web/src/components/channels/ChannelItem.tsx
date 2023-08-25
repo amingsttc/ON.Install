@@ -2,24 +2,25 @@ import React, { useRef, useState } from "react";
 import "@styles/ChannelItem.css";
 import { Channel } from "../../types/channel";
 import { Link } from "react-router-dom";
+import { useContextMenu } from "../../providers/ContextMenuProvider";
 
 type ChannelItemProps = {
   channel: Channel;
 };
 
 export default function ChannelItem({ channel }: ChannelItemProps) {
-  const [showChannelContextMenu, setShowChannelContextMenu] = useState(false);
+  const { showContextMenu, setShowContextMenu } = useContextMenu();
   // const deleteChannel = useDeleteChannelMutation();
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const handleDeleteChannel = async () => {
     //await deleteChannel.mutateAsync(channel.channelId);
-    setShowChannelContextMenu(false);
+    setShowContextMenu(false);
   };
 
   const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    setShowChannelContextMenu(true);
+    setShowContextMenu(false);
     const clickX = e.clientX;
     const clickY = e.clientY;
     const contextMenu = document.getElementById("channel-context-menu");
@@ -28,6 +29,7 @@ export default function ChannelItem({ channel }: ChannelItemProps) {
       contextMenu.style.top = `${clickY}px`;
       contextMenu.style.left = `${clickX}px`;
     }
+    setShowContextMenu(true);
   };
 
   const handleOutsideClick = (e: MouseEvent) => {
@@ -35,7 +37,7 @@ export default function ChannelItem({ channel }: ChannelItemProps) {
       contextMenuRef.current &&
       !contextMenuRef.current.contains(e.target as Node)
     ) {
-      setShowChannelContextMenu(false);
+      setShowContextMenu(false);
     }
   };
 
@@ -62,13 +64,13 @@ export default function ChannelItem({ channel }: ChannelItemProps) {
       <div
         className="sidebar-channel"
         onContextMenu={handleContextMenu}
-        onMouseLeave={() => setShowChannelContextMenu(false)}
+        onMouseLeave={() => setShowContextMenu(false)}
       >
         <li className="channel-name">
           <span className="custom-bullet">#</span>
           {channel.name}
         </li>
-        {showChannelContextMenu && (
+        {showContextMenu && (
           <div
             ref={contextMenuRef}
             id="channel-context-menu"
@@ -76,7 +78,7 @@ export default function ChannelItem({ channel }: ChannelItemProps) {
           >
             <div
               className="context-menu-item"
-              onClick={() => setShowChannelContextMenu(false)}
+              onClick={() => setShowContextMenu(false)}
             >
               Edit Channel
             </div>

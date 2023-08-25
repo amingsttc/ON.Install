@@ -12,6 +12,8 @@ import { redirect, useHref, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { HubConnection } from "@microsoft/signalr";
 import CustomBulletItem from "../lists/CustomBulletItem";
+import Cogwheel from "../icons/Cogwheel";
+import { useContextMenu } from "../../providers/ContextMenuProvider";
 
 function Sidebar() {
   const routerHref = useHref;
@@ -19,10 +21,10 @@ function Sidebar() {
   const dispatch = useAppDispatch();
   const channels = useAppSelector(selectChannels);
   const username = useAppSelector(selectLoggedInUsername);
-  const [showSidebarContextMenu, setShowSidebarContextMenu] = useState(false);
+  const { showContextMenu, setShowContextMenu } = useContextMenu();
   const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setShowSidebarContextMenu(true);
+    setShowContextMenu(false);
     const clickX = e.clientX;
     const clickY = e.clientY;
     const contextMenu = document.getElementById("sidebar-context-menu");
@@ -31,6 +33,8 @@ function Sidebar() {
       contextMenu.style.top = `${clickY}px`;
       contextMenu.style.left = `${clickX}px`;
     }
+
+    setShowContextMenu(true);
   };
 
   const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -44,7 +48,7 @@ function Sidebar() {
     <div
       className="sidebar"
       onContextMenu={handleContextMenu}
-      onMouseLeave={() => setShowSidebarContextMenu(false)}
+      onMouseLeave={() => setShowContextMenu(false)}
     >
       <div className="sidebar-header">
         <h3>ServerName</h3>
@@ -60,17 +64,22 @@ function Sidebar() {
         </ul>
       </div>
       <div className="sidebar-footer">
-        <h2>{username}</h2>
-        <button className="logout-button" onClick={handleLogout}>
-          Logout
-        </button>
+        <div className="username">
+          <h2>@{username}</h2>
+        </div>
+        {/* <button className="logout-button" onClick={handleLogout}>
+          <Cogwheel />
+        </button> */}
+        <div className="logout-button">
+          <Cogwheel />
+        </div>
       </div>
-      {showSidebarContextMenu && (
+      {showContextMenu && (
         <div id="sidebar-context-menu" className="context-menu">
           <div
             className="context-menu-item"
             onClick={() => {
-              setShowSidebarContextMenu(false);
+              setShowContextMenu(false);
               navigate("/channels/new");
             }}
           >

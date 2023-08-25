@@ -8,6 +8,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ChatChannelView } from "./views/ChatChannelView";
 import Sidebar from "./components/sidebar/sidebar";
 import { Message } from "./types/message";
+import { ContextMenuProvider } from "./providers/ContextMenuProvider";
 
 globalThis.token = localStorage.getItem("jwt");
 
@@ -44,7 +45,9 @@ function App() {
 
   return (
     <div className="App">
-      <RouterProvider router={router} />
+      <ContextMenuProvider>
+        <RouterProvider router={router} />
+      </ContextMenuProvider>
     </div>
   );
 }

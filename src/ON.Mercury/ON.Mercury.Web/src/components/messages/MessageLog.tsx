@@ -18,6 +18,7 @@ import {
   selectChannel,
   setMessages,
 } from "../../features/messages/messagesSlice";
+import { useContextMenu } from "../../providers/ContextMenuProvider";
 
 interface MessageLogProps {
   connection: HubConnection;
@@ -31,6 +32,7 @@ export default function MessageLog({ connection }: MessageLogProps) {
   let messages: Message[] = useAppSelector((state) =>
     selectChannel(state, channelId as string),
   );
+  const { showContextMenu, setShowContextMenu } = useContextMenu();
   const [showScrollButton, setShowScrollButton] = useState(false);
   const loggedInUser = useAppSelector(selectLoggedInUser);
   const [newMessage, setNewMessage] = useState("");
@@ -130,6 +132,19 @@ export default function MessageLog({ connection }: MessageLogProps) {
 
   return (
     <>
+      {showContextMenu && (
+        <div id="context-menu" className="context-menu">
+          <div
+            className="context-menu-item"
+            onClick={() => {
+              setShowContextMenu(false);
+            }}
+          >
+            Edit Message
+          </div>
+          <div className="context-menu-item">Delete Message</div>
+        </div>
+      )}
       <div className="message-log" ref={messageLogRef}>
         {messages &&
           messages.map((message) => <MessageItem message={message} />)}

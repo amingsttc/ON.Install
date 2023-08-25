@@ -69,7 +69,7 @@
 }
 
 .logout-button {
-  margin-left: 150px;
+  margin-left: 130px;
   padding: 8px 12px;
   background-color: #2f3136;
   border: none;
@@ -99,5 +99,17 @@
 }
 
 .context-menu-item:hover {
+  background-color: #424549;
+}
+
+.username {
+  margin-left: 5px;
+  background-color: #2f3136;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.username:hover {
   background-color: #424549;
 }
