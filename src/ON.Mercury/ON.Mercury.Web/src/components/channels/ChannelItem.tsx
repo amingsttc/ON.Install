@@ -17,43 +17,43 @@ export default function ChannelItem({ channel }: ChannelItemProps) {
     setShowContextMenu(false);
   };
 
-  const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setShowContextMenu(false);
-    const clickX = e.clientX;
-    const clickY = e.clientY;
-    const contextMenu = document.getElementById("channel-context-menu");
+  // const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   setShowContextMenu(false);
+  //   const clickX = e.clientX;
+  //   const clickY = e.clientY;
+  //   const contextMenu = document.getElementById("channel-context-menu");
 
-    if (contextMenu) {
-      contextMenu.style.top = `${clickY}px`;
-      contextMenu.style.left = `${clickX}px`;
-    }
-    setShowContextMenu(true);
-  };
+  //   if (contextMenu) {
+  //     contextMenu.style.top = `${clickY}px`;
+  //     contextMenu.style.left = `${clickX}px`;
+  //   }
+  //   setShowContextMenu(true);
+  // };
 
-  const handleOutsideClick = (e: MouseEvent) => {
-    if (
-      contextMenuRef.current &&
-      !contextMenuRef.current.contains(e.target as Node)
-    ) {
-      setShowContextMenu(false);
-    }
-  };
+  // const handleOutsideClick = (e: MouseEvent) => {
+  //   if (
+  //     contextMenuRef.current &&
+  //     !contextMenuRef.current.contains(e.target as Node)
+  //   ) {
+  //     setShowContextMenu(false);
+  //   }
+  // };
 
-  const handleContextMenuItemClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Prevent the click event from bubbling up to the parent (Sidebar) context menu
-    e.stopPropagation();
-  };
+  // const handleContextMenuItemClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  //   // Prevent the click event from bubbling up to the parent (Sidebar) context menu
+  //   e.stopPropagation();
+  // };
 
-  // Add a global event listener to handle outside clicks and close the context menu
-  React.useEffect(() => {
-    document.addEventListener("click", handleOutsideClick);
+  // // Add a global event listener to handle outside clicks and close the context menu
+  // React.useEffect(() => {
+  //   document.addEventListener("click", handleOutsideClick);
 
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
-  }, []);
+  //   return () => {
+  //     document.removeEventListener("click", handleOutsideClick);
+  //   };
+  // }, []);
 
   return (
     <Link
@@ -63,14 +63,14 @@ export default function ChannelItem({ channel }: ChannelItemProps) {
     >
       <div
         className="sidebar-channel"
-        onContextMenu={handleContextMenu}
-        onMouseLeave={() => setShowContextMenu(false)}
+        // onContextMenu={handleContextMenu}
+        // onMouseLeave={() => setShowContextMenu(false)}
       >
         <li className="channel-name">
           <span className="custom-bullet">#</span>
           {channel.name}
         </li>
-        {showContextMenu && (
+        {/* {showContextMenu && (
           <div
             ref={contextMenuRef}
             id="channel-context-menu"
@@ -86,7 +86,7 @@ export default function ChannelItem({ channel }: ChannelItemProps) {
               Delete Channel
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </Link>
   );

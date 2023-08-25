@@ -47,21 +47,21 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
   return (
     <div
       className="message-item"
-      onContextMenu={(e) => {
-        e.preventDefault();
-        const clickX = e.clientX;
-        const clickY = e.clientY;
+      // onContextMenu={(e) => {
+      //   e.preventDefault();
+      //   const clickX = e.clientX;
+      //   const clickY = e.clientY;
 
-        // Calculate the position of the context menu based on mouse coordinates
-        const contextMenu = document.getElementById("context-menu");
-        if (contextMenu) {
-          contextMenu.style.top = `${clickY}px`;
-          contextMenu.style.left = `${clickX}px`;
-        }
+      //   // Calculate the position of the context menu based on mouse coordinates
+      //   const contextMenu = document.getElementById("context-menu");
+      //   if (contextMenu) {
+      //     contextMenu.style.top = `${clickY}px`;
+      //     contextMenu.style.left = `${clickX}px`;
+      //   }
 
-        setShowContextMenu(true);
-      }}
-      onMouseLeave={() => setShowContextMenu(false)}
+      //   setShowContextMenu(true);
+      // }}
+      // onMouseLeave={() => setShowContextMenu(false)}
     >
       <div className="username-date-container">
         <div className="message-username">

@@ -21,21 +21,21 @@ function Sidebar() {
   const dispatch = useAppDispatch();
   const channels = useAppSelector(selectChannels);
   const username = useAppSelector(selectLoggedInUsername);
-  const { showContextMenu, setShowContextMenu } = useContextMenu();
-  const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setShowContextMenu(false);
-    const clickX = e.clientX;
-    const clickY = e.clientY;
-    const contextMenu = document.getElementById("sidebar-context-menu");
+  // const { showContextMenu, setShowContextMenu } = useContextMenu();
+  // const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
+  //   e.preventDefault();
+  //   setShowContextMenu(false);
+  //   const clickX = e.clientX;
+  //   const clickY = e.clientY;
+  //   const contextMenu = document.getElementById("sidebar-context-menu");
 
-    if (contextMenu) {
-      contextMenu.style.top = `${clickY}px`;
-      contextMenu.style.left = `${clickX}px`;
-    }
+  //   if (contextMenu) {
+  //     contextMenu.style.top = `${clickY}px`;
+  //     contextMenu.style.left = `${clickX}px`;
+  //   }
 
-    setShowContextMenu(true);
-  };
+  //   setShowContextMenu(true);
+  // };
 
   const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -47,8 +47,8 @@ function Sidebar() {
   return (
     <div
       className="sidebar"
-      onContextMenu={handleContextMenu}
-      onMouseLeave={() => setShowContextMenu(false)}
+      // onContextMenu={handleContextMenu}
+      // onMouseLeave={() => setShowContextMenu(false)}
     >
       <div className="sidebar-header">
         <h3>ServerName</h3>
@@ -74,7 +74,7 @@ function Sidebar() {
           <Cogwheel />
         </div>
       </div>
-      {showContextMenu && (
+      {/* {showContextMenu && (
         <div id="sidebar-context-menu" className="context-menu">
           <div
             className="context-menu-item"
@@ -86,7 +86,7 @@ function Sidebar() {
             Create Channel
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
