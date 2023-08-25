@@ -22,3 +22,34 @@
   background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
   z-index: 999; /* Below the modal */
 }
+
+.modal-opening {
+  animation: modalExpandIn 0.3s ease forwards;
+}
+
+@keyframes modalExpandIn {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* TODO: Fix this */
+.modal-closing {
+  animation: modalShrinkOut 0.3s ease forwards;
+}
+
+@keyframes modalShrinkOut {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+}
