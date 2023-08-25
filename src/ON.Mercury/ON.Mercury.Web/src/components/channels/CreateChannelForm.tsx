@@ -3,6 +3,8 @@ import "../../assets/styles/NewChannelForm.css";
 import { useMutation } from "@tanstack/react-query";
 import { createChannel } from "../../api/channels.api";
 import { useModal } from "../../providers/ModalProvider";
+import { useAppSelector } from "../../app/hooks";
+import { selectRoles } from "../../features/app/appSlice";
 
 type NewChannelRequest = {
   name: string;
@@ -22,7 +24,7 @@ export function NewChannelForm() {
   const createChannelMutation = useMutation(() => {
     return createChannel(newChannel);
   });
-
+  const rolesArray = useAppSelector(selectRoles);
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await createChannelMutation.mutateAsync();
@@ -71,7 +73,26 @@ export function NewChannelForm() {
             </label>
           </div>
         </div>
-
+        {isPrivateChannel && (
+          <div className="roles-box">
+            <h2>Roles</h2>
+            <div className="roles-grid">
+              {rolesArray.map((role) => (
+                <div key={role.id} className="role-item">
+                  <input
+                    type="checkbox"
+                    id={`role-${role.id}`}
+                    name={`role-${role.id}`}
+                    className="role-checkbox"
+                  />
+                  <label htmlFor={`role-${role.id}`} className="role-label">
+                    {role.name}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         <div className="submit-button-container">
           <button type="button" onClick={hideModal}>
             Back
