@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 import "@styles/Modal.css";
 
 interface ModalContextType {
-  showModal: () => void;
+  showModal: (content: ReactNode) => void;
   hideModal: () => void;
 }
 
@@ -21,13 +21,16 @@ interface ModalProviderProps {
 }
 
 export function ModalProvider({ children }: ModalProviderProps) {
-  const [isModalVisible, setIsModalVisible] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState<ReactNode | null>(null);
 
-  const showModal = () => {
+  const showModal = (content: ReactNode) => {
+    setModalContent(content);
     setIsModalVisible(true);
   };
 
   const hideModal = () => {
+    setModalContent(null);
     setIsModalVisible(false);
   };
 
@@ -38,7 +41,7 @@ export function ModalProvider({ children }: ModalProviderProps) {
         <>
           <div className="modal-overlay" />
           <div className="modal">
-            Modal Content
+            {modalContent}
             <button onClick={hideModal}>Close Modal</button>
           </div>
         </>

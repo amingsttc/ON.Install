@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect } from "react";
-import MessageLog from "../components/messages/MessageLog";
 import Sidebar from "../components/sidebar/sidebar";
 import { HubConnection } from "@microsoft/signalr";
 import { fetchAllChannels } from "../api/channels.api";
@@ -23,7 +22,7 @@ export function RootView({ hubConnection }: RootViewProps) {
   const dispatch = useAppDispatch();
   const queryChannels = useQuery(["channels"], {
     queryFn: async () => {
-      var found = await fetchAllChannels();
+      const found = await fetchAllChannels();
       if (found) {
         dispatch(setChannels(found));
       }
@@ -36,7 +35,7 @@ export function RootView({ hubConnection }: RootViewProps) {
 
   const queryRoles = useQuery(["roles"], {
     queryFn: async () => {
-      var found = await fetchAllRoles();
+      const found = await fetchAllRoles();
       if (found) {
         dispatch(setRoles(found));
       }
@@ -50,7 +49,7 @@ export function RootView({ hubConnection }: RootViewProps) {
 
   const queryMembers = useQuery(["members"], {
     queryFn: async () => {
-      var found = await fetchAllMembers();
+      const found = await fetchAllMembers();
       if (found) {
         dispatch(setMembers(found));
       }
@@ -64,7 +63,7 @@ export function RootView({ hubConnection }: RootViewProps) {
 
   const queryLoggedInUser = useQuery(["app:loggedInUser"], {
     queryFn: async () => {
-      var found = await fetchCurrentMember();
+      const found = await fetchCurrentMember();
       if (found) {
         dispatch(setLoggedInUser(found));
       }

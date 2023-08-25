@@ -1,21 +1,20 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import "@styles/ChannelItem.css";
 import { Channel } from "../../types/channel";
 import { Link } from "react-router-dom";
-import { useContextMenu } from "../../providers/ContextMenuProvider";
 
 type ChannelItemProps = {
   channel: Channel;
 };
 
 export default function ChannelItem({ channel }: ChannelItemProps) {
-  const { showContextMenu, setShowContextMenu } = useContextMenu();
+  // const { showContextMenu, setShowContextMenu } = useContextMenu();
   // const deleteChannel = useDeleteChannelMutation();
-  const contextMenuRef = useRef<HTMLDivElement>(null);
-  const handleDeleteChannel = async () => {
-    //await deleteChannel.mutateAsync(channel.channelId);
-    setShowContextMenu(false);
-  };
+  // const contextMenuRef = useRef<HTMLDivElement>(null);
+  // const handleDeleteChannel = async () => {
+  //   //await deleteChannel.mutateAsync(channel.channelId);
+  //   setShowContextMenu(false);
+  // };
 
   // const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
   //   e.preventDefault();

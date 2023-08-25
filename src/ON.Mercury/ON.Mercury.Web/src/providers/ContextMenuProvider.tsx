@@ -1,4 +1,3 @@
-import { number } from "prop-types";
 import React, { createContext, useContext, useState } from "react";
 
 interface ContextMenuContextProps {
@@ -9,8 +8,8 @@ interface ContextMenuContextProps {
 }
 
 interface PositionInterface {
-  x: Number;
-  y: Number;
+  x: number;
+  y: number;
 }
 
 const ContextMenuContext = createContext<ContextMenuContextProps | undefined>(

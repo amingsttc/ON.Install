@@ -4,6 +4,8 @@ import { useAppSelector } from "../../app/hooks";
 import { selectChannels } from "../../features/channels/channelsSlice";
 import { CategoryListEntry, Channel } from "../../types/channel";
 import { Link } from "react-router-dom";
+import { useModal } from "../../providers/ModalProvider";
+import { NewChannelForm } from "./CreateChannelForm";
 
 const groupChannels = (channels: Channel[]) => {
   const groupedChannels: { [category: string]: Channel[] } = channels.reduce(
@@ -30,11 +32,18 @@ const groupChannels = (channels: Channel[]) => {
 
 export function ChannelList() {
   const categories = groupChannels(useAppSelector(selectChannels));
+  const { showModal } = useModal();
+  const openModal = () => {
+    const content = <NewChannelForm />;
+    showModal(content);
+  };
 
   // TODO: Fix each element should have a unique key warning on <div className="list-item" key={category.category}>
   return (
     <div className="channel-list">
-      <h1 className="list-item">create channel</h1>
+      <button className="list-item" onClick={openModal}>
+        create channel
+      </button>
       {categories.map((category: CategoryListEntry) => (
         <div className="list-item" key={category.category}>
           <h1>{category.category}</h1>
