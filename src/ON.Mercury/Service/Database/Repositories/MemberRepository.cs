@@ -1,0 +1,64 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using ON.Mercury.Service.Caching;
+using ON.Mercury.Service.Database.Entities;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Service.Database.Entities;
+
+namespace ON.Mercury.Service.Database.Repositories
+{
+    public class MemberRepository
+    {
+        private readonly ILogger<MemberRepository> _logger;
+        private readonly ICachingService _cache;
+        private readonly PostgresContext _postgres;
+        
+        public MemberRepository(ICachingService cache, ILogger<MemberRepository> logger, PostgresContext postgres)
+        {
+            _cache = cache;
+            _logger = logger;
+            _postgres = postgres;
+        }
+
+        public async Task<Member> CreateMember(string id, string username) 
+        {
+            var newMember = new Member()
+            {
+                Id = id,
+                Username = username,
+            };
+            await _postgres.Members.AddAsync(newMember);
+            await _postgres.SaveChangesAsync();
+
+            return newMember;
+        }
+
+        public async Task<Member> GetOrCreateMember(string id, string username)
+        {
+            var member = await GetMember(id);
+            if (member is null)
+            {
+                member = await CreateMember(id, username);
+                return member;
+            }
+
+            return member;
+        }
+
+        public async Task<Member?> GetMember(string id)
+        {
+            var member = await _postgres.Members.Where(m => m.Id == id).FirstOrDefaultAsync();
+            //_logger.LogInformation(JsonConvert.SerializeObject(member));
+            return member;
+        }
+
+        public async Task<IEnumerable<Member>> GetMembers()
+        {
+            var members = await _postgres.Members.ToListAsync();
+            return members;
+        }
+    }
+}

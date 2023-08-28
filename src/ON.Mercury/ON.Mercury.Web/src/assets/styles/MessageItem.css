@@ -1,0 +1,63 @@
+/* MessageItem.css */
+
+.message-item {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  padding-right: 50px;
+  background-color: #424549;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  margin-left: 310px;
+  width: calc(100% - 300px);
+}
+
+.message-item:hover {
+  background-color: #23272a;
+}
+
+.username-date-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.message-username {
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+.message-username:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.message-sent-on {
+  color: #888;
+  font-size: 12px;
+}
+
+.message-body {
+  color: white;
+}
+
+.context-menu {
+  position: fixed;
+  background-color: #23272a;
+  color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+  z-index: 9999;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.context-menu-item {
+  cursor: pointer;
+  padding: 4px 12px;
+}
+
+.context-menu-item:hover {
+  background-color: #424549;
+}

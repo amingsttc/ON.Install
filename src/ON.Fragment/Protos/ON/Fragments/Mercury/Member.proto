@@ -1,0 +1,66 @@
+﻿syntax = "proto3";
+
+package ON.Fragments.Mercury;
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "Protos/ON/Fragments/Mercury/Role.proto";
+import "Protos/ON/Fragments/Mercury/Types.proto";
+
+service MemberInterface {
+  rpc CreateMember (CreateMemberRequest) returns (CreateMemberResponse);
+  rpc GetMember (GetMemberRequest) returns (GetMemberResponse);
+  rpc UpdateMember (UpdateMemberRequest) returns (UpdateMemberResponse);
+  rpc DeleteMember (DeleteMemberRequest) returns (DeleteMemberResponse);
+}
+
+message CreateMemberRequest {
+  string UserId = 1;
+  string Username = 2;
+  repeated Role Roles = 3;
+}
+
+message CreateMemberResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  optional Member Member = 3;
+}
+
+message GetMemberRequest {
+  string MemberId = 1;
+}
+
+message GetMemberResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  optional Member Member = 3;
+}
+
+message GetMembersRequest {}
+
+message GetMembersResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  repeated Member Members = 3;
+}
+
+message UpdateMemberRequest {
+  string MemberId = 1;
+  optional string Username = 2;
+  repeated Role Roles = 3;
+}
+
+message UpdateMemberResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  optional Member Member = 3;
+}
+
+message DeleteMemberRequest {
+  string MemberId = 1;
+}
+
+message DeleteMemberResponse {
+  bool IsSuccess = 1;
+  optional string Error = 2;
+  string DeletedMember = 3;
+}

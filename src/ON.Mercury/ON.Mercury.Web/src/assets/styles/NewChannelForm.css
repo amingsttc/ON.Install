@@ -1,0 +1,203 @@
+.new-channel-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90%;
+  flex-direction: column;
+  color: white;
+  position: relative;
+  padding: 20px;
+  max-width: 645px;
+}
+
+input[type="text"] {
+  padding: 10px;
+  border: 0;
+  box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
+}
+
+.rounded-input {
+  background-color: #2f3136;
+  width: 75%;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.input-label {
+  font-size: 20px;
+  margin-right: 55%;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+}
+
+.submit-button-container {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-right: 100px;
+}
+
+button[type="submit"] {
+  background-color: #5469d4;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  margin-left: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="button"] {
+  background-color: transparent;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="button"]:hover {
+  background-color: #5469d4;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-container {
+  background-color: #2f3136;
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  border: none;
+  border-radius: 15px;
+}
+
+.toggle-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.toggle-heading {
+  margin-right: 10px;
+  font-size: 24px;
+  color: white;
+}
+
+.toggle-input {
+  display: none;
+}
+
+.toggle-label {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.toggle-indicator {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background-color: #7289da;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.toggle-input:checked + .toggle-label .toggle-indicator {
+  transform: translateX(100%);
+  background-color: #5469d4;
+}
+
+.roles-box {
+  display: grid;
+  margin-top: 20px;
+  background-color: #2f3136;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 75%;
+}
+
+.roles-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #7289da;
+  margin-bottom: 10px;
+}
+
+.roles-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+}
+
+.role-item {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: 5px;
+  background-color: #36393f;
+  transition: background-color 0.3s ease;
+}
+
+.role-item:hover {
+  background-color: #44474d;
+}
+
+.role-checkbox {
+  margin-right: 5px;
+}
+
+.role-label {
+  color: white;
+}
+
+/* Add appropriate styles to show .roles-box when isPrivateChannel is true */
+.toggle-input:checked ~ .roles-box {
+  display: block;
+}
+
+/* Add appropriate styles to show .roles-box when isPrivateChannel is true */
+.toggle-input:checked ~ .roles-box {
+  display: block;
+}
+
+@media screen and (max-width: 768px) {
+  /* Adjust the layout for smaller screens */
+  .new-channel-form {
+    height: auto;
+    padding: 20px;
+  }
+
+  .rounded-input {
+    width: 100%;
+  }
+
+  .input-label {
+    margin-right: 0;
+  }
+
+  .submit-button-container {
+    position: static;
+    margin-right: 0;
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  /* Hide the roles box on smaller screens */
+  .roles-box {
+    display: none;
+  }
+
+  /* ... other adjustments for smaller screens ... */
+}

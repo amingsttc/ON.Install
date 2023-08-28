@@ -1,0 +1,115 @@
+:root {
+  --primary-dark-1: #23272a;
+}
+
+.list {
+  list-style: none;
+}
+
+.category .category-header {
+  color: white;
+  padding-left: 15px;
+}
+
+.category .channel-name {
+  color: white;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 300px;
+  background-color: var(--primary-dark-1);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-link {
+  color: white;
+  text-decoration: none;
+}
+
+.sidebar ul {
+  padding-left: 0;
+}
+
+.sidebar ul ul {
+  margin-left: 20px;
+  margin-right: 10px;
+}
+
+.sidebar ul li {
+  list-style: none;
+}
+
+.sidebar .custom-bullet {
+  margin-right: 5px;
+}
+
+.sidebar-header {
+  color: white;
+  text-align: left;
+  font-size: 18px;
+  padding-left: 25px;
+  border-bottom: 1px solid white;
+}
+
+.sidebar-footer {
+  display: flex;
+  margin-top: auto; /* Pushes the footer to the bottom */
+  border-top: 1px solid white;
+  color: white;
+  align-items: center;
+}
+
+.list.collapsed {
+  display: none;
+}
+
+.logout-button {
+  margin-left: 130px;
+  padding: 8px 12px;
+  background-color: #2f3136;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.logout-button:hover {
+  background-color: #424549;
+}
+
+.context-menu {
+  position: fixed;
+  background-color: #23272a;
+  color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+  z-index: 9999;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.context-menu-item {
+  cursor: pointer;
+  padding: 4px 12px;
+}
+
+.context-menu-item:hover {
+  background-color: #424549;
+}
+
+.username {
+  margin-left: 5px;
+  background-color: #2f3136;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.username:hover {
+  background-color: #424549;
+}

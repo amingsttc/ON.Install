@@ -5,18 +5,31 @@
 #    https://aka.ms/AA7q20u
 #
 name: ONInstall
+ingress:
+  - name: ingress
+    bindings:
+      - port: 80
+    rules:
+      - path: /
+        service: web
+        preservePath: true
+      - path: /api/mercury
+        service: chatservice
+        preservePath: true
+      - path: /api/mercury/auth
+        service: chatservice
+        preservePath: true
 services:
-#  - name: web
-#    project: ON.Web/SimpleWeb/SimpleWeb/ON.SimpleWeb.csproj
-#    env:
-#      - JWT_PUB_KEY=eyJBZGRpdGlvbmFsRGF0YSI6e30sIkFsZyI6IkVTMjU2IiwiQ3J2IjoiUC0yNTYiLCJEIjpudWxsLCJEUCI6bnVsbCwiRFEiOm51bGwsIkUiOm51bGwsIksiOm51bGwsIktleUlkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS2V5T3BzIjpbXSwiS2lkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS3R5IjoiRUMiLCJOIjpudWxsLCJPdGgiOm51bGwsIlAiOm51bGwsIlEiOm51bGwsIlFJIjpudWxsLCJVc2UiOiJzaWciLCJYIjoiVDNCQzlQUlNkamFIcEV4VXF6Z1RpMWt5X2pvMG9YSHMtbVNoN0RsRVZFMCIsIlg1YyI6W10sIlg1dCI6bnVsbCwiWDV0UzI1NiI6bnVsbCwiWDV1IjpudWxsLCJZIjoiMjhmNEtLS0hyZ3dfM2Z4SlJsX1c0eExkcm5FUXVPQWNfZ0wyN0tNc0NSOCIsIktleVNpemUiOjI1NiwiSGFzUHJpdmF0ZUtleSI6ZmFsc2UsIkNyeXB0b1Byb3ZpZGVyRmFjdG9yeSI6eyJDcnlwdG9Qcm92aWRlckNhY2hlIjp7fSwiQ3VzdG9tQ3J5cHRvUHJvdmlkZXIiOm51bGwsIkNhY2hlU2lnbmF0dXJlUHJvdmlkZXJzIjp0cnVlfX0
-#    bindings:
-#      - port: 80
+  - name: web
+    project: ON.Web/SimpleWeb/SimpleWeb/ON.SimpleWeb.csproj
+    env:
+      - JWT_PUB_KEY=eyJBZGRpdGlvbmFsRGF0YSI6e30sIkFsZyI6IkVTMjU2IiwiQ3J2IjoiUC0yNTYiLCJEIjpudWxsLCJEUCI6bnVsbCwiRFEiOm51bGwsIkUiOm51bGwsIksiOm51bGwsIktleUlkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS2V5T3BzIjpbXSwiS2lkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS3R5IjoiRUMiLCJOIjpudWxsLCJPdGgiOm51bGwsIlAiOm51bGwsIlEiOm51bGwsIlFJIjpudWxsLCJVc2UiOiJzaWciLCJYIjoiVDNCQzlQUlNkamFIcEV4VXF6Z1RpMWt5X2pvMG9YSHMtbVNoN0RsRVZFMCIsIlg1YyI6W10sIlg1dCI6bnVsbCwiWDV0UzI1NiI6bnVsbCwiWDV1IjpudWxsLCJZIjoiMjhmNEtLS0hyZ3dfM2Z4SlJsX1c0eExkcm5FUXVPQWNfZ0wyN0tNc0NSOCIsIktleVNpemUiOjI1NiwiSGFzUHJpdmF0ZUtleSI6ZmFsc2UsIkNyeXB0b1Byb3ZpZGVyRmFjdG9yeSI6eyJDcnlwdG9Qcm92aWRlckNhY2hlIjp7fSwiQ3VzdG9tQ3J5cHRvUHJvdmlkZXIiOm51bGwsIkNhY2hlU2lnbmF0dXJlUHJvdmlkZXJzIjp0cnVlfX0
+    bindings:
+      - port: 7080
   - name: cmsservice
     project: ON.Content/SimpleCMS/Service/ON.Content.SimpleCMS.Service.csproj
     env:
       - JWT_PUB_KEY=eyJBZGRpdGlvbmFsRGF0YSI6e30sIkFsZyI6IkVTMjU2IiwiQ3J2IjoiUC0yNTYiLCJEIjpudWxsLCJEUCI6bnVsbCwiRFEiOm51bGwsIkUiOm51bGwsIksiOm51bGwsIktleUlkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS2V5T3BzIjpbXSwiS2lkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS3R5IjoiRUMiLCJOIjpudWxsLCJPdGgiOm51bGwsIlAiOm51bGwsIlEiOm51bGwsIlFJIjpudWxsLCJVc2UiOiJzaWciLCJYIjoiVDNCQzlQUlNkamFIcEV4VXF6Z1RpMWt5X2pvMG9YSHMtbVNoN0RsRVZFMCIsIlg1YyI6W10sIlg1dCI6bnVsbCwiWDV0UzI1NiI6bnVsbCwiWDV1IjpudWxsLCJZIjoiMjhmNEtLS0hyZ3dfM2Z4SlJsX1c0eExkcm5FUXVPQWNfZ0wyN0tNc0NSOCIsIktleVNpemUiOjI1NiwiSGFzUHJpdmF0ZUtleSI6ZmFsc2UsIkNyeXB0b1Byb3ZpZGVyRmFjdG9yeSI6eyJDcnlwdG9Qcm92aWRlckNhY2hlIjp7fSwiQ3VzdG9tQ3J5cHRvUHJvdmlkZXIiOm51bGwsIkNhY2hlU2lnbmF0dXJlUHJvdmlkZXJzIjp0cnVlfX0
-      - EVENT_DB_SERVER_NAME=localhost
     volumes:
       - source: tmpdata/cms/
         target: /data
@@ -24,24 +37,11 @@ services:
       - name: api
       - name: grpc
         port: 7002
-  - name: commentservice
-    project: ON.Content/SimpleComment/Service/ON.Content.SimpleComment.Service.csproj
-    env:
-      - JWT_PUB_KEY=eyJBZGRpdGlvbmFsRGF0YSI6e30sIkFsZyI6IkVTMjU2IiwiQ3J2IjoiUC0yNTYiLCJEIjpudWxsLCJEUCI6bnVsbCwiRFEiOm51bGwsIkUiOm51bGwsIksiOm51bGwsIktleUlkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS2V5T3BzIjpbXSwiS2lkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS3R5IjoiRUMiLCJOIjpudWxsLCJPdGgiOm51bGwsIlAiOm51bGwsIlEiOm51bGwsIlFJIjpudWxsLCJVc2UiOiJzaWciLCJYIjoiVDNCQzlQUlNkamFIcEV4VXF6Z1RpMWt5X2pvMG9YSHMtbVNoN0RsRVZFMCIsIlg1YyI6W10sIlg1dCI6bnVsbCwiWDV0UzI1NiI6bnVsbCwiWDV1IjpudWxsLCJZIjoiMjhmNEtLS0hyZ3dfM2Z4SlJsX1c0eExkcm5FUXVPQWNfZ0wyN0tNc0NSOCIsIktleVNpemUiOjI1NiwiSGFzUHJpdmF0ZUtleSI6ZmFsc2UsIkNyeXB0b1Byb3ZpZGVyRmFjdG9yeSI6eyJDcnlwdG9Qcm92aWRlckNhY2hlIjp7fSwiQ3VzdG9tQ3J5cHRvUHJvdmlkZXIiOm51bGwsIkNhY2hlU2lnbmF0dXJlUHJvdmlkZXJzIjp0cnVlfX0
-      - EVENT_DB_SERVER_NAME=localhost
-    volumes:
-      - source: tmpdata/comment/
-        target: /data
-    bindings:
-      - name: api
-      - name: grpc
-        port: 7012
   - name: authservice
     project: ON.Authentication/SimpleAuth/Service/ON.Authentication.SimpleAuth.Service.csproj
     env:
       - JWT_PRIV_KEY=eyJBZGRpdGlvbmFsRGF0YSI6e30sIkFsZyI6IkVTMjU2IiwiQ3J2IjoiUC0yNTYiLCJEIjoiT29QN3dhcUdtLU1fYU43N1dGSlZlXzc4Y2loMUZEX09hVmp5eHp6Q19SbyIsIkRQIjpudWxsLCJEUSI6bnVsbCwiRSI6bnVsbCwiSyI6bnVsbCwiS2V5SWQiOiJmNjBiMjNkNy1hN2JjLTQyY2MtYTRiNC1lN2JmMjQ4NmJjODkiLCJLZXlPcHMiOltdLCJLaWQiOiJmNjBiMjNkNy1hN2JjLTQyY2MtYTRiNC1lN2JmMjQ4NmJjODkiLCJLdHkiOiJFQyIsIk4iOm51bGwsIk90aCI6bnVsbCwiUCI6bnVsbCwiUSI6bnVsbCwiUUkiOm51bGwsIlVzZSI6InNpZyIsIlgiOiJUM0JDOVBSU2RqYUhwRXhVcXpnVGkxa3lfam8wb1hIcy1tU2g3RGxFVkUwIiwiWDVjIjpbXSwiWDV0IjpudWxsLCJYNXRTMjU2IjpudWxsLCJYNXUiOm51bGwsIlkiOiIyOGY0S0tLSHJnd18zZnhKUmxfVzR4TGRybkVRdU9BY19nTDI3S01zQ1I4IiwiS2V5U2l6ZSI6MjU2LCJIYXNQcml2YXRlS2V5Ijp0cnVlLCJDcnlwdG9Qcm92aWRlckZhY3RvcnkiOnsiQ3J5cHRvUHJvdmlkZXJDYWNoZSI6e30sIkN1c3RvbUNyeXB0b1Byb3ZpZGVyIjpudWxsLCJDYWNoZVNpZ25hdHVyZVByb3ZpZGVycyI6dHJ1ZX19
       - JWT_PUB_KEY=eyJBZGRpdGlvbmFsRGF0YSI6e30sIkFsZyI6IkVTMjU2IiwiQ3J2IjoiUC0yNTYiLCJEIjpudWxsLCJEUCI6bnVsbCwiRFEiOm51bGwsIkUiOm51bGwsIksiOm51bGwsIktleUlkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS2V5T3BzIjpbXSwiS2lkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS3R5IjoiRUMiLCJOIjpudWxsLCJPdGgiOm51bGwsIlAiOm51bGwsIlEiOm51bGwsIlFJIjpudWxsLCJVc2UiOiJzaWciLCJYIjoiVDNCQzlQUlNkamFIcEV4VXF6Z1RpMWt5X2pvMG9YSHMtbVNoN0RsRVZFMCIsIlg1YyI6W10sIlg1dCI6bnVsbCwiWDV0UzI1NiI6bnVsbCwiWDV1IjpudWxsLCJZIjoiMjhmNEtLS0hyZ3dfM2Z4SlJsX1c0eExkcm5FUXVPQWNfZ0wyN0tNc0NSOCIsIktleVNpemUiOjI1NiwiSGFzUHJpdmF0ZUtleSI6ZmFsc2UsIkNyeXB0b1Byb3ZpZGVyRmFjdG9yeSI6eyJDcnlwdG9Qcm92aWRlckNhY2hlIjp7fSwiQ3VzdG9tQ3J5cHRvUHJvdmlkZXIiOm51bGwsIkNhY2hlU2lnbmF0dXJlUHJvdmlkZXJzIjp0cnVlfX0
-      - EVENT_DB_SERVER_NAME=localhost
       - CLAIMS_SERVICE_LIST=chat
     volumes:
       - source: tmpdata/auth/
@@ -54,7 +54,6 @@ services:
     project: ON.Notification/SimpleNotification/Service/ON.Notification.SimpleNotification.Service.csproj
     env:
       - JWT_PUB_KEY=eyJBZGRpdGlvbmFsRGF0YSI6e30sIkFsZyI6IkVTMjU2IiwiQ3J2IjoiUC0yNTYiLCJEIjpudWxsLCJEUCI6bnVsbCwiRFEiOm51bGwsIkUiOm51bGwsIksiOm51bGwsIktleUlkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS2V5T3BzIjpbXSwiS2lkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS3R5IjoiRUMiLCJOIjpudWxsLCJPdGgiOm51bGwsIlAiOm51bGwsIlEiOm51bGwsIlFJIjpudWxsLCJVc2UiOiJzaWciLCJYIjoiVDNCQzlQUlNkamFIcEV4VXF6Z1RpMWt5X2pvMG9YSHMtbVNoN0RsRVZFMCIsIlg1YyI6W10sIlg1dCI6bnVsbCwiWDV0UzI1NiI6bnVsbCwiWDV1IjpudWxsLCJZIjoiMjhmNEtLS0hyZ3dfM2Z4SlJsX1c0eExkcm5FUXVPQWNfZ0wyN0tNc0NSOCIsIktleVNpemUiOjI1NiwiSGFzUHJpdmF0ZUtleSI6ZmFsc2UsIkNyeXB0b1Byb3ZpZGVyRmFjdG9yeSI6eyJDcnlwdG9Qcm92aWRlckNhY2hlIjp7fSwiQ3VzdG9tQ3J5cHRvUHJvdmlkZXIiOm51bGwsIkNhY2hlU2lnbmF0dXJlUHJvdmlkZXJzIjp0cnVlfX0
-      - EVENT_DB_SERVER_NAME=localhost
     volumes:
       - source: tmpdata/notification/
         target: /data
@@ -66,7 +65,6 @@ services:
     project: ON.Authorization/Payment/Service/ON.Authorization.Payment.Service.csproj
     env:
       - JWT_PUB_KEY=eyJBZGRpdGlvbmFsRGF0YSI6e30sIkFsZyI6IkVTMjU2IiwiQ3J2IjoiUC0yNTYiLCJEIjpudWxsLCJEUCI6bnVsbCwiRFEiOm51bGwsIkUiOm51bGwsIksiOm51bGwsIktleUlkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS2V5T3BzIjpbXSwiS2lkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS3R5IjoiRUMiLCJOIjpudWxsLCJPdGgiOm51bGwsIlAiOm51bGwsIlEiOm51bGwsIlFJIjpudWxsLCJVc2UiOiJzaWciLCJYIjoiVDNCQzlQUlNkamFIcEV4VXF6Z1RpMWt5X2pvMG9YSHMtbVNoN0RsRVZFMCIsIlg1YyI6W10sIlg1dCI6bnVsbCwiWDV0UzI1NiI6bnVsbCwiWDV1IjpudWxsLCJZIjoiMjhmNEtLS0hyZ3dfM2Z4SlJsX1c0eExkcm5FUXVPQWNfZ0wyN0tNc0NSOCIsIktleVNpemUiOjI1NiwiSGFzUHJpdmF0ZUtleSI6ZmFsc2UsIkNyeXB0b1Byb3ZpZGVyRmFjdG9yeSI6eyJDcnlwdG9Qcm92aWRlckNhY2hlIjp7fSwiQ3VzdG9tQ3J5cHRvUHJvdmlkZXIiOm51bGwsIkNhY2hlU2lnbmF0dXJlUHJvdmlkZXJzIjp0cnVlfX0
-      - EVENT_DB_SERVER_NAME=localhost
     volumes:
       - source: tmpdata/payment/
         target: /data
@@ -78,7 +76,6 @@ services:
     project: ON.Settings/SimpleSettings/Service/ON.Settings.SimpleSettings.Service.csproj
     env:
       - JWT_PUB_KEY=eyJBZGRpdGlvbmFsRGF0YSI6e30sIkFsZyI6IkVTMjU2IiwiQ3J2IjoiUC0yNTYiLCJEIjpudWxsLCJEUCI6bnVsbCwiRFEiOm51bGwsIkUiOm51bGwsIksiOm51bGwsIktleUlkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS2V5T3BzIjpbXSwiS2lkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS3R5IjoiRUMiLCJOIjpudWxsLCJPdGgiOm51bGwsIlAiOm51bGwsIlEiOm51bGwsIlFJIjpudWxsLCJVc2UiOiJzaWciLCJYIjoiVDNCQzlQUlNkamFIcEV4VXF6Z1RpMWt5X2pvMG9YSHMtbVNoN0RsRVZFMCIsIlg1YyI6W10sIlg1dCI6bnVsbCwiWDV0UzI1NiI6bnVsbCwiWDV1IjpudWxsLCJZIjoiMjhmNEtLS0hyZ3dfM2Z4SlJsX1c0eExkcm5FUXVPQWNfZ0wyN0tNc0NSOCIsIktleVNpemUiOjI1NiwiSGFzUHJpdmF0ZUtleSI6ZmFsc2UsIkNyeXB0b1Byb3ZpZGVyRmFjdG9yeSI6eyJDcnlwdG9Qcm92aWRlckNhY2hlIjp7fSwiQ3VzdG9tQ3J5cHRvUHJvdmlkZXIiOm51bGwsIkNhY2hlU2lnbmF0dXJlUHJvdmlkZXJzIjp0cnVlfX0
-      - EVENT_DB_SERVER_NAME=localhost
     volumes:
       - source: tmpdata/settings/
         target: /data
@@ -90,7 +87,6 @@ services:
     project: ON.Content/SimpleStats/Service/ON.Content.SimpleStats.Service.csproj
     env:
       - JWT_PUB_KEY=eyJBZGRpdGlvbmFsRGF0YSI6e30sIkFsZyI6IkVTMjU2IiwiQ3J2IjoiUC0yNTYiLCJEIjpudWxsLCJEUCI6bnVsbCwiRFEiOm51bGwsIkUiOm51bGwsIksiOm51bGwsIktleUlkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS2V5T3BzIjpbXSwiS2lkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS3R5IjoiRUMiLCJOIjpudWxsLCJPdGgiOm51bGwsIlAiOm51bGwsIlEiOm51bGwsIlFJIjpudWxsLCJVc2UiOiJzaWciLCJYIjoiVDNCQzlQUlNkamFIcEV4VXF6Z1RpMWt5X2pvMG9YSHMtbVNoN0RsRVZFMCIsIlg1YyI6W10sIlg1dCI6bnVsbCwiWDV0UzI1NiI6bnVsbCwiWDV1IjpudWxsLCJZIjoiMjhmNEtLS0hyZ3dfM2Z4SlJsX1c0eExkcm5FUXVPQWNfZ0wyN0tNc0NSOCIsIktleVNpemUiOjI1NiwiSGFzUHJpdmF0ZUtleSI6ZmFsc2UsIkNyeXB0b1Byb3ZpZGVyRmFjdG9yeSI6eyJDcnlwdG9Qcm92aWRlckNhY2hlIjp7fSwiQ3VzdG9tQ3J5cHRvUHJvdmlkZXIiOm51bGwsIkNhY2hlU2lnbmF0dXJlUHJvdmlkZXJzIjp0cnVlfX0
-      - EVENT_DB_SERVER_NAME=localhost
     volumes:
       - source: tmpdata/stats/
         target: /data
@@ -98,6 +94,16 @@ services:
       - name: api
       - name: grpc
         port: 7010
+  - name: chatservice
+    project: ON.Mercury/Service/ON.Mercury.Service.csproj
+    bindings:
+      - name: api
+        port: 8015
+      - name: grpc
+        port: 7015
+    env:
+      - JWT_PUB_KEY=eyJBZGRpdGlvbmFsRGF0YSI6e30sIkFsZyI6IkVTMjU2IiwiQ3J2IjoiUC0yNTYiLCJEIjpudWxsLCJEUCI6bnVsbCwiRFEiOm51bGwsIkUiOm51bGwsIksiOm51bGwsIktleUlkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS2V5T3BzIjpbXSwiS2lkIjoiZjYwYjIzZDctYTdiYy00MmNjLWE0YjQtZTdiZjI0ODZiYzg5IiwiS3R5IjoiRUMiLCJOIjpudWxsLCJPdGgiOm51bGwsIlAiOm51bGwsIlEiOm51bGwsIlFJIjpudWxsLCJVc2UiOiJzaWciLCJYIjoiVDNCQzlQUlNkamFIcEV4VXF6Z1RpMWt5X2pvMG9YSHMtbVNoN0RsRVZFMCIsIlg1YyI6W10sIlg1dCI6bnVsbCwiWDV0UzI1NiI6bnVsbCwiWDV1IjpudWxsLCJZIjoiMjhmNEtLS0hyZ3dfM2Z4SlJsX1c0eExkcm5FUXVPQWNfZ0wyN0tNc0NSOCIsIktleVNpemUiOjI1NiwiSGFzUHJpdmF0ZUtleSI6ZmFsc2UsIkNyeXB0b1Byb3ZpZGVyRmFjdG9yeSI6eyJDcnlwdG9Qcm92aWRlckNhY2hlIjp7fSwiQ3VzdG9tQ3J5cHRvUHJvdmlkZXIiOm51bGwsIkNhY2hlU2lnbmF0dXJlUHJvdmlkZXJzIjp0cnVlfX0
+      - JWT_PRIV_KEY=eyJBZGRpdGlvbmFsRGF0YSI6e30sIkFsZyI6IkVTMjU2IiwiQ3J2IjoiUC0yNTYiLCJEIjoiT29QN3dhcUdtLU1fYU43N1dGSlZlXzc4Y2loMUZEX09hVmp5eHp6Q19SbyIsIkRQIjpudWxsLCJEUSI6bnVsbCwiRSI6bnVsbCwiSyI6bnVsbCwiS2V5SWQiOiJmNjBiMjNkNy1hN2JjLTQyY2MtYTRiNC1lN2JmMjQ4NmJjODkiLCJLZXlPcHMiOltdLCJLaWQiOiJmNjBiMjNkNy1hN2JjLTQyY2MtYTRiNC1lN2JmMjQ4NmJjODkiLCJLdHkiOiJFQyIsIk4iOm51bGwsIk90aCI6bnVsbCwiUCI6bnVsbCwiUSI6bnVsbCwiUUkiOm51bGwsIlVzZSI6InNpZyIsIlgiOiJUM0JDOVBSU2RqYUhwRXhVcXpnVGkxa3lfam8wb1hIcy1tU2g3RGxFVkUwIiwiWDVjIjpbXSwiWDV0IjpudWxsLCJYNXRTMjU2IjpudWxsLCJYNXUiOm51bGwsIlkiOiIyOGY0S0tLSHJnd18zZnhKUmxfVzR4TGRybkVRdU9BY19nTDI3S01zQ1I4IiwiS2V5U2l6ZSI6MjU2LCJIYXNQcml2YXRlS2V5Ijp0cnVlLCJDcnlwdG9Qcm92aWRlckZhY3RvcnkiOnsiQ3J5cHRvUHJvdmlkZXJDYWNoZSI6e30sIkN1c3RvbUNyeXB0b1Byb3ZpZGVyIjpudWxsLCJDYWNoZVNpZ25hdHVyZVByb3ZpZGVycyI6dHJ1ZX19
   - name: eventdb
     image: eventstore/eventstore:21.10.8-buster-slim
     bindings:
@@ -121,6 +127,23 @@ services:
         target: /var/lib/eventstore
       - source: tmpdata/eventdb/logs
         target: /var/log/eventstore
+  - name: pg
+    image: postgres
+    env:
+      - name: POSTGRES_USER
+        value: root
+      - name: POSTGRES_PASSWORD
+        value: root
+      - name: POSTGRES_DB
+        value: test_db
+    volumes:
+      - source: tmpdata/mercury/pg
+        target: /var/lib/postgresql/data
+      - source: tmpdata/mercury/init-scripts
+        target: /docker-entrypoint-initdb.d
+    bindings:
+      - port: 5432
+        connectionString: Host=localhost;Port=5432;Database=test_db;User Id=root;Password=root;
 # - name: grpc-lb
 # dockerFile: grpc-lb/Dockerfile
 # dockerFileContext: grpc-lb

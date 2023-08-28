@@ -1,0 +1,44 @@
+﻿syntax = "proto3";
+
+package ON.Fragments.Mercury;
+import "google/protobuf/timestamp.proto";
+
+service AuditLogInterface {
+  rpc CreateAudit (CreateAuditRequest) returns (CreateAuditResponse);
+  rpc GetAuditLog (GetAuditLogRequest) returns (GetAuditLogResponse);
+}
+
+enum AuditActions {
+  CreateChannel = 0;
+  UpdateChannel = 1;
+  DeleteChannel = 2;
+  BanMember = 3;
+  UnbanMember = 4;
+  EditMessage = 5;
+  DeleteMessage = 6;
+  CreateRole = 7;
+  EditRole = 8;
+  DeleteRole = 9;
+}
+
+message AuditItem {
+  string Id = 1;
+  string CallerId = 2;
+  AuditActions Action = 3;
+  google.protobuf.Timestamp CreatedOn = 4;
+}
+
+message CreateAuditRequest {
+  string CallerId = 1;
+  AuditActions Action = 2;
+}
+
+message CreateAuditResponse {
+  AuditItem Data = 1;
+}
+
+message GetAuditLogRequest {}
+
+message GetAuditLogResponse {
+  repeated AuditItem Data = 1;
+}
