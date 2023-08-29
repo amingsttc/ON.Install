@@ -30,7 +30,7 @@ namespace ON.Mercury.Service.Services
             
             var user = ONUserHelper.ParseUser(context.GetHttpContext());
             var res = new GetClaimsResponse();
-            var member = await _members.GetOrCreateMember(request.UserID, user.UserName);
+            var member = await _members.GetMember(request.UserID);
 
             if (member is null)
                 return new GetClaimsResponse();

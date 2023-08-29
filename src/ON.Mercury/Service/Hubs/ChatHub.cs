@@ -27,7 +27,6 @@ public class ChatHub : Hub
 
     public override Task OnConnectedAsync()
     {
-        var user = ONUserHelper.ParseUser(Context.GetHttpContext());
         return base.OnConnectedAsync();
     }
 
@@ -37,16 +36,35 @@ public class ChatHub : Hub
     }
 
     // TODO: Create new return type that sets message dates to DateTime
-    public async Task SendMessage(SendMessageRequest request)
+    [HubMethodName("SendMessage")]
+    public async Task SendMessage(string request)
     {
-        var res = _chatClient.SendMessage(request);
-        if (!res.IsSuccess)
+        try
         {
+            var req = JsonConvert.DeserializeObject<SendMessageRequest>(request);
+            var res = _chatClient.SendMessage(req);
+            if (!res.IsSuccess)
+            {
+                await Clients.Caller.SendAsync("ReceiveMessage", "Error Sending Message");
+            }
+            else
+            {
+                await Clients.All.SendAsync("ReceiveMessage", res.Message);
+            }
+        }
+        catch (Exception e)
+        {
+            _logger.LogInformation(JsonConvert.SerializeObject(e));
             await Clients.Caller.SendAsync("ReceiveMessage", "Error Sending Message");
         }
-        else
-        {
-            await Clients.All.SendAsync("ReceiveMessage", res.Message);
-        }
+        // var res = _chatClient.SendMessage(request);
+        // if (!res.IsSuccess)
+        // {
+        //     await Clients.Caller.SendAsync("ReceiveMessage", "Error Sending Message");
+        // }
+        // else
+        // {
+        //     await Clients.All.SendAsync("ReceiveMessage", res.Message);
+        // }
     }
 }
