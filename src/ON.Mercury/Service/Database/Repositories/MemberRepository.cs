@@ -51,7 +51,12 @@ namespace ON.Mercury.Service.Database.Repositories
         public async Task<Member?> GetMember(string id)
         {
             var member = await _postgres.Members.Where(m => m.Id == id).FirstOrDefaultAsync();
-            //_logger.LogInformation(JsonConvert.SerializeObject(member));
+            var roles = await _postgres.MemberRoles.Where(m => m.MemberId == member.Id).Include(m => m.Role).ToListAsync();
+            foreach (var memberRole in roles)
+            {
+                member.Roles.Add(memberRole.Role);
+            }
+            
             return member;
         }
 

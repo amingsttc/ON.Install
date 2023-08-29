@@ -10,6 +10,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
+using ON.Mercury.Service.Database.UnionTables;
+using ON.Mercury.Service.Hubs;
 
 namespace ON.Mercury.Service.Database.Repositories
 {
@@ -18,25 +22,47 @@ namespace ON.Mercury.Service.Database.Repositories
         // TODO: Look Into CQRS
         private readonly ILogger<ChannelRepository> _logger;
         private readonly PostgresContext _postgres;
+        private const string DEFAULT_ROLE = "9bb8d652-cc23-497d-a222-ea4c681c2a64";
+        private readonly IHubContext<ChatHub> _hubContext;
         
-        public ChannelRepository(ILogger<ChannelRepository> logger, PostgresContext postgres)
+        public ChannelRepository(ILogger<ChannelRepository> logger, PostgresContext postgres, IHubContext<ChatHub> hubContext)
         {
             _logger = logger;
             _postgres = postgres;
+            _hubContext = hubContext;
         }
 
-        public async Task<Channel> CreateChannelAsync(string name, string category = "", string description = "", CancellationToken cancellationToken = default)
+        public async Task<Channel> CreateChannelAsync(string name, string category = "", string description = "", IEnumerable<Role> roles = null, CancellationToken cancellationToken = default)
         {
             var newChannel = new Channel()
             {
                 Id = Guid.NewGuid().ToString(),
+                Name = name,
                 Category = category,
                 Description = description,
                 CreatedOn = DateTime.UtcNow,
                 ModifiedOn = DateTime.UtcNow
             };
+
+            // TODO: Give ChannelsRoles a primary key
+            // if (roles is not null)
+            // {
+            //     newChannel.Roles.Add(roles);
+            // }
+            // else
+            // {
+            //     var defaultRole = await _postgres.Roles.FirstOrDefaultAsync(r => r.Id == DEFAULT_ROLE, cancellationToken);
+            //     await _postgres.ChannelRoles.AddAsync(new ChannelsRoles()
+            //     {
+            //         ChannelId = newChannel.Id,
+            //         RoleId = DEFAULT_ROLE
+            //     });
+            // }
+            
             await _postgres.Channels.AddAsync(newChannel, cancellationToken);
             await _postgres.SaveChangesAsync(cancellationToken);
+
+            await _hubContext.Clients.All.SendAsync("ChannelCreated", JsonConvert.SerializeObject(newChannel), cancellationToken);
 
             return newChannel;
         }
