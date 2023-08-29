@@ -1,7 +1,6 @@
-import { AppConfig } from "../types/appconfig";
+import { DevConfig } from '../types/config';
 
-export const config: AppConfig = {
-  env: import.meta.env.NODE_ENV,
-  mercuryApi: import.meta.env.VITE_MERCURY_BASE_API,
-  authToken: import.meta.env.VITE_AUTH_TOKEN,
+export const devConfig: DevConfig = {
+	apiPath: import.meta.env.VITE_MERCURY_API_PATH,
+	token: import.meta.env.VITE_AUTH_TOKEN,
 };

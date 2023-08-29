@@ -1,49 +1,41 @@
-import { config } from "../config/config";
-import { Channel } from "@mercury/types/channel";
+import axios, { AxiosResponse } from 'axios';
 
-type NewChannelRequest = {
-  name: string;
-  category: string;
-  description: string;
-};
+import { devConfig } from '../config/config';
+import { headers } from './headers';
+import { Channel, CreateChannelRequest } from '../types/channel';
+import { Message } from '../types/message';
 
-export async function fetchAllChannels() {
-  const result = await fetch(`${config.mercuryApi}/channels`, {
-    headers: {
-      Authorization: config.authToken,
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    mode: "cors",
-    method: "get",
-  });
-
-  const channels = (await result.json()) as Channel[];
-
-  return channels;
+export async function fetchAllChannels(): Promise<Channel[]> {
+	const result: AxiosResponse = await axios.get(
+		`${devConfig.apiPath}/channels`,
+		{ headers }
+	);
+	const channels: Channel[] = result.data;
+	return channels;
 }
 
-export async function createChannel(newChannel: NewChannelRequest) {
-  try {
-    const result = await fetch(`${config.mercuryApi}/channels`, {
-      headers: {
-        Authorization: config.authToken,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      mode: "cors",
-      method: "post",
-      body: JSON.stringify(newChannel),
-    });
+// TODO: Fix the server not accepting the request
+export async function createChannel(
+	request: CreateChannelRequest
+): Promise<Channel> {
+	const result: AxiosResponse = await axios.post(
+		`${devConfig.apiPath}/channels`,
+		request,
+		{
+			headers: headers,
+		}
+	);
 
-    if (!result.ok) {
-      throw new Error(`Failed to create channel. Status: ${result.status}`);
-    }
+	const channel: Channel = result.data;
+	return channel;
+}
 
-    const responseData = await result.json();
-    return responseData;
-  } catch (error) {
-    console.error("Error creating channel:", error);
-    throw error; // Rethrow the error for further handling if needed
-  }
+export async function getMessages(channelId: string) {
+	const result: AxiosResponse = await axios.get(
+		`${devConfig.apiPath}/channels/${channelId}/messages`,
+		{ headers }
+	);
+	const messages: Message[] = result.data;
+
+	return messages;
 }

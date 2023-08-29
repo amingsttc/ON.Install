@@ -1,175 +1,119 @@
-import { useParams } from "react-router-dom";
-//import { createSelector } from '@reduxjs/toolkit';
-import React, { useEffect, useRef, useState } from "react";
-import { HubConnection } from "@microsoft/signalr";
-// import { useAppSelector } from '../../App/hooks';
-// import { SendMessageDto } from '../../../lib/dto/message.dto';
-// import { RootState } from '../../App/store';
-// import { ProfileDto } from '../../../lib/dto/profile.dto';
-import MessageItem from "./MessageItem";
-import "@styles/MessageLog.css";
-import { selectLoggedInUser } from "../../features/app/appSlice";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { useQuery } from "@tanstack/react-query";
-import { Message } from "../../types/message";
-import { fetchMessages } from "../../api/message.api";
-import {
-  MessageMapEntry,
-  selectChannel,
-  setMessages,
-} from "../../features/messages/messagesSlice";
-import { useContextMenu } from "../../providers/ContextMenuProvider";
+import { For, createEffect, createSignal } from 'solid-js';
+import './MessageLog.scss';
+import { Message, SendMessageRequest } from '../../types/message';
+import { useParams } from '@solidjs/router';
+import { getMessages } from '../../api/channels.api';
+import { MessageItem } from './MessageItem';
+import { useGlobalContext } from '../../state/GlobalProvider';
 
-interface MessageLogProps {
-  connection: HubConnection;
-}
+export function MessageLog() {
+	let messageLogRef!: HTMLDivElement;
+	let channelId = useParams().id;
+	const [isLockedToBottom, setIsLockedToBottom] = createSignal<boolean>(true);
+	const [showScrollButton, setShowScrollButton] = createSignal<boolean>(true);
+	const [newMessage, setNewMessage] = createSignal<string>('');
+	let channelMessages: Message[] = [];
+	const { messages, setMessages, hubConnection, currentMember } =
+		useGlobalContext();
+	let connection = hubConnection();
 
-export default function MessageLog({ connection }: MessageLogProps) {
-  const messageLogRef = useRef<HTMLDivElement>(null);
-  const [isLockedToBottom, setIsLockedToBottom] = useState(true);
-  const dispatch = useAppDispatch();
-  let channelId = useParams().id;
-  let messages: Message[] = useAppSelector((state) =>
-    selectChannel(state, channelId as string),
-  );
-  const { showContextMenu, setShowContextMenu } = useContextMenu();
-  const [showScrollButton, setShowScrollButton] = useState(false);
-  const loggedInUser = useAppSelector(selectLoggedInUser);
-  const [newMessage, setNewMessage] = useState("");
-  const messageQuery = useQuery(["messages"], {
-    queryFn: async () => {
-      if (channelId) {
-        messages = await fetchMessages(channelId);
-        const id = channelId as string;
+	const scrollToBottom = () => {
+		if (messageLogRef && isLockedToBottom()) {
+			const messageLog = messageLogRef;
+			messageLog.scrollTop = messageLog.scrollHeight;
+		}
+	};
 
-        const stateEntry: MessageMapEntry = {
-          channel: id,
-          messages: [...messages],
-        };
-        dispatch(setMessages(stateEntry));
-      }
+	createEffect(async () => {
+		channelId = useParams().id;
+		channelMessages = messages()[channelId];
+		if (!channelMessages || channelMessages.length === 0) {
+			channelMessages = await getMessages(channelId);
+			setMessages({ [channelId]: channelMessages });
+		} else {
+			scrollToBottom();
+		}
 
-      return messages;
-    },
-    enabled: false,
-  });
+		if (!connection) {
+			connection = hubConnection();
+		}
+	}, [messages, channelId, channelMessages]);
 
-  const scrollToBottom = () => {
-    if (messageLogRef.current && isLockedToBottom) {
-      const messageLog = messageLogRef.current;
-      messageLog.scrollTop = messageLog.scrollHeight;
-    }
-  };
+	const handleScrollToBottomClick = () => {
+		setIsLockedToBottom(true);
+		scrollToBottom();
+		setShowScrollButton(false);
+	};
 
-  const handleScrollToBottomClick = () => {
-    setIsLockedToBottom(true);
-    scrollToBottom();
-    setShowScrollButton(false); // Hide the button after clicking
-  };
+	const handleScroll = () => {
+		const messageLog = messageLogRef;
+		if (messageLog) {
+			const isScrolledToBottom =
+				messageLog.scrollHeight - messageLog.scrollTop <=
+				messageLog.clientHeight + 10;
+			setIsLockedToBottom(isScrolledToBottom);
 
-  const handleScroll = () => {
-    const messageLog = messageLogRef.current;
-    if (messageLog) {
-      const isScrolledToBottom =
-        messageLog.scrollHeight - messageLog.scrollTop <=
-        messageLog.clientHeight + 10;
-      setIsLockedToBottom(isScrolledToBottom);
+			// Toggle the visibility of the scroll button
+			setShowScrollButton(!isScrolledToBottom);
+		}
+	};
 
-      // Toggle the visibility of the scroll button
-      setShowScrollButton(!isScrolledToBottom);
-    }
-  };
+	const handleSubmit = async () => {
+		const msg: SendMessageRequest = {
+			channelId: channelId,
+			senderId: currentMember().id,
+			body: newMessage(),
+		};
 
-  const handleKeyPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && newMessage !== "") {
-      await handleSubmit();
-    }
-  };
+		await hubConnection().invoke('SendMessage', JSON.stringify(msg));
+		setNewMessage('');
+	};
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewMessage(e.target.value);
-  };
+	const handleKeyPress = async (e: KeyboardEvent) => {
+		if (e.key === 'Enter' && newMessage() !== '') {
+			await handleSubmit();
+		}
+	};
 
-  const handleSubmit = async () => {
-    const msg = {
-      channelId: channelId as string,
-      senderId: loggedInUser?.id,
-      body: newMessage,
-    };
+	const handleChange = (e: Event) => {
+		const target = e.target as HTMLInputElement;
+		setNewMessage(target.value);
+	};
 
-    await connection.invoke("SendMessage", msg);
+	createEffect(() => {
+		const messageLog = messageLogRef;
+		if (messageLog) {
+			messageLog.addEventListener('scroll', handleScroll);
+		}
+		return () => {
+			if (messageLog) {
+				messageLog.removeEventListener('scroll', handleScroll);
+			}
+		};
+	}, []);
 
-    setNewMessage("");
-  };
-
-  useEffect(() => {
-    if (!messages) {
-      messageQuery.refetch();
-    } else {
-      scrollToBottom();
-    }
-  }, [messages, messageQuery]);
-
-  useEffect(() => {
-    const messageLog = messageLogRef.current;
-    if (messageLog) {
-      messageLog.addEventListener("scroll", handleScroll);
-    }
-    return () => {
-      if (messageLog) {
-        messageLog.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, []);
-
-  if (!messageQuery.isSuccess) {
-    return (
-      <div>
-        <h1>Loading</h1>
-      </div>
-    );
-  }
-
-  return (
-    <>
-      {showContextMenu && (
-        <div id="context-menu" className="context-menu">
-          <div
-            className="context-menu-item"
-            onClick={() => {
-              setShowContextMenu(false);
-            }}
-          >
-            Edit Message
-          </div>
-          <div className="context-menu-item">Delete Message</div>
-        </div>
-      )}
-      <div className="message-log" ref={messageLogRef}>
-        {messages &&
-          messages.map((message) => <MessageItem message={message} />)}
-        {!isLockedToBottom && showScrollButton && (
-          <div
-            className="scroll-to-bottom-button"
-            onClick={handleScrollToBottomClick}
-          >
-            <div className="arrow-down-icon">▼</div>
-          </div>
-        )}
-      </div>
-      <div className="message-input-container">
-        <input
-          type="text"
-          className="message-input"
-          placeholder="Enter your text"
-          value={newMessage}
-          onChange={handleChange}
-          onKeyPress={handleKeyPress}
-        />
-        <button className="message-submit" onClick={handleSubmit}>
-          Submit
-        </button>
-      </div>
-    </>
-  );
+	return (
+		<div class="message-log" ref={messageLogRef}>
+			<For each={messages()[channelId]}>
+				{(message) => {
+					return <MessageItem message={message} />;
+				}}
+			</For>
+			<div class="message-input-container">
+				<input
+					type="text"
+					class="message-input"
+					placeholder="Enter your text"
+					value={newMessage()}
+					onChange={(e) => handleChange(e)}
+					onKeyPress={(e) => handleKeyPress(e)}
+				/>
+				<button
+					class="message-submit"
+					onClick={async () => await handleSubmit()}>
+					Submit
+				</button>
+			</div>
+		</div>
+	);
 }

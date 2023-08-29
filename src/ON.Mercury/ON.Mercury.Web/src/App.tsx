@@ -1,55 +1,88 @@
-import React, { useEffect, useState } from "react";
-import "@styles/App.css";
-import { buildSignalR } from "./signalR/signalR";
-import { config } from "./config/config";
-import { RootView } from "./views/RootView";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ChatChannelView } from "./views/ChatChannelView";
-import { ContextMenuProvider } from "./providers/ContextMenuProvider";
-import { ModalProvider } from "./providers/ModalProvider";
-
-globalThis.token = localStorage.getItem("jwt");
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <RootView hubConnection={globalThis.hubConnection} />,
-  },
-  {
-    path: "/channels/:id",
-    element: <ChatChannelView />,
-  },
-]);
+import { Route, Routes } from '@solidjs/router';
+import './App.scss';
+import { ChatView } from './views/ChatView';
+import { createEffect } from 'solid-js';
+import { fetchAllChannels } from './api/channels.api';
+import { fetchAllRoles } from './api/roles.api';
+import { fetchAllMembers, fetchAuthenticatedUser } from './api/auth.api';
+import { devConfig } from './config/config';
+import { buildConnection } from './signalR/buildConnection';
+import { DirectoryView } from './views/DirectoryView';
+import { useGlobalContext } from './state/GlobalProvider';
+import { Message } from './types/message';
+import { Channel } from './types/channel';
+import { NewChannelForm } from './components/channels/new-channel/NewChannelForm';
 
 function App() {
-  const [token, setToken] = useState(globalThis.token);
-  const [isLoading, setIsLoading] = useState(false);
-  // const [showServerSettings, setShowServerSettings] = useState(false);
+	const {
+		channels,
+		setChannels,
+		roles,
+		setRoles,
+		members,
+		setMembers,
+		hubConnection,
+		setHubConnection,
+		addMessage,
+		currentMember,
+		setCurrentMember,
+	} = useGlobalContext();
 
-  useEffect(() => {
-    if (token === undefined) {
-      setIsLoading(true);
-    } else {
-      if (globalThis.hubConnection === undefined) {
-        globalThis.hubConnection = buildSignalR(
-          `${config.mercuryApi}/hub`,
-          token as string,
-        );
+	createEffect(async () => {
+		if (!currentMember()) {
+			const currentMemberFound = await fetchAuthenticatedUser();
+			if (currentMemberFound) {
+				setCurrentMember({
+					id: currentMemberFound.id,
+					username: currentMemberFound.username,
+					roles: currentMemberFound.roles ?? [],
+					token: devConfig.token,
+				});
+			}
+		}
 
-        globalThis.hubConnection.start();
-      }
-    }
-  }, [token, setToken, globalThis.hubConnection]);
+		if (channels().length === 0) {
+			const channelsFound = await fetchAllChannels();
+			if (channelsFound) {
+				setChannels(channelsFound);
+			}
+		}
 
-  return (
-    <div className="App">
-      <ModalProvider>
-        <ContextMenuProvider>
-          <RouterProvider router={router} />
-        </ContextMenuProvider>
-      </ModalProvider>
-    </div>
-  );
+		if (roles().length === 0) {
+			const rolesFound = await fetchAllRoles();
+			if (rolesFound) {
+				setRoles(rolesFound);
+			}
+		}
+
+		if (members().length === 0) {
+			const membersFound = await fetchAllMembers();
+			if (membersFound) {
+				setMembers(membersFound);
+			}
+		}
+	});
+
+	createEffect(async () => {
+		if (!hubConnection()) {
+			const conn = await buildConnection();
+			conn.on('ReceiveMessage', (message: Message) => {
+				addMessage(message);
+			});
+			conn.on('ChannelCreated', (channel: Channel) => {
+				setChannels((prev) => [...prev, channel]);
+			});
+			setHubConnection(conn);
+		}
+	});
+
+	return (
+		<Routes>
+			<Route path="/" component={DirectoryView} />
+			<Route path="/channels/:id" component={ChatView} />
+			<Route path="/channels/new" component={NewChannelForm} />
+		</Routes>
+	);
 }
 
 export default App;
