@@ -27,10 +27,13 @@ namespace ON.Mercury.Service.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateChannelAsync([FromBody] CreateOrUpdateChannel request, CancellationToken cancellationToken = default)
         {
+            if (string.IsNullOrEmpty(request.Name) || string.IsNullOrWhiteSpace(request.Name))
+            {
+                return BadRequest("Name is required");
+            }
+            
             var channel = await _channels.CreateChannelAsync(request.Name, request.Description, request.Category, request.Roles, cancellationToken);
             return Ok(channel);
-            // _logger.LogInformation(JsonConvert.SerializeObject(request));
-            // return Ok();
         }
         
         [HttpGet]
