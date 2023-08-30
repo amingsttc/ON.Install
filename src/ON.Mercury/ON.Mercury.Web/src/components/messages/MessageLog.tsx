@@ -59,14 +59,16 @@ export function MessageLog() {
 	};
 
 	const handleSubmit = async () => {
-		const msg: SendMessageRequest = {
-			channelId: channelId,
-			senderId: currentMember().id,
-			body: newMessage(),
-		};
+		if (newMessage()) {
+			const msg: SendMessageRequest = {
+				channelId: channelId,
+				senderId: currentMember().id,
+				body: newMessage(),
+			};
 
-		await hubConnection().invoke('SendMessage', JSON.stringify(msg));
-		setNewMessage('');
+			await hubConnection().invoke('SendMessage', JSON.stringify(msg));
+			setNewMessage('');
+		}
 	};
 
 	const handleKeyPress = async (e: KeyboardEvent) => {
@@ -93,24 +95,25 @@ export function MessageLog() {
 	}, []);
 
 	return (
-		<div class="message-log" ref={messageLogRef}>
+		<div class='message-log' ref={messageLogRef}>
 			<For each={messages()[channelId]}>
 				{(message) => {
 					return <MessageItem message={message} />;
 				}}
 			</For>
-			<div class="message-input-container">
+			<div class='message-input-container'>
 				<input
-					type="text"
-					class="message-input"
-					placeholder="Enter your text"
+					type='text'
+					class='message-input'
+					placeholder='Enter your text'
 					value={newMessage()}
 					onChange={(e) => handleChange(e)}
 					onKeyPress={(e) => handleKeyPress(e)}
 				/>
 				<button
-					class="message-submit"
-					onClick={async () => await handleSubmit()}>
+					class='message-submit'
+					onClick={async () => await handleSubmit()}
+				>
 					Submit
 				</button>
 			</div>

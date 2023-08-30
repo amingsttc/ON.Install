@@ -3,6 +3,7 @@ import { useGlobalContext } from '../../state/GlobalProvider';
 import { Message } from '../../types/message';
 import './MessageItem.scss';
 import { DateTime } from 'luxon';
+import profileDefaultImage from '../../assets/profile_default.png';
 
 type MessageItemProps = {
 	message: Message;
@@ -18,13 +19,16 @@ export function MessageItem({ message }: MessageItemProps) {
 
 	return (
 		<div class='message-item'>
-			<div class='username-date-container'>
+			<div class='message-avatar'>
+				<img src={profileDefaultImage} alt='Profile' />
+			</div>
+			<div class='message-content'>
 				<div class='message-username'>
 					{getMemberUsernameById(message.senderId)}
 				</div>
-				<div class='message-sent-on'>{getLocalTime(message.sentOn)}</div>
+				<div class='message-body'>{message.body}</div>
+				<div class='message-timestamp'>{getLocalTime(message.sentOn)}</div>
 			</div>
-			<div class='message-body'>{message.body}</div>
 		</div>
 	);
 }

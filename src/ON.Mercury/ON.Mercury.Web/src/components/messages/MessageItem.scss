@@ -1,61 +1,57 @@
 .message-item {
 	display: flex;
-	flex-direction: column;
-	padding: 8px;
-	background-color: #424549;
+	padding: 10px 5px;
 	border-radius: 8px;
 	margin-bottom: 8px;
-	margin-left: 310px;
-	margin-right: 0px;
-	width: calc(100% - 400px);
+	margin-left: 23px;
+	width: calc(100% - 310px); /* Adjusted width */
+	margin-left: auto; /* Pushes the messages to the right side of the screen */
+	align-self: flex-start; /* Aligns messages at the top */
+	&:hover {
+		background-color: #23272a;
+	}
 }
 
-.message-item:hover {
-	background-color: #23272a;
-}
-
-.username-date-container {
+.message-content {
 	display: flex;
-	justify-content: space-between;
-	margin-bottom: 4px;
+	flex-direction: column;
+	margin-left: 12px;
+	flex-grow: 1;
+
+	.message-username {
+		font-weight: bold;
+		color: white;
+		&:hover {
+			text-decoration: underline;
+			cursor: pointer;
+		}
+	}
+
+	.message-body {
+		color: white;
+		margin-top: 4px;
+	}
 }
 
-.message-username {
-	font-weight: bold;
-	color: white;
-	text-decoration: none;
+.message-avatar {
+	flex-shrink: 0;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	overflow: hidden;
+	margin-left: 15px;
+	margin-top: 5px;
+
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
 }
 
-.message-username:hover {
-	text-decoration: underline;
-	cursor: pointer;
-}
-
-.message-sent-on {
+.message-timestamp {
 	color: #888;
 	font-size: 12px;
-}
-
-.message-body {
-	color: white;
-}
-
-.context-menu {
-	position: fixed;
-	background-color: #23272a;
-	color: white;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	padding: 8px;
-	z-index: 9999;
-	box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
-}
-
-.context-menu-item {
-	cursor: pointer;
-	padding: 4px 12px;
-}
-
-.context-menu-item:hover {
-	background-color: #424549;
+	margin-top: 4px;
+	text-align: right;
 }
