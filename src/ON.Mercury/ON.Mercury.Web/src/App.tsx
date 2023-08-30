@@ -13,6 +13,7 @@ import { useGlobalContext } from './state/GlobalProvider';
 import { Message } from './types/message';
 import { Channel } from './types/channel';
 import { NewChannelForm } from './components/channels/new-channel/NewChannelForm';
+import { Role } from './types/role';
 
 function App() {
 	const {
@@ -72,6 +73,27 @@ function App() {
 			});
 			conn.on('ChannelCreated', (channel: Channel) => {
 				setChannels((prev) => [...prev, channel]);
+			});
+			conn.on('ChannelUpdated', (channel: Channel) => {
+				console.log(channel);
+			});
+			conn.on('ChannelDeleted', (channelId: string) => {
+				console.log(channelId);
+			});
+			conn.on('RoleCreated', (role: Role) => {
+				setRoles((prev) => [...prev, role]);
+			});
+			conn.on('RoleUpdated', (role: Role) => {
+				console.log(role);
+			});
+			conn.on('RoleDeleted', (roleId: string) => {
+				console.log(roleId);
+			});
+			conn.on('MessageUpdated', (message: Message) => {
+				console.log(message);
+			});
+			conn.on('MessageDeleted', (messageId: string) => {
+				console.log(messageId);
 			});
 			setHubConnection(conn);
 		}

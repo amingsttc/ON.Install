@@ -13,6 +13,8 @@ using ON.Mercury.Service.Database;
 using Service.Database.Entities;
 using System.Collections.Generic;
 using Google.Protobuf.WellKnownTypes;
+using Microsoft.AspNetCore.SignalR;
+using ON.Mercury.Service.Hubs;
 using Channel = ON.Fragments.Mercury.Channel;
 using Message = Service.Database.Entities.Message;
 
@@ -23,12 +25,14 @@ public class ChatService : ChatInterface.ChatInterfaceBase
     private readonly ILogger<ChatService> _logger;
     private readonly PostgresContext _postgres;
     private readonly ICachingService _cache;
+    private readonly IHubContext<ChatHub> _hubContext;
 
-    public ChatService(ILogger<ChatService> logger, PostgresContext postgres, ICachingService cache)
+    public ChatService(ILogger<ChatService> logger, PostgresContext postgres, ICachingService cache, IHubContext<ChatHub> hubContext)
     {
         _logger = logger;
         _postgres = postgres;
         _cache = cache;
+        _hubContext = hubContext;
     }
     
     public override async Task<SendMessageResponse> SendMessage(SendMessageRequest request, ServerCallContext context)
@@ -134,6 +138,7 @@ public class ChatService : ChatInterface.ChatInterfaceBase
 
             _postgres.Messages.Update(messageFound);
             await _postgres.SaveChangesAsync();
+            await _hubContext.Clients.All.SendAsync("MessageUpdated", JsonConvert.SerializeObject(messageFound));
             
             return new UpdateMessageResponse()
             {
@@ -170,6 +175,7 @@ public class ChatService : ChatInterface.ChatInterfaceBase
             _postgres.Messages.Update(messageFound);
             await _postgres.SaveChangesAsync();
             
+            await _hubContext.Clients.All.SendAsync("MessageDeleted", messageFound.Id);
             return new DeleteMessageResponse()
             {
                 IsSuccess = true,

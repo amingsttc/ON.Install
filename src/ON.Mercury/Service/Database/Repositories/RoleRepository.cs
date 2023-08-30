@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
+using ON.Mercury.Service.Hubs;
 using Role = Service.Database.Entities.Role;
 
 namespace ON.Mercury.Service.Database.Repositories
@@ -23,12 +25,14 @@ namespace ON.Mercury.Service.Database.Repositories
         private readonly ILogger<RoleRepository> _logger;
         private readonly PostgresContext _postgres;
         private readonly ICachingService _cache;
+        private readonly IHubContext<ChatHub> _hubContext;
         
-        public RoleRepository(ILogger<RoleRepository> logger, PostgresContext postgres, ICachingService cache)
+        public RoleRepository(ILogger<RoleRepository> logger, PostgresContext postgres, ICachingService cache, IHubContext<ChatHub> hubContext)
         {
             _logger = logger;
             _postgres = postgres;
             _cache = cache;
+            _hubContext = hubContext;
         }
 
         public async Task<IReadOnlyList<Role>?> GetRolesAsync(CancellationToken  cancellationToken = default)
@@ -59,10 +63,8 @@ namespace ON.Mercury.Service.Database.Repositories
             }, cancellationToken);
             await _postgres.SaveChangesAsync(cancellationToken);
             var role = roleEntry.Entity;
-            // await _cache.AddOrSetAsync("roles", new List<RoleEntity>()
-            // {
-            //     role
-            // });
+            await _hubContext.Clients.All.SendAsync("RoleCreated", JsonConvert.SerializeObject(role), cancellationToken);
+            
             return role.Id;
         }
 
@@ -77,7 +79,8 @@ namespace ON.Mercury.Service.Database.Repositories
 
             _postgres.Roles.Update(role);
             await _postgres.SaveChangesAsync(cancellationToken);
-
+            await _hubContext.Clients.All.SendAsync("RoleUpdated", JsonConvert.SerializeObject(role), cancellationToken);
+    
             return role;
         }
 
@@ -88,6 +91,7 @@ namespace ON.Mercury.Service.Database.Repositories
 
             _postgres.Roles.Remove(role);
             await _postgres.SaveChangesAsync(cancellationToken);
+            await _hubContext.Clients.All.SendAsync("RoleDeleted", role.Id, cancellationToken);
 
             return role.Id;
         }

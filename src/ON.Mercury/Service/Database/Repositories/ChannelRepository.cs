@@ -85,6 +85,9 @@ namespace ON.Mercury.Service.Database.Repositories
             _postgres.Channels.Update(channel);
             await _postgres.SaveChangesAsync(cancellationToken);
 
+            await _hubContext.Clients.All.SendAsync("ChannelUpdated", JsonConvert.SerializeObject(channel),
+                cancellationToken);
+
             return channel;
         }
 
@@ -95,6 +98,8 @@ namespace ON.Mercury.Service.Database.Repositories
 
             _postgres.Channels.Remove(channel);
             await _postgres.SaveChangesAsync(cancellationToken);
+
+            await _hubContext.Clients.All.SendAsync("ChannelDeleted", channel.Id, cancellationToken);
 
             return channel.Id;
         }

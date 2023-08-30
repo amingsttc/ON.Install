@@ -5,7 +5,9 @@ using Microsoft.Extensions.Logging;
 using ON.Mercury.Service.Caching;
 using ON.Mercury.Service.Database.Entities;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
+using ON.Mercury.Service.Hubs;
 using Service.Database.Entities;
 
 namespace ON.Mercury.Service.Database.Repositories
@@ -15,12 +17,14 @@ namespace ON.Mercury.Service.Database.Repositories
         private readonly ILogger<MemberRepository> _logger;
         private readonly ICachingService _cache;
         private readonly PostgresContext _postgres;
+        private readonly IHubContext<ChatHub> _hubContext;
         
-        public MemberRepository(ICachingService cache, ILogger<MemberRepository> logger, PostgresContext postgres)
+        public MemberRepository(ICachingService cache, ILogger<MemberRepository> logger, PostgresContext postgres, IHubContext<ChatHub> hubContext)
         {
             _cache = cache;
             _logger = logger;
             _postgres = postgres;
+            _hubContext = hubContext;
         }
 
         public async Task<Member> CreateMember(string id, string username) 
