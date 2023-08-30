@@ -35,7 +35,6 @@ public class ChatHub : Hub
         return base.OnDisconnectedAsync(exception);
     }
 
-    // TODO: Create new return type that sets message dates to DateTime
     [HubMethodName("SendMessage")]
     public async Task SendMessage(string request)
     {
@@ -57,14 +56,5 @@ public class ChatHub : Hub
             _logger.LogInformation(JsonConvert.SerializeObject(e));
             await Clients.Caller.SendAsync("ReceiveMessage", "Error Sending Message");
         }
-        // var res = _chatClient.SendMessage(request);
-        // if (!res.IsSuccess)
-        // {
-        //     await Clients.Caller.SendAsync("ReceiveMessage", "Error Sending Message");
-        // }
-        // else
-        // {
-        //     await Clients.All.SendAsync("ReceiveMessage", res.Message);
-        // }
     }
 }

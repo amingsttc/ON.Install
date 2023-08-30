@@ -53,10 +53,6 @@ public class Startup
         services.AddScoped<MemberRepository>();
         services.AddScoped<RoleRepository>();
         services.AddScoped<ChannelRepository>();
-        // services.AddGrpcClient<ChatInterface.ChatInterfaceClient>(options =>
-        // {
-        //     options.Address = new Uri("http://localhost:7015/ChatService");
-        // });
         services.AddJwtAuthentication();
         services.AddSwaggerGen(c =>
         {
