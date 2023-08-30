@@ -22,6 +22,7 @@
     "@types/luxon": "^3.3.1",
     "@types/signalr": "^2.4.0",
     "sass": "^1.66.1",
+    "solid-devtools": "^0.27.7",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
     "vite-plugin-solid": "^2.7.0"
