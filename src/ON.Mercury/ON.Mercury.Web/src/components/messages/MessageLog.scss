@@ -1,3 +1,5 @@
+@import '../../globals';
+
 .message-log {
 	width: 100vw;
 	top: 0;
@@ -8,8 +10,17 @@
 	flex-direction: column;
 	overflow-y: auto;
 	overflow-x: hidden;
-}
+	scrollbar-width: thin; /* Show thin scrollbar on supported browsers */
+	scrollbar-color: #888888 #f0f0f0; /* Thumb and track color */
 
+	&::-webkit-scrollbar {
+		width: 8px; /* Width of the scrollbar track */
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background-color: $primary-bg-dark-1; /* Color of the scrollbar thumb */
+	}
+}
 .message-log h1 {
 	margin: 0;
 	margin-left: 300px;
@@ -67,35 +78,4 @@
 .arrow-down-icon {
 	font-size: 24px;
 	color: white;
-}
-.custom-scrollbar {
-	// Set the dimensions of the scroll container
-	width: 300px;
-	height: 400px;
-	overflow: auto; // Important for scroll behavior
-
-	// Customize the scrollbar track
-	scrollbar-color: #2f3136 #202225; // Scrollbar thumb color and track color
-	scrollbar-width: thin; // Important for Firefox support
-
-	// Style the scrollbar thumb (vertical)
-	&::-webkit-scrollbar-thumb {
-		background-color: #7289da; // Color of the thumb
-		border-radius: 6px; // Border radius of the thumb
-	}
-
-	// Style the scrollbar track (vertical)
-	&::-webkit-scrollbar-track {
-		background-color: #202225; // Color of the track
-	}
-
-	// Hide the scrollbar buttons (up and down arrows)
-	&::-webkit-scrollbar-button {
-		display: none;
-	}
-
-	// Add hover effect to the thumb
-	&::-webkit-scrollbar-thumb:hover {
-		background-color: #5a65a4; // Hover color of the thumb
-	}
 }
