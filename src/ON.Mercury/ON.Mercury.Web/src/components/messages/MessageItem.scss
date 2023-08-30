@@ -6,7 +6,6 @@
 	margin-left: 23px;
 	width: calc(100% - 310px); /* Adjusted width */
 	margin-left: auto; /* Pushes the messages to the right side of the screen */
-	align-self: flex-start; /* Aligns messages at the top */
 	&:hover {
 		background-color: #23272a;
 	}
@@ -53,6 +52,6 @@
 .message-timestamp {
 	color: #888;
 	font-size: 12px;
-	margin-top: 4px;
 	text-align: right;
+	align-self: flex-start; /* Align the timestamp to the top of its container */
 }

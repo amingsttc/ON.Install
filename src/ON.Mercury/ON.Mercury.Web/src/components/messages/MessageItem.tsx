@@ -12,9 +12,23 @@ type MessageItemProps = {
 export function MessageItem({ message }: MessageItemProps) {
 	const { getMemberUsernameById } = useGlobalContext();
 
+	// const getLocalTime = (timestamp: Timestamp) => {
+	// 	const time = DateTime.fromISO(timestamp.toString()).toLocal();
+	// 	return `${time.month}/${time.day} ${time.hour}:${time.minute}`;
+	// };
+
 	const getLocalTime = (timestamp: Timestamp) => {
 		const time = DateTime.fromISO(timestamp.toString()).toLocal();
-		return `${time.month}/${time.day} ${time.hour}:${time.minute}`;
+
+		const formattedTime = time.toLocaleString({
+			month: '2-digit',
+			day: '2-digit',
+			hour: 'numeric',
+			minute: '2-digit',
+			hour12: true, // This will format the hour in 12-hour format
+		});
+
+		return formattedTime;
 	};
 
 	return (
