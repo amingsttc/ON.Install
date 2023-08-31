@@ -14,6 +14,8 @@ import { Message } from './types/message';
 import { Channel } from './types/channel';
 import { NewChannelForm } from './components/channels/new-channel/NewChannelForm';
 import { Role } from './types/role';
+import { Topbar } from './components/app/topbar/Topbar';
+import { Sidebar } from './components/app/sidebar/Sidebar';
 
 function App() {
 	const {
@@ -100,11 +102,19 @@ function App() {
 	});
 
 	return (
-		<Routes>
-			<Route path="/" component={DirectoryView} />
-			<Route path="/channels/:id" component={ChatView} />
-			<Route path="/channels/new" component={NewChannelForm} />
-		</Routes>
+		<>
+			<Topbar
+				backgroundColor='#242424'
+				textColor='#ffffff'
+				serverName='TestServer'
+			/>
+			<Routes>
+				<Route path='/' component={DirectoryView} />
+				<Route path='/channels/:id' component={ChatView} />
+				<Route path='/channels/new' component={NewChannelForm} />
+			</Routes>
+			{/* <Sidebar /> */}
+		</>
 	);
 }
 

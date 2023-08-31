@@ -1,11 +1,11 @@
 import { For, createEffect, createMemo } from 'solid-js';
 import './Sidebar.scss';
-import { SidebarChannel } from '../channels/SidebarChannel';
+import { SidebarChannel } from '../../channels/SidebarChannel';
 import { Link } from '@solidjs/router';
-import { useGlobalContext } from '../../state/GlobalProvider';
-import CustomBulletItem from '../decorations/bullet/CustomBulletItem';
+import { useGlobalContext } from '../../../state/GlobalProvider';
+import CustomBulletItem from '../../decorations/bullet/CustomBulletItem';
 
-import profileDefaultImage from '../../assets/profile_default.png';
+import profileDefaultImage from '../../../assets/profile_default.png';
 export function Sidebar() {
 	const { channels, currentMember, notifications } = useGlobalContext();
 	const memoUsername = createMemo(() => {
@@ -13,16 +13,14 @@ export function Sidebar() {
 	});
 
 	return (
-		<div class="sidebar">
-			<div class="sidebar-header">
+		<div class='sidebar'>
+			{/* <div class='sidebar-header'>
 				<h3>ServerName</h3>
-			</div>
-			<div class="container">
-				<ul class="list">
-					<Link href="/" class="sidebar-link sidebar-channel">
-						<CustomBulletItem bullet="#">
-							Directory
-						</CustomBulletItem>
+			</div> */}
+			<div class='container'>
+				<ul class='list'>
+					<Link href='/' class='sidebar-link sidebar-channel'>
+						<CustomBulletItem bullet='#'>Directory</CustomBulletItem>
 					</Link>
 					<For each={channels()}>
 						{(channel) => {
@@ -36,9 +34,9 @@ export function Sidebar() {
 					</For>
 				</ul>
 			</div>
-			<div class="sidebar-footer username-container">
-				<div class="message-avatar">
-					<img src={profileDefaultImage} alt="Profile" />
+			<div class='sidebar-footer username-container'>
+				<div class='message-avatar'>
+					<img src={profileDefaultImage} alt='Profile' />
 				</div>
 				<div>
 					<h3>@{memoUsername()}</h3>

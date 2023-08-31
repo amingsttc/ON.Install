@@ -1,13 +1,13 @@
 import { useParams } from '@solidjs/router';
-import { Sidebar } from '../components/app/Sidebar';
+import { Sidebar } from '../components/app/sidebar/Sidebar';
 import { MessageLog } from '../components/messages/MessageLog';
 import { createEffect } from 'solid-js';
 import { useGlobalContext } from '../state/GlobalProvider';
+import { Topbar } from '../components/app/topbar/Topbar';
 
 export function ChatView() {
 	// TODO: Fix notifications not updating
-	const { activeChannel, setActiveChannel, notifications } =
-		useGlobalContext();
+	const { activeChannel, setActiveChannel, notifications } = useGlobalContext();
 	const params = useParams();
 	let messageNotifications = notifications();
 

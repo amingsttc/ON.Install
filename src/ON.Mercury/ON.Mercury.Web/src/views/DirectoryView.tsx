@@ -1,4 +1,4 @@
-import { Sidebar } from '../components/app/Sidebar';
+import { Sidebar } from '../components/app/sidebar/Sidebar';
 import { ChannelDirectory } from '../components/channels/directory/ChannelDirectory';
 
 export function DirectoryView() {
