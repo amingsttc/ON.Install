@@ -10,6 +10,7 @@ import { Message } from '../types/message';
 import { Role } from '../types/role';
 import { CurrentMember, Member } from '../types/member';
 import { HubConnection } from '@microsoft/signalr';
+import { NotificationLog } from './notifications';
 
 interface ContextProps {
 	channels: Accessor<Channel[]>;
@@ -26,6 +27,9 @@ interface ContextProps {
 	setHubConnection: Setter<HubConnection>;
 	currentMember: Accessor<CurrentMember>;
 	setCurrentMember: Setter<CurrentMember>;
+	activeChannel: Accessor<string>;
+	setActiveChannel: Setter<string>;
+	notifications: Accessor<NotificationLog>;
 }
 
 const GlobalContext = createContext<ContextProps>();
@@ -41,11 +45,16 @@ export function GlobalProvider(props: any) {
 	const [currentMember, setCurrentMember] = createSignal<CurrentMember>(
 		undefined!
 	);
+	const [activeChannel, setActiveChannel] = createSignal<string>('');
+	const [notifications, setNotifications] = createSignal<NotificationLog>([]);
 
 	const addMessage = (message: Message) => {
 		let msgs = messages()[message.channelId];
 		msgs.push(message);
 		setMessages({ [message.channelId]: msgs });
+		if (message.channelId !== activeChannel()) {
+			updateNotificationCount(message.channelId);
+		}
 	};
 
 	// TODO: Get this server side as a full state variable with connection statuses
@@ -54,6 +63,26 @@ export function GlobalProvider(props: any) {
 			(member: Member) => member.id === memberId
 		);
 		return member ? member.username : 'Unknown Member';
+	};
+
+	const updateNotificationCount = (channelId: string) => {
+		setNotifications((prevNotifications) => {
+			const updatedNotifications = [...prevNotifications];
+			const existingEntry = updatedNotifications.find(
+				(entry) => entry.channel === channelId
+			);
+
+			if (existingEntry) {
+				existingEntry.count += 1;
+			} else {
+				updatedNotifications.push({
+					channel: channelId,
+					count: 1,
+				});
+			}
+
+			return updatedNotifications;
+		});
 	};
 
 	return (
@@ -73,6 +102,9 @@ export function GlobalProvider(props: any) {
 				setHubConnection,
 				currentMember,
 				setCurrentMember,
+				activeChannel,
+				setActiveChannel,
+				notifications,
 			}}>
 			{props.children}
 		</GlobalContext.Provider>

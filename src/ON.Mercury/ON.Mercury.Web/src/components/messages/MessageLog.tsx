@@ -13,8 +13,13 @@ export function MessageLog() {
 	const [showScrollButton, setShowScrollButton] = createSignal<boolean>(true);
 	const [newMessage, setNewMessage] = createSignal<string>('');
 	let channelMessages: Message[] = [];
-	const { messages, setMessages, hubConnection, currentMember } =
-		useGlobalContext();
+	const {
+		messages,
+		setMessages,
+		hubConnection,
+		currentMember,
+		activeChannel,
+	} = useGlobalContext();
 	let connection = hubConnection();
 
 	const scrollToBottom = () => {
@@ -25,7 +30,7 @@ export function MessageLog() {
 	};
 
 	createEffect(async () => {
-		channelId = useParams().id;
+		channelId = activeChannel();
 		channelMessages = messages()[channelId];
 		if (!channelMessages || channelMessages.length === 0) {
 			channelMessages = await getMessages(channelId);
@@ -95,25 +100,24 @@ export function MessageLog() {
 	}, []);
 
 	return (
-		<div class='message-log' ref={messageLogRef}>
+		<div class="message-log" ref={messageLogRef}>
 			<For each={messages()[channelId]}>
 				{(message) => {
 					return <MessageItem message={message} />;
 				}}
 			</For>
-			<div class='message-input-container'>
+			<div class="message-input-container">
 				<input
-					type='text'
-					class='message-input'
-					placeholder='Enter your text'
+					type="text"
+					class="message-input"
+					placeholder="Enter your text"
 					value={newMessage()}
 					onChange={(e) => handleChange(e)}
 					onKeyPress={(e) => handleKeyPress(e)}
 				/>
 				<button
-					class='message-submit'
-					onClick={async () => await handleSubmit()}
-				>
+					class="message-submit"
+					onClick={async () => await handleSubmit()}>
 					Submit
 				</button>
 			</div>

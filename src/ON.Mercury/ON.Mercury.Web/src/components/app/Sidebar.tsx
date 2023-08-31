@@ -1,4 +1,4 @@
-import { For, createMemo } from 'solid-js';
+import { For, createEffect, createMemo } from 'solid-js';
 import './Sidebar.scss';
 import { SidebarChannel } from '../channels/SidebarChannel';
 import { Link } from '@solidjs/router';
@@ -7,8 +7,7 @@ import CustomBulletItem from '../decorations/bullet/CustomBulletItem';
 
 import profileDefaultImage from '../../assets/profile_default.png';
 export function Sidebar() {
-	const { channels, currentMember } = useGlobalContext();
-
+	const { channels, currentMember, notifications } = useGlobalContext();
 	const memoUsername = createMemo(() => {
 		return currentMember() ? currentMember().username : 'username';
 	});

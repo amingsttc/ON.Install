@@ -1,4 +1,4 @@
-import { Route, Routes } from '@solidjs/router';
+import { Route, Routes, useParams } from '@solidjs/router';
 import 'solid-devtools';
 import './App.scss';
 import { ChatView } from './views/ChatView';
