@@ -24,6 +24,7 @@ namespace Service.Database.Entities
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
         public DateTime? ModifiedOn { get; set; } = DateTime.UtcNow;
         public DateTime? DeletedOn { get; set; }
+        [JsonIgnore]
         [NotMapped] public RepeatedField<Channel> Channels { get; set; } = new();
         [NotMapped] public RepeatedField<Member> Members { get; set; } = new();
         public static void SetColumnMetadata(ModelBuilder modelBuilder)

@@ -44,20 +44,18 @@ namespace ON.Mercury.Service.Database.Repositories
                 ModifiedOn = DateTime.UtcNow
             };
 
-            // TODO: Give ChannelsRoles a primary key
-            // if (roles is not null)
-            // {
-            //     newChannel.Roles.Add(roles);
-            // }
-            // else
-            // {
-            //     var defaultRole = await _postgres.Roles.FirstOrDefaultAsync(r => r.Id == DEFAULT_ROLE, cancellationToken);
-            //     await _postgres.ChannelRoles.AddAsync(new ChannelsRoles()
-            //     {
-            //         ChannelId = newChannel.Id,
-            //         RoleId = DEFAULT_ROLE
-            //     });
-            // }
+            if (roles is null)
+            {
+                await _postgres.ChannelRoles.AddAsync(new ChannelsRoles()
+                {
+                    ChannelId = newChannel.Id,
+                    RoleId = DEFAULT_ROLE
+                });
+            }
+            else
+            {
+                newChannel.Roles.Add(roles);
+            }
             
             await _postgres.Channels.AddAsync(newChannel, cancellationToken);
             await _postgres.SaveChangesAsync(cancellationToken);
@@ -69,7 +67,7 @@ namespace ON.Mercury.Service.Database.Repositories
 
         public async Task<IEnumerable<Channel>> GetChannelsAsync(CancellationToken cancellationToken = default)
         {
-            var channels = await _postgres.Channels.ToListAsync(cancellationToken);
+            var channels = await _postgres.Channels.Include(c => c.Roles).ToListAsync();
             return channels;
         }
 

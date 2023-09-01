@@ -17,7 +17,7 @@ public class ChannelsRoles
     public static void SetColumnMetadata(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ChannelsRoles>()
-            .HasNoKey();
+            .HasKey(cr => new { cr.ChannelId, cr.RoleId });
         
         modelBuilder.Entity<ChannelsRoles>()
             .Property(x => x.ChannelId)
