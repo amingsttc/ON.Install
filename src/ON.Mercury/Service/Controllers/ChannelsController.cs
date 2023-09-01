@@ -60,13 +60,24 @@ namespace ON.Mercury.Service.Controllers
         }
 
         [HttpGet("{channelId}/messages")]
-        public async Task<IActionResult> GetMessagesAsync([FromRoute]string channelId, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetMessagesAsync(string channelId, [FromQuery] string lastReceivedId = null,CancellationToken cancellationToken = default)
         {
-            var messages = await _channels.GetMessagesAsync(channelId, cancellationToken: cancellationToken);
-            if (messages == null)
-                return BadRequest("No messages found");
+            if (string.IsNullOrWhiteSpace(lastReceivedId))
+            {
+                var messages = await _channels.GetMessagesAsync(channelId, cancellationToken: cancellationToken);
+                if (messages == null)
+                    return BadRequest("No messages found");
 
-            return Ok(messages);
+                return Ok(messages);
+            }
+            else
+            {
+                var messages = await _channels.GetMessagesAsync(channelId, lastReceivedId: lastReceivedId, cancellationToken: cancellationToken);
+                if (messages == null)
+                    return BadRequest("No messages found");
+
+                return Ok(messages);
+            }
         }
     }
 }

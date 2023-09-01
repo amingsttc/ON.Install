@@ -104,15 +104,41 @@ namespace ON.Mercury.Service.Database.Repositories
             return channel.Id;
         }
 
-        public async Task<IReadOnlyList<Message>?> GetMessagesAsync(string channelId, MessageSenderParams messageSenderParams = MessageSenderParams.SenderId, CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyList<Message>?> GetMessagesAsync(string channelId, MessageSenderParams messageSenderParams = MessageSenderParams.SenderId, string lastReceivedId = null, CancellationToken cancellationToken = default)
         {
             var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
             if (channel is null) return null;
-            var messages = await _postgres.Messages
-                .Where(m => m.ChannelId == channelId && m.DeletedOn == null)
-                .OrderBy(m => m.SentOn)
-                .ToListAsync(cancellationToken);
-            return messages;
+            if (string.IsNullOrWhiteSpace(lastReceivedId))
+            {
+                var messages = await _postgres.Messages
+                    .Where(m => m.ChannelId == channelId && m.DeletedOn == null)
+                    .OrderBy(m => m.SentOn)
+                    .ToListAsync(cancellationToken);
+                return messages;
+            }
+            else
+            {
+                // var messages = await _postgres.Messages
+                //     .Where(m => m.ChannelId == channelId && m.DeletedOn == null)
+                //     .OrderBy(m => m.SentOn)
+                //     .SkipWhile(m =>  m.Id != lastReceivedId)
+                //     .Skip(1)
+                //     .ToListAsync(cancellationToken);
+                // return messages;
+                var messages = await _postgres.Messages
+                    .Where(m => m.ChannelId == channelId && m.DeletedOn == null)
+                    .OrderBy(m => m.SentOn)
+                    .ToListAsync(cancellationToken);
+
+                var startIndex = messages.FindIndex(m => m.Id == lastReceivedId);
+                if (startIndex >= 0)
+                {
+                    // Use messages.GetRange to get messages after lastReceivedId
+                    messages = messages.GetRange(startIndex + 1, messages.Count - startIndex - 1);
+                }
+
+                return messages;
+            }
         }
 
         public async Task<Message> SendMessageAsync(string channelId, string senderId, string body, CancellationToken cancellationToken = default)
