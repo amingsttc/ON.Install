@@ -118,13 +118,6 @@ namespace ON.Mercury.Service.Database.Repositories
             }
             else
             {
-                // var messages = await _postgres.Messages
-                //     .Where(m => m.ChannelId == channelId && m.DeletedOn == null)
-                //     .OrderBy(m => m.SentOn)
-                //     .SkipWhile(m =>  m.Id != lastReceivedId)
-                //     .Skip(1)
-                //     .ToListAsync(cancellationToken);
-                // return messages;
                 var messages = await _postgres.Messages
                     .Where(m => m.ChannelId == channelId && m.DeletedOn == null)
                     .OrderBy(m => m.SentOn)
@@ -133,28 +126,11 @@ namespace ON.Mercury.Service.Database.Repositories
                 var startIndex = messages.FindIndex(m => m.Id == lastReceivedId);
                 if (startIndex >= 0)
                 {
-                    // Use messages.GetRange to get messages after lastReceivedId
                     messages = messages.GetRange(startIndex + 1, messages.Count - startIndex - 1);
                 }
 
                 return messages;
             }
-        }
-
-        public async Task<Message> SendMessageAsync(string channelId, string senderId, string body, CancellationToken cancellationToken = default)
-        {
-            var newMessage = new Message()
-            {
-                Id = Guid.NewGuid().ToString(),
-                ChannelId = channelId,
-                SenderId = senderId,
-                Body = body,
-                SentOn = DateTime.UtcNow
-            };
-            await _postgres.Messages.AddAsync(newMessage, cancellationToken);
-            await _postgres.SaveChangesAsync(cancellationToken);
-
-            return new Message();
         }
     }
 }
