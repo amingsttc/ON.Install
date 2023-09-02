@@ -130,5 +130,66 @@ namespace ON.Mercury.Service.Database.Repositories
                 return messages;
             }
         }
+
+        public async Task<Message> PinMessageAsync(string messageId, string channelId, CancellationToken cancellationToken = default)
+        {
+            var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
+            if (channel is null)
+            {
+                throw new Exception("Channel Not Found");
+            }
+            
+            var message = await _postgres.Messages.FirstOrDefaultAsync(m => m.Id == messageId, cancellationToken);
+            if (message is null)
+            {
+                throw new Exception("Message Not Found");
+            }
+            
+            channel.PinnedMessages.Add(message);
+            _postgres.Channels.Update(channel);
+            await _postgres.SaveChangesAsync(cancellationToken);
+
+            return message;
+        }
+
+        public async Task<IReadOnlyList<Message>?> GetPinnedMessagesAsync(string channelId, CancellationToken cancellationToken = default)
+        {
+            var channel = await _postgres.Channels.Include(c =>  c.PinnedMessages).FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
+            if (channel is null)
+            {
+                throw new Exception("Channel Not Found");
+            }
+
+            return channel.PinnedMessages.ToList();
+        }
+
+        public async Task<Message> UnpinMessageAsync(string channelId, string messageId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var channel = await _postgres.Channels.Include(c => c.PinnedMessages).FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
+                if (channel is null)
+                {
+                    throw new Exception("Channel Not Found");
+                }
+
+                var message = channel.PinnedMessages.FirstOrDefault(m => m.Id == messageId);
+                if (message is null)
+                {
+                    throw new Exception("Message Not Pinned");
+                }
+
+                channel.PinnedMessages.Remove(message);
+                _postgres.Channels.Update(channel);
+                await _postgres.SaveChangesAsync(cancellationToken);
+
+                return message;
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation(JsonConvert.SerializeObject(e));
+                throw;
+            }
+        }
     }
 }

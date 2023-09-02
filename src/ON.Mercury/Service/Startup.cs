@@ -65,6 +65,8 @@ public class Startup
         services.AddDbContext<PostgresContext>(opts =>
         {
             opts.UseNpgsql(Configuration.GetConnectionString("Postgres"));
+            opts.EnableDetailedErrors();
+            opts.EnableSensitiveDataLogging();
         });
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     }

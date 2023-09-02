@@ -7,6 +7,7 @@ using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Google.Protobuf.Collections;
 using Service.Database.Entities;
+using System.Linq;
 
 namespace ON.Mercury.Service.Database.Entities
 {
@@ -22,6 +23,7 @@ namespace ON.Mercury.Service.Database.Entities
 
         [NotMapped] public RepeatedField<Message> Messages { get; set; } = new();
         [NotMapped] public RepeatedField<Role> Roles { get; set; } = new();
+        [NotMapped] public RepeatedField<Message> PinnedMessages { get; set; } = new();
 
         public static void SetColumnMetadata(ModelBuilder modelBuilder)
         {
@@ -64,19 +66,14 @@ namespace ON.Mercury.Service.Database.Entities
                     j => j.HasOne(x => x.Role).WithMany().HasForeignKey(x => x.RoleId),
                     j => j.HasOne(x => x.Channel).WithMany().HasForeignKey(x => x.ChannelId)
                 );
-
-            // modelBuilder.Entity<Channel>()
-            //     .HasMany(x => x.Messages)
-            //     .WithOne(x => x.Channel)
-            //     .HasForeignKey(x => x.ChannelId);
-            //
-            // modelBuilder.Entity<Channel>()
-            //     .HasMany(x => x.Roles)
-            //     .WithMany(x => x.Channels)
-            //     .UsingEntity<ChannelsRoles>(
-            //         j => j.HasOne(x => x.Role).WithMany().HasForeignKey(x => x.RoleId),
-            //         j => j.HasOne(x => x.Channel).WithMany().HasForeignKey(x => x.ChannelId)
-            //     );
+            
+            modelBuilder.Entity<Channel>()
+                .HasMany(c => c.PinnedMessages)
+                .WithMany()
+                .UsingEntity<ChannelsPinnedMessages>(
+                    j => j.HasOne(p => p.Message).WithMany().HasForeignKey(p => p.MessageId),
+                    j => j.HasOne(p => p.Channel).WithMany().HasForeignKey(p => p.ChannelId)
+                );
         }
 
         public void MergeFrom(Fragments.Mercury.Channel message)

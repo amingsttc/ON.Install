@@ -23,6 +23,7 @@ public sealed class PostgresContext : DbContext
     public DbSet<ChannelsRoles> ChannelRoles { get; set; }
     public DbSet<MembersRoles> MemberRoles { get; set; }
     public DbSet<AuditItem> AuditLog { get; set; }
+    public DbSet<ChannelsPinnedMessages> ChannelPinnedMessages { get; set; }
 
     public PostgresContext(IConfiguration configuration)
     {
@@ -34,6 +35,7 @@ public sealed class PostgresContext : DbContext
         ChannelRoles = Set<ChannelsRoles>();
         MemberRoles = Set<MembersRoles>();
         AuditLog = Set<AuditItem>();
+        ChannelPinnedMessages = Set<ChannelsPinnedMessages>();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -49,6 +51,7 @@ public sealed class PostgresContext : DbContext
         ChannelsRoles.SetColumnMetadata(modelBuilder);
         MembersRoles.SetColumnMetadata(modelBuilder);
         Channel.SetColumnMetadata(modelBuilder);
+        ChannelsPinnedMessages.SetColumnMetadata(modelBuilder);
         
 
         modelBuilder.Entity<AuditItem>()
