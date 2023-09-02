@@ -25,8 +25,10 @@ namespace Service.Database.Entities
         public DateTime? ModifiedOn { get; set; } = DateTime.UtcNow;
         public DateTime? DeletedOn { get; set; }
         [JsonIgnore]
-        [NotMapped] public RepeatedField<Channel> Channels { get; set; } = new();
-        [NotMapped] public RepeatedField<Member> Members { get; set; } = new();
+        [NotMapped]
+        public RepeatedField<Channel> Channels { get; set; } = new();
+        [NotMapped]
+        public RepeatedField<Member> Members { get; set; } = new();
         public static void SetColumnMetadata(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Role>()
@@ -52,11 +54,11 @@ namespace Service.Database.Entities
             modelBuilder.Entity<Role>()
                 .Property(x => x.ModifiedOn)
                 .HasColumnName("modified_on");
-            
+
             modelBuilder.Entity<Role>()
                 .Property(x => x.DeletedOn)
                 .HasColumnName("deleted_on");
-            
+
             modelBuilder.Entity<Role>()
                 .Property(x => x.Permissions)
                 .HasColumnName("permissions")
@@ -83,7 +85,7 @@ namespace Service.Database.Entities
             }
             return dict;
         }
-        
+
         public void MergeFrom(ON.Fragments.Mercury.Role message)
         {
             throw new System.NotImplementedException();
@@ -104,16 +106,19 @@ namespace Service.Database.Entities
             throw new System.NotImplementedException();
         }
 
+        [NotMapped]
+        [JsonIgnore]
         public MessageDescriptor Descriptor { get; }
+
 
         public bool Equals(ON.Fragments.Mercury.Role other)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public ON.Fragments.Mercury.Role Clone()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

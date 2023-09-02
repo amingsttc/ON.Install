@@ -3,6 +3,7 @@ using Google.Protobuf;
 using Google.Protobuf.Collections;
 using Google.Protobuf.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using ON.Mercury.Service.Database.UnionTables;
 
 namespace Service.Database.Entities
@@ -56,13 +57,25 @@ namespace Service.Database.Entities
             throw new System.NotImplementedException();
         }
 
+        [NotMapped] [JsonIgnore]
         public MessageDescriptor Descriptor { get; }
 
-        public bool Equals(Member other)
+        public bool Equals(Member? other)
         {
-            throw new System.NotImplementedException();
+            if (other == null)
+            {
+                return false;
+            }
+
+            // Compare the Id and Username properties for equality
+            return Id == other.Id && Username == other.Username;
         }
 
+        public override int GetHashCode()
+        {
+            return (Id?.GetHashCode() ?? 0) ^ (Username?.GetHashCode() ?? 0);
+        }
+        
         public Member Clone()
         {
             throw new System.NotImplementedException();

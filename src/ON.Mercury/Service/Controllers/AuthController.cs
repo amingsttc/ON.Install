@@ -1,13 +1,19 @@
-﻿using System.Linq;
+﻿using Grpc.Core;
+using Grpc.Net.Client;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ON.Authentication;
 using ON.Mercury.Service.Models.Auth;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using ON.Fragments.Authentication;
 using ON.Mercury.Service.Database.Entities;
 using ON.Mercury.Service.Database.Repositories;
+using ON.Mercury.Service.Models.Roles;
 using Service.Database.Entities;
+using System;
+using System.Collections.Generic;
 
 namespace ON.Mercury.Service.Controllers
 {
@@ -63,6 +69,50 @@ namespace ON.Mercury.Service.Controllers
         {
             var members = await _members.GetMembers();
             return Ok(members);
+        }
+
+        [HttpPut("members/{memberId}/grant-roles")]
+        public async Task<IActionResult> GrantRolesAsync(string memberId, [FromBody] GrantRolesRequest request)
+        {
+            if (request is null || !request.Roles.Any())
+            {
+                return BadRequest("At least one role must be provided");
+            }
+            
+            try
+            {
+                _logger.LogInformation(ONUserHelper.ParseUser(HttpContext).JwtToken);
+                var member = await _members.GrantRolesAsync(memberId, request.Roles);
+                _logger.LogInformation(ONUserHelper.ParseUser(HttpContext).JwtToken);
+                
+                return Ok(member);
+            } catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+            
+        }
+        
+        [HttpPut("members/{memberId}/remove-roles")]
+        public async Task<IActionResult> RemoveRolesAsync(string memberId, [FromBody] GrantRolesRequest request)
+        {
+            if (request is null || !request.Roles.Any())
+            {
+                return BadRequest("At least one role must be provided");
+            }
+
+            try
+            {
+                _logger.LogInformation(ONUserHelper.ParseUser(HttpContext).JwtToken);
+                var member = await _members.RemoveRolesAsync(memberId, request.Roles);
+                _logger.LogInformation(ONUserHelper.ParseUser(HttpContext).JwtToken);
+
+                return Ok(member);
+            } catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+            
         }
     }
 }

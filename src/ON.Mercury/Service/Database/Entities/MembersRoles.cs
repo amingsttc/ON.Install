@@ -16,7 +16,11 @@ public class MembersRoles
     public static void SetColumnMetadata(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<MembersRoles>()
-            .HasNoKey();
+            .HasKey(mr => new
+            {
+                mr.MemberId,
+                mr.RoleId
+            });
         
         modelBuilder.Entity<MembersRoles>()
             .Property(x => x.MemberId)
@@ -30,14 +34,14 @@ public class MembersRoles
             .HasOne(x => x.Member)
             .WithMany()
             .HasForeignKey(x => x.MemberId)
-            .HasConstraintName("FK_member_id")
+            .HasConstraintName("FK_MembersRoles_Member") // Descriptive name for Member relationship
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<MembersRoles>()
             .HasOne(x => x.Role)
             .WithMany()
             .HasForeignKey(x => x.RoleId)
-            .HasConstraintName("FK_role_id")
+            .HasConstraintName("FK_MembersRoles_Role") // Descriptive name for Role relationship
             .OnDelete(DeleteBehavior.Restrict);
     }
 }
