@@ -45,7 +45,7 @@ namespace ON.Mercury.Service.Controllers
                 else
                 {
                     //res.Member = JsonConvert.DeserializeObject<Member>(profileStr);
-                    res.Member = await _members.GetMember(user.Id.ToString());
+                    res.Member = await _members.GetOrCreateMember(user.Id.ToString(), user.DisplayName);
                 }
                 
                 return Ok(res);

@@ -29,11 +29,20 @@ namespace ON.Mercury.Service.Services
                 return new GetClaimsResponse();
             
             var user = ONUserHelper.ParseUser(context.GetHttpContext());
-            var res = new GetClaimsResponse();
-            var member = await _members.GetMember(request.UserID);
-
-            if (member is null)
+            
+            // TODO: Parse GUID's then compare
+            if (user is null ||  request.UserID  != user.Id.ToString())
+            {
                 return new GetClaimsResponse();
+            }
+            
+            var res = new GetClaimsResponse();
+            var member = await _members.GetOrCreateMember(user.Id.ToString(), user.DisplayName);
+
+            // if (member is null)
+            // {
+            //     await _members.CreateMember(user.Id.ToString(), user.DisplayName);
+            // }
             
             var serialized = JsonConvert.SerializeObject(member, settings: new JsonSerializerSettings()
             {

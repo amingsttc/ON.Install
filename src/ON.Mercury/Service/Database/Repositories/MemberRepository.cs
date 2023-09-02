@@ -42,7 +42,7 @@ namespace ON.Mercury.Service.Database.Repositories
 
         public async Task<Member> GetOrCreateMember(string id, string username)
         {
-            var member = await GetMember(id);
+            Member? member = await GetMember(id);
             if (member is null)
             {
                 member = await CreateMember(id, username);
@@ -55,6 +55,9 @@ namespace ON.Mercury.Service.Database.Repositories
         public async Task<Member?> GetMember(string id)
         {
             var member = await _postgres.Members.Where(m => m.Id == id).FirstOrDefaultAsync();
+            if (member is null)
+                return null;
+            
             var roles = await _postgres.MemberRoles.Where(m => m.MemberId == member.Id).Include(m => m.Role).ToListAsync();
             foreach (var memberRole in roles)
             {
