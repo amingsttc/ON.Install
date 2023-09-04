@@ -12,7 +12,7 @@ using System.Linq;
 namespace ON.Mercury.Service.Database.Entities
 {
     [Table("channels")]
-    public sealed partial class Channel : IMessage<Fragments.Mercury.Channel>
+    public class Channel 
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -74,38 +74,6 @@ namespace ON.Mercury.Service.Database.Entities
                     j => j.HasOne(p => p.Message).WithMany().HasForeignKey(p => p.MessageId),
                     j => j.HasOne(p => p.Channel).WithMany().HasForeignKey(p => p.ChannelId)
                 );
-        }
-
-        public void MergeFrom(Fragments.Mercury.Channel message)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void MergeFrom(CodedInputStream input)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void WriteTo(CodedOutputStream output)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public int CalculateSize()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public MessageDescriptor Descriptor { get; }
-
-        public bool Equals(Fragments.Mercury.Channel other)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Fragments.Mercury.Channel Clone()
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

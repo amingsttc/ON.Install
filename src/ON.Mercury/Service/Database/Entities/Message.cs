@@ -11,7 +11,7 @@ using MessageProto = ON.Fragments.Mercury.Message;
 namespace Service.Database.Entities;
 
 [Table("messages")]
-public sealed partial class Message : IMessage<Message>
+public class Message
 {
     public string Id { get; set; }
     public string? ChannelId { get; set; }
@@ -76,53 +76,5 @@ public sealed partial class Message : IMessage<Message>
             ModifiedOn = Timestamp.FromDateTime(msg.SentOn),
             DeletedOn = null
         };
-    }
-
-public void MergeFrom(Message message)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void MergeFrom(CodedInputStream input)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void WriteTo(CodedOutputStream output)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public int CalculateSize()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public MessageDescriptor Descriptor { get; }
-    public bool Equals(Message obj)
-    {
-        if (obj is null || GetType() != obj.GetType())
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(this, obj))
-        {
-            return true;
-        }
-
-        Message otherMessage = (Message)obj;
-
-        return Id == otherMessage.Id
-               && ChannelId == otherMessage.ChannelId
-               && SenderId == otherMessage.SenderId
-               && Body == otherMessage.Body
-               && SentOn == otherMessage.SentOn
-               && ModifiedOn == otherMessage.ModifiedOn
-               && DeletedOn == otherMessage.DeletedOn;
-    }
-    public Message Clone()
-    {
-        throw new System.NotImplementedException();
     }
 }

@@ -50,10 +50,10 @@ public class ChatService : ChatInterface.ChatInterfaceBase
 
             await _postgres.Messages.AddAsync(newMessage);
             await _postgres.SaveChangesAsync();
-            await _cache.AddOrSetAsync($"messages:{request.ChannelId}", new List<Message>()
-            {
-                newMessage
-            });
+            // await _cache.AddOrSetAsync($"messages:{request.ChannelId}", new List<Message>()
+            // {
+            //     newMessage
+            // });
             
             return new SendMessageResponse()
             {

@@ -14,7 +14,7 @@ using ON.Mercury.Service.Database.Entities;
 namespace Service.Database.Entities
 {
     [Table("roles")]
-    public partial class Role : IMessage<ON.Fragments.Mercury.Role>
+    public class Role
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -84,41 +84,6 @@ namespace Service.Database.Entities
                 dict.Add(kvp.Key, kvp.Value);
             }
             return dict;
-        }
-
-        public void MergeFrom(ON.Fragments.Mercury.Role message)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void MergeFrom(CodedInputStream input)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void WriteTo(CodedOutputStream output)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public int CalculateSize()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        [NotMapped]
-        [JsonIgnore]
-        public MessageDescriptor Descriptor { get; }
-
-
-        public bool Equals(ON.Fragments.Mercury.Role other)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ON.Fragments.Mercury.Role Clone()
-        {
-            throw new NotImplementedException();
         }
     }
 }
