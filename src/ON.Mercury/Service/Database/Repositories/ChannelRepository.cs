@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using Google.Protobuf.WellKnownTypes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ON.Mercury.Service.Database.Entities;
@@ -19,7 +18,6 @@ namespace ON.Mercury.Service.Database.Repositories
 {
     public class ChannelRepository
     {
-        // TODO: Look Into CQRS
         private readonly ILogger<ChannelRepository> _logger;
         private readonly PostgresContext _postgres;
         private const string DEFAULT_ROLE = "9bb8d652-cc23-497d-a222-ea4c681c2a64";
@@ -32,7 +30,7 @@ namespace ON.Mercury.Service.Database.Repositories
             _hubContext = hubContext;
         }
 
-        public async Task<Channel> CreateChannelAsync(string name, string category = "", string description = "", IEnumerable<Role> roles = null, CancellationToken cancellationToken = default)
+        public async Task<Channel> CreateChannelAsync(string name, string category = "", string description = "", IEnumerable<Role>? roles = null, CancellationToken cancellationToken = default)
         {
             var newChannel = new Channel()
             {
@@ -44,13 +42,15 @@ namespace ON.Mercury.Service.Database.Repositories
                 ModifiedOn = DateTime.UtcNow
             };
 
+            
+            //  TODO: Make adding roles not suck
             if (roles is null)
             {
                 await _postgres.ChannelRoles.AddAsync(new ChannelsRoles()
                 {
                     ChannelId = newChannel.Id,
                     RoleId = DEFAULT_ROLE
-                });
+                },  cancellationToken);
             }
             else
             {
@@ -67,11 +67,11 @@ namespace ON.Mercury.Service.Database.Repositories
 
         public async Task<IEnumerable<Channel>> GetChannelsAsync(CancellationToken cancellationToken = default)
         {
-            var channels = await _postgres.Channels.Include(c => c.Roles).ToListAsync();
+            var channels = await _postgres.Channels.Include(c => c.Roles).ToListAsync(cancellationToken);
             return channels;
         }
 
-        public async Task<Channel> UpdateChannelAsync(string id, string name, string category = "", string description = "", CancellationToken cancellationToken = default)
+        public async Task<Channel?> UpdateChannelAsync(string id, string name, string category = "", string description = "", CancellationToken cancellationToken = default)
         {
             var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
             if (channel is null) return null;
