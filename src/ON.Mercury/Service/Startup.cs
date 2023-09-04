@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FluentValidation;
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +16,9 @@ using ON.Mercury.Service.Database;
 using ON.Mercury.Service.Database.Repositories;
 using ON.Mercury.Service.Hubs;
 using ON.Mercury.Service.Middleware;
+using ON.Mercury.Service.Models.Channels;
 using ON.Mercury.Service.Services;
+using ON.Mercury.Service.Validators;
 
 namespace ON.Mercury.Service;
 
@@ -55,6 +58,7 @@ public class Startup
         services.AddScoped<RoleRepository>();
         services.AddScoped<ChannelRepository>();
         services.AddTransient<GlobalExceptionHandlingMiddleware>();
+        services.AddScoped<IValidator<CreateOrUpdateChannel>, CreateOrUpdateChannelValidator>();
         services.AddJwtAuthentication();
         services.AddSwaggerGen(c =>
         {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ON.Mercury.Service.Database.Repositories;
 using ON.Mercury.Service.Models.Channels;
@@ -14,19 +15,22 @@ namespace ON.Mercury.Service.Controllers
     {
         private readonly ILogger<ChannelsController> _logger;
         private readonly ChannelRepository _channels;
+        private readonly IValidator<CreateOrUpdateChannel> _createOrUpdateValidator;
         
-        public ChannelsController(ILogger<ChannelsController> logger, ChannelRepository channels)
+        public ChannelsController(ILogger<ChannelsController> logger, ChannelRepository channels, IValidator<CreateOrUpdateChannel> createOrUpdateValidator)
         {
             _logger = logger;
             _channels = channels;
+            _createOrUpdateValidator = createOrUpdateValidator;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateChannelAsync([FromBody] CreateOrUpdateChannel request, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrEmpty(request.Name) || string.IsNullOrWhiteSpace(request.Name))
+            var result = await _createOrUpdateValidator.ValidateAsync(request, cancellationToken);
+            if (!result.IsValid)
             {
-                return BadRequest("Name is required");
+                return BadRequest(result);
             }
             
             var channel = await _channels.CreateChannelAsync(request.Name, request.Description, request.Category, request.Roles, cancellationToken);
