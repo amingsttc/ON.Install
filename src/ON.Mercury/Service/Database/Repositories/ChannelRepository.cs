@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using ON.Mercury.Service.Database.UnionTables;
+using ON.Mercury.Service.Exceptions;
 using ON.Mercury.Service.Hubs;
 
 namespace ON.Mercury.Service.Database.Repositories
@@ -74,7 +75,7 @@ namespace ON.Mercury.Service.Database.Repositories
         public async Task<Channel?> UpdateChannelAsync(string id, string name, string category = "", string description = "", CancellationToken cancellationToken = default)
         {
             var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
-            if (channel is null) return null;
+            if (channel is null) throw new ChannelNotFoundException(id);
 
             channel.Name = name;
             channel.Category = category;
@@ -92,7 +93,7 @@ namespace ON.Mercury.Service.Database.Repositories
         public async Task<string?> DeleteChannelAsync(string id, CancellationToken cancellationToken = default)
         {
             var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
-            if (channel is null) return null;
+            if (channel is null) throw new ChannelNotFoundException(id);
 
             _postgres.Channels.Remove(channel);
             await _postgres.SaveChangesAsync(cancellationToken);
@@ -105,7 +106,7 @@ namespace ON.Mercury.Service.Database.Repositories
         public async Task<IReadOnlyList<Message>?> GetMessagesAsync(string channelId, MessageSenderParams messageSenderParams = MessageSenderParams.SenderId, string lastReceivedId = null, CancellationToken cancellationToken = default)
         {
             var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
-            if (channel is null) return null;
+            if (channel is null) throw new ChannelNotFoundException(channelId);
             if (string.IsNullOrWhiteSpace(lastReceivedId))
             {
                 var messages = await _postgres.Messages
@@ -136,13 +137,13 @@ namespace ON.Mercury.Service.Database.Repositories
             var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
             if (channel is null)
             {
-                throw new Exception("Channel Not Found");
+                throw new ChannelNotFoundException(channelId);
             }
             
             var message = await _postgres.Messages.FirstOrDefaultAsync(m => m.Id == messageId, cancellationToken);
             if (message is null)
             {
-                throw new Exception("Message Not Found");
+                throw new MessageNotFoundException(messageId);
             }
             
             channel.PinnedMessages.Add(message);
@@ -157,7 +158,7 @@ namespace ON.Mercury.Service.Database.Repositories
             var channel = await _postgres.Channels.Include(c =>  c.PinnedMessages).FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
             if (channel is null)
             {
-                throw new Exception("Channel Not Found");
+                throw new ChannelNotFoundException(channelId);
             }
 
             return channel.PinnedMessages.ToList();
@@ -165,18 +166,16 @@ namespace ON.Mercury.Service.Database.Repositories
 
         public async Task<Message> UnpinMessageAsync(string channelId, string messageId, CancellationToken cancellationToken = default)
         {
-            try
-            {
                 var channel = await _postgres.Channels.Include(c => c.PinnedMessages).FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
                 if (channel is null)
                 {
-                    throw new Exception("Channel Not Found");
+                    throw new ChannelNotFoundException(channelId);
                 }
 
                 var message = channel.PinnedMessages.FirstOrDefault(m => m.Id == messageId);
                 if (message is null)
                 {
-                    throw new Exception("Message Not Pinned");
+                    throw new MessageNotPinnedException(messageId);
                 }
 
                 channel.PinnedMessages.Remove(message);
@@ -184,12 +183,6 @@ namespace ON.Mercury.Service.Database.Repositories
                 await _postgres.SaveChangesAsync(cancellationToken);
 
                 return message;
-            }
-            catch (Exception e)
-            {
-                _logger.LogInformation(JsonConvert.SerializeObject(e));
-                throw;
-            }
         }
     }
 }

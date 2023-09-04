@@ -14,6 +14,7 @@ using ON.Mercury.Service.Caching;
 using ON.Mercury.Service.Database;
 using ON.Mercury.Service.Database.Repositories;
 using ON.Mercury.Service.Hubs;
+using ON.Mercury.Service.Middleware;
 using ON.Mercury.Service.Services;
 
 namespace ON.Mercury.Service;
@@ -53,6 +54,7 @@ public class Startup
         services.AddScoped<MemberRepository>();
         services.AddScoped<RoleRepository>();
         services.AddScoped<ChannelRepository>();
+        services.AddTransient<GlobalExceptionHandlingMiddleware>();
         services.AddJwtAuthentication();
         services.AddSwaggerGen(c =>
         {
@@ -86,6 +88,7 @@ public class Startup
             Program.IsDevelopment = true;
         app.UseRouting();
         app.UseCors();
+        app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
         app.UseJwtAuthentication();
         app.UseEndpoints(endpoints =>
         {
