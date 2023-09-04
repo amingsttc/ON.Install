@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using ON.Fragments.Authentication;
+using ON.Mercury.Service.Exceptions;
 using ON.Mercury.Service.Hubs;
 using Service.Database.Entities;
 using System;
@@ -85,7 +86,7 @@ namespace ON.Mercury.Service.Database.Repositories
             var member = await _postgres.Members.FirstOrDefaultAsync(m => m.Id ==  memberId,  cancellationToken);
             if (member is null)
             {
-                throw new Exception("Member not found");
+                throw new NotFoundException("Member", memberId);
             }
             
             var matchingRoles = await _postgres.Roles
@@ -111,7 +112,7 @@ namespace ON.Mercury.Service.Database.Repositories
             var member = await _postgres.Members.Include(member => member.Roles).FirstOrDefaultAsync(m => m.Id == memberId, cancellationToken);
             if (member is null)
             {
-                throw new Exception("Member not found");
+                throw new NotFoundException("Member", memberId);
             }
 
             foreach (var roleId in roleIds)

@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using ON.Mercury.Service.Exceptions;
 using ON.Mercury.Service.Hubs;
 using Role = Service.Database.Entities.Role;
 
@@ -71,7 +72,7 @@ namespace ON.Mercury.Service.Database.Repositories
         public async Task<Role?> UpdateRoleAsync(string id, string name, MapField<string, bool> permissions, int hierarchy, CancellationToken cancellationToken = default)
         {
             var role = await _postgres.Roles.FirstOrDefaultAsync(r => r.Id == id, cancellationToken: cancellationToken);
-            if (role is null) return null;
+            if (role is null) throw new NotFoundException("Role", id);
 
             role.Name = name;
             role.Permissions = permissions;
@@ -87,7 +88,7 @@ namespace ON.Mercury.Service.Database.Repositories
         public async Task<string?> DeleteRoleAsync(string id, CancellationToken cancellationToken = default)
         {
             var role = await _postgres.Roles.FirstOrDefaultAsync(r => r.Id == id, cancellationToken: cancellationToken);
-            if (role is null) return null;
+            if (role is null) throw new NotFoundException("Role", id);
 
             _postgres.Roles.Remove(role);
             await _postgres.SaveChangesAsync(cancellationToken);

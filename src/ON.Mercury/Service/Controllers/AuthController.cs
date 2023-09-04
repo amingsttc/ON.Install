@@ -79,18 +79,9 @@ namespace ON.Mercury.Service.Controllers
                 return BadRequest("At least one role must be provided");
             }
             
-            try
-            {
-                _logger.LogInformation(ONUserHelper.ParseUser(HttpContext).JwtToken);
-                var member = await _members.GrantRolesAsync(memberId, request.Roles);
-                _logger.LogInformation(ONUserHelper.ParseUser(HttpContext).JwtToken);
-                
-                return Ok(member);
-            } catch (Exception e)
-            {
-                return BadRequest(e);
-            }
             
+            var member = await _members.GrantRolesAsync(memberId, request.Roles);
+            return Ok(member);
         }
         
         [HttpPut("members/{memberId}/remove-roles")]
@@ -101,18 +92,10 @@ namespace ON.Mercury.Service.Controllers
                 return BadRequest("At least one role must be provided");
             }
 
-            try
-            {
-                _logger.LogInformation(ONUserHelper.ParseUser(HttpContext).JwtToken);
-                var member = await _members.RemoveRolesAsync(memberId, request.Roles);
-                _logger.LogInformation(ONUserHelper.ParseUser(HttpContext).JwtToken);
-
-                return Ok(member);
-            } catch (Exception e)
-            {
-                return BadRequest(e);
-            }
             
+            var member = await _members.RemoveRolesAsync(memberId, request.Roles);
+
+            return Ok(member);
         }
     }
 }

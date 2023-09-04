@@ -75,7 +75,7 @@ namespace ON.Mercury.Service.Database.Repositories
         public async Task<Channel?> UpdateChannelAsync(string id, string name, string category = "", string description = "", CancellationToken cancellationToken = default)
         {
             var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
-            if (channel is null) throw new ChannelNotFoundException(id);
+            if (channel is null) throw new NotFoundException("Channel", id);
 
             channel.Name = name;
             channel.Category = category;
@@ -93,7 +93,7 @@ namespace ON.Mercury.Service.Database.Repositories
         public async Task<string?> DeleteChannelAsync(string id, CancellationToken cancellationToken = default)
         {
             var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
-            if (channel is null) throw new ChannelNotFoundException(id);
+            if (channel is null) throw new NotFoundException("Channel", id);
 
             _postgres.Channels.Remove(channel);
             await _postgres.SaveChangesAsync(cancellationToken);
@@ -106,7 +106,7 @@ namespace ON.Mercury.Service.Database.Repositories
         public async Task<IReadOnlyList<Message>?> GetMessagesAsync(string channelId, MessageSenderParams messageSenderParams = MessageSenderParams.SenderId, string lastReceivedId = null, CancellationToken cancellationToken = default)
         {
             var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
-            if (channel is null) throw new ChannelNotFoundException(channelId);
+            if (channel is null) throw new NotFoundException("Channel", channelId);
             if (string.IsNullOrWhiteSpace(lastReceivedId))
             {
                 var messages = await _postgres.Messages
@@ -137,13 +137,13 @@ namespace ON.Mercury.Service.Database.Repositories
             var channel = await _postgres.Channels.FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
             if (channel is null)
             {
-                throw new ChannelNotFoundException(channelId);
+                throw new NotFoundException("Channel", channelId);
             }
             
             var message = await _postgres.Messages.FirstOrDefaultAsync(m => m.Id == messageId, cancellationToken);
             if (message is null)
             {
-                throw new MessageNotFoundException(messageId);
+                throw new NotFoundException("Message", messageId);
             }
             
             channel.PinnedMessages.Add(message);
@@ -158,7 +158,7 @@ namespace ON.Mercury.Service.Database.Repositories
             var channel = await _postgres.Channels.Include(c =>  c.PinnedMessages).FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
             if (channel is null)
             {
-                throw new ChannelNotFoundException(channelId);
+                throw new NotFoundException("Channel", channelId);
             }
 
             return channel.PinnedMessages.ToList();
@@ -169,7 +169,7 @@ namespace ON.Mercury.Service.Database.Repositories
                 var channel = await _postgres.Channels.Include(c => c.PinnedMessages).FirstOrDefaultAsync(c => c.Id == channelId, cancellationToken);
                 if (channel is null)
                 {
-                    throw new ChannelNotFoundException(channelId);
+                    throw new NotFoundException("Channel", channelId);
                 }
 
                 var message = channel.PinnedMessages.FirstOrDefault(m => m.Id == messageId);

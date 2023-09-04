@@ -18,53 +18,23 @@ namespace ON.Mercury.Service.Middleware
             _logger = logger;
         }
 
-        // TODO: Cleanup and Refactor catch blocks
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
             {
                 await next(context);
-            }  
-            catch (ChannelNotFoundException e)
+            } catch (NotFoundException e)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-
-                ProblemDetails problemDetails = new ProblemDetails()
-                {
-                    Status = (int)HttpStatusCode.NotFound,
-                    Type = "CHANNEL",
-                    Title = "Channel Not Found",
-                    Detail = e.Message
-                };
-                var json = JsonConvert.SerializeObject(problemDetails);
-                await context.Response.WriteAsync(json);
-            }
-            catch (MessageNotFoundException e)
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-
-                ProblemDetails problemDetails = new ProblemDetails()
-                {
-                    Status = (int)HttpStatusCode.NotFound,
-                    Type = "Message",
-                    Title = "Message Not Found",
-                    Detail = e.Message
-                };
-                var json = JsonConvert.SerializeObject(problemDetails);
+                var details = e.GetDetails();
+                var json = JsonConvert.SerializeObject(details);
                 await context.Response.WriteAsync(json);
             }
             catch (MessageNotPinnedException e)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-
-                ProblemDetails problemDetails = new ProblemDetails()
-                {
-                    Status = (int)HttpStatusCode.NotFound,
-                    Type = "Message",
-                    Title = "Message Not Pinned",
-                    Detail = e.Message
-                };
-                var json = JsonConvert.SerializeObject(problemDetails);
+                var details = e.GetDetails();
+                var json = JsonConvert.SerializeObject(details);
                 await context.Response.WriteAsync(json);
             }
             catch (Exception e)
