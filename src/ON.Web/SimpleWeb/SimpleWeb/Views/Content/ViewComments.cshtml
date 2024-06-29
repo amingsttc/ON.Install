@@ -3,11 +3,16 @@
 @using userHelper = ON.Authentication.ONUserHelper;
 @using commentHelper = ON.SimpleWeb.Services.CommentService;
 
+<h4>Comments</h4>
 
 @foreach (var record in Model.Records)
 {
     <p>
-        @(record.Data.CommentText)
+        By: @(record.UserDisplayName) at: @(record.CreatedOnUTC.ToDateTime().ToString("yyy-MM-dd HH:mm"))
+        <br />
+        @(record.CommentText)
+        <br />
+        <a asp-action="Replies" asp-controller="Comment" asp-route-id="@(record.CommentID)">Replies (@(record.NumReplies))</a>
     </p>
 }
 @await Html.PartialAsync("AddComment", Model.NewComment)
