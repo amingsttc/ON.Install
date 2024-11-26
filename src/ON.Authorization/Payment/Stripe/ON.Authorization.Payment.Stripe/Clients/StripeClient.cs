@@ -55,6 +55,81 @@ namespace ON.Authorization.Payment.Stripe.Clients
             EnsureProducts();
         }
 
+        public async Task<StripeCreateProductResponse> CreateProduct(
+            StripeCreateProductRequest request
+        )
+        {
+            try
+            {
+                var newProductOpts = new ProductCreateOptions()
+                {
+                    Id = request.InternalId,
+                    Active = true,
+                    Name = request.Name,
+                    Metadata = new Dictionary<string, string>()
+                    {
+                        { "internal_id", request.InternalId },
+                    },
+                    DefaultPriceData = { Currency = "usd", }
+                };
+
+                newProductOpts.ExtraParams.Add(
+                    "default_price_data.custom_unit_amount.enabled",
+                    true
+                );
+                newProductOpts.ExtraParams.Add(
+                    "default_price_data.custom_unit_amount.minimum",
+                    request.MinimumPrice
+                );
+                newProductOpts.ExtraParams.Add(
+                    "default_price_data.custom_unit_amount.maximum",
+                    request.MaximumPrice
+                );
+
+                var createdProduct = await productService.CreateAsync(newProductOpts);
+                if (createdProduct == null)
+                    return new() { Error = "Failed To Create Product" };
+
+                return new();
+            }
+            catch (Exception ex)
+            {
+                return new() { Error = ex.Message, };
+            }
+        }
+
+        public async Task<StripeModifyProductResponse> StripeModifyProduct(
+            StripeModifyProductRequest request
+        )
+        {
+            try
+            {
+                var modifyProductOpts = new ProductUpdateOptions { Name = request.Name, };
+
+                modifyProductOpts.ExtraParams.Add(
+                    "default_price_data.custom_unit_amount.minimum",
+                    request.MinimumPrice
+                );
+
+                modifyProductOpts.ExtraParams.Add(
+                    "default_price_data.custom_unit_amount.maximum",
+                    request.MaximumPrice
+                );
+                var updated = await productService.UpdateAsync(
+                    request.InternalId,
+                    modifyProductOpts
+                );
+                if (updated == null)
+                    return new() { Error = "Unable to update product" };
+
+                return new();
+            }
+            catch (Exception ex)
+            {
+                return new() { Error = ex.Message };
+            }
+        }
+
         public async Task<StripeNewDetails?> GetNewDetails(
             uint level,
             ONUser userToken,
